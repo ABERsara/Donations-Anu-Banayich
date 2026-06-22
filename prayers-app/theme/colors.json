@@ -1,0 +1,9 @@
+{
+  "primary": { "DEFAULT": "#1B2A4A", "light": "#2B3F6B", "dark": "#0D1A2E" },
+  "gold": { "DEFAULT": "#C9A84C", "light": "#DBBE78", "dark": "#9E7B2E" },
+  "flame": { "DEFAULT": "#E07B2C", "light": "#F0A65A", "dark": "#B85F18" },
+  "teal": { "DEFAULT": "#2E8B84", "light": "#4FB3AB", "dark": "#1E625C" },
+  "surface": { "DEFAULT": "#FAF6EF", "card": "#FFFFFF", "muted": "#F0EBE0" },
+  "ink": { "DEFAULT": "#1B2A4A", "muted": "#666666", "subtle": "#888888" },
+  "accent": "#C9A84C"
+}

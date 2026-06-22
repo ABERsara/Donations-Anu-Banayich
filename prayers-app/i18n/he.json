@@ -1,0 +1,44 @@
+{
+  "common": {
+    "app_name": "תפילות",
+    "donate": "תרום",
+    "send_prayer": "שלח תפילה",
+    "cancel": "ביטול",
+    "confirm": "אישור",
+    "loading": "טוען...",
+    "error": "אירעה שגיאה, נסה שוב",
+    "download_app": "הורד את האפליקציה"
+  },
+  "prayer": {
+    "read_prayer": "קרא תפילה",
+    "related_prayers": "תפילות קשורות",
+    "share_prayer": "שתף תפילה",
+    "prayer_sent": "תפילתך נשלחה ✨"
+  },
+  "donation": {
+    "choose_amount": "בחר סכום לתרומה",
+    "your_name": "שם המתפלל",
+    "other_amount": "סכום אחר",
+    "save_card": "שמור כרטיס לפעם הבאה",
+    "confirm_donation": "אשר תרומה של {{amount}}",
+    "saved_card": "{{brand}} ****{{last4}}",
+    "donation_success": "תרומתך התקבלה! 🙏",
+    "processing": "מעבד תשלום..."
+  },
+  "auth": {
+    "sign_in": "התחבר",
+    "sign_in_google": "התחבר עם Google",
+    "sign_in_apple": "התחבר עם Apple",
+    "sign_in_phone": "התחבר עם מספר טלפון",
+    "sign_out": "התנתק",
+    "profile": "הפרופיל שלי"
+  },
+  "quick_buttons": {
+    "title": "מה קורה אצלך?",
+    "exam": "יש לי מבחן",
+    "flight": "אני טס לחו\"ל",
+    "surgery": "לפני ניתוח",
+    "birth": "לפני לידה",
+    "job_interview": "ראיון עבודה"
+  }
+}

@@ -1,0 +1,33 @@
+# --- Node / Frontend ---
+node_modules/
+.expo/
+dist/
+web-build/
+
+# --- Python / Backend ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Environment / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Logs ---
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.tsbuildinfo

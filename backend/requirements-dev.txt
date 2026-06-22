@@ -1,0 +1,6 @@
+# כלי פיתוח בלבד (לא נדרשים לפרודקשן)
+# התקנה: pip install -r requirements-dev.txt
+ruff==0.15.18
+pytest==8.3.4
+httpx==0.28.1
+

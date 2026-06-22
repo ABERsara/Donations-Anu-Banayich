@@ -1,0 +1,23 @@
+# Frontend (prayers-app): ESLint + Prettier על קבצים שב-stage
+cd prayers-app && npx lint-staged
+cd ..
+
+# Backend (backend): ruff format + lint על קובצי Python שב-stage
+STAGED_PY=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' || true)
+if [ -n "$STAGED_PY" ]; then
+  if [ -x backend/.venv/Scripts/python.exe ]; then
+    PY=backend/.venv/Scripts/python.exe
+  elif [ -x backend/.venv/bin/python ]; then
+    PY=backend/.venv/bin/python
+  else
+    PY=""
+  fi
+  if [ -n "$PY" ] && "$PY" -m ruff --version >/dev/null 2>&1; then
+    # format נאכף; check --fix מתקן אוטומטית אך לא חוסם commit על ממצאים שנותרו
+    echo "$STAGED_PY" | xargs "$PY" -m ruff format
+    echo "$STAGED_PY" | xargs "$PY" -m ruff check --fix || true
+    echo "$STAGED_PY" | xargs git add
+  else
+    echo "⚠ ruff לא מותקן ב-backend/.venv — דילוג על Python. הריצו: pip install -r backend/requirements-dev.txt"
+  fi
+fi

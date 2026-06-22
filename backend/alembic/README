@@ -1,0 +1,8 @@
+Alembic migrations.
+
+יצירת migration ראשון (לאחר השלמת המודלים ב-app/models/models.py):
+    alembic revision --autogenerate -m "create initial tables"
+    alembic upgrade head
+
+ה-DATABASE_URL נקרא מ-.env דרך alembic/env.py.
+קבצי ה-migration נשמרים תחת versions/.

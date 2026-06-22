@@ -1,0 +1,5 @@
+{
+  "common": { "donate": "TODO", "cancel": "TODO", "confirm": "TODO", "loading": "TODO" },
+  "donation": { "choose_amount": "TODO", "confirm_donation": "TODO", "saved_card": "TODO", "donation_success": "TODO" },
+  "quick_buttons": { "title": "TODO" }
+}
