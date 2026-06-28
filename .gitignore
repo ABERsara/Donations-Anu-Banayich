@@ -19,6 +19,16 @@ __pycache__/
 .env.*
 !.env.example
 
+# --- Local MCP config (private, not shared) ---
+.mcp.json
+
+# --- Claude Code local settings (private, not shared) ---
+.claude/settings.json
+.claude/settings.local.json
+
+# --- Generated planning artifacts ---
+sprint-*.html
+
 # --- Logs ---
 *.log
 npm-debug.*
