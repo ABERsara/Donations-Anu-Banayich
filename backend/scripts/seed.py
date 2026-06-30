@@ -8,6 +8,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from app.database import SessionLocal
 from app.models.models import Category, Prayer
@@ -18,11 +21,11 @@ def seed():
     try:
         # ─── קטגוריות ────────────────────────────────────────────
         categories_data = [
-            {"slug": "shacharit", "name_he": "שחרית", "name_en": "Shacharit", "order": 1},
-            {"slug": "mincha", "name_he": "מנחה", "name_en": "Mincha", "order": 2},
-            {"slug": "arvit", "name_he": "ערבית", "name_en": "Arvit", "order": 3},
-            {"slug": "musaf", "name_he": "מוסף", "name_en": "Musaf", "order": 4},
-            {"slug": "neilah", "name_he": "נעילה", "name_en": "Neilah", "order": 5},
+            {"slug": "health", "name_he": "רפואה", "name_en": "Health", "order": 1},
+            {"slug": "success", "name_he": "הצלחה", "name_en": "Success", "order": 2},
+            {"slug": "exam", "name_he": "מבחן", "name_en": "Exam", "order": 3},
+            {"slug": "travel", "name_he": "נסיעה", "name_en": "Travel", "order": 4},
+            {"slug": "baby", "name_he": "לידה", "name_en": "Baby", "order": 5},
         ]
 
         category_map = {}
@@ -41,44 +44,44 @@ def seed():
         # ─── תפילות ──────────────────────────────────────────────
         prayers_data = [
             {
-                "slug": "shacharit-amida",
-                "category_slug": "shacharit",
-                "title_he": "תפילת שחרית",
-                "title_en": "Morning Prayer",
-                "body_he": "תפילת השחרית היא תפילת הבוקר הנאמרת מדי יום עם זריחת השמש.",
-                "body_en": "The Shacharit prayer is the morning prayer recited daily at sunrise.",
+                "slug": "health-prayer",
+                "category_slug": "health",
+                "title_he": "תפילה לרפואה שלמה",
+                "title_en": "Prayer for Healing",
+                "body_he": "תפילה לרפואה שלמה ובריאות טובה.",
+                "body_en": "A prayer for complete healing and good health.",
             },
             {
-                "slug": "mincha-amida",
-                "category_slug": "mincha",
-                "title_he": "תפילת מנחה",
-                "title_en": "Afternoon Prayer",
-                "body_he": "תפילת המנחה נאמרת בשעות אחר הצהריים, מחצות היום ועד השקיעה.",
-                "body_en": "The Mincha prayer is recited in the afternoon, from midday until sunset.",
+                "slug": "success-prayer",
+                "category_slug": "success",
+                "title_he": "תפילה להצלחה",
+                "title_en": "Prayer for Success",
+                "body_he": "תפילה להצלחה בדרך ובמעשי ידיים.",
+                "body_en": "A prayer for success in one's path and endeavors.",
             },
             {
-                "slug": "arvit-amida",
-                "category_slug": "arvit",
-                "title_he": "תפילת ערבית",
-                "title_en": "Evening Prayer",
-                "body_he": "תפילת הערבית נאמרת לאחר צאת הכוכבים, בסיום היום.",
-                "body_en": "The Arvit prayer is recited after nightfall, at the end of the day.",
+                "slug": "exam-prayer",
+                "category_slug": "exam",
+                "title_he": "תפילה להצלחה במבחן",
+                "title_en": "Prayer for Exam Success",
+                "body_he": "תפילה לסייעתא דשמיא לפני מבחן.",
+                "body_en": "A prayer for divine assistance before an exam.",
             },
             {
-                "slug": "musaf-shabbat",
-                "category_slug": "musaf",
-                "title_he": "תפילת מוסף",
-                "title_en": "Additional Prayer",
-                "body_he": "תפילת המוסף נאמרת בשבתות וימים טובים, לאחר תפילת שחרית.",
-                "body_en": "The Musaf prayer is recited on Shabbat and holidays, after Shacharit.",
+                "slug": "travel-prayer",
+                "category_slug": "travel",
+                "title_he": "תפילה לנסיעה בטוחה",
+                "title_en": "Prayer for Safe Travel",
+                "body_he": "תפילה לנוסעים, לשמירה בדרך.",
+                "body_en": "A prayer for travelers, for safety on the road.",
             },
             {
-                "slug": "neilah-yom-kippur",
-                "category_slug": "neilah",
-                "title_he": "תפילת נעילה",
-                "title_en": "Closing Prayer",
-                "body_he": "תפילת נעילה היא התפילה האחרונה של יום הכיפורים, בשעת נעילת שערי שמים.",
-                "body_en": "The Neilah prayer is the final prayer of Yom Kippur, as the gates of heaven close.",
+                "slug": "baby-prayer",
+                "category_slug": "baby",
+                "title_he": "תפילה להריון ולידה",
+                "title_en": "Prayer for Pregnancy and Birth",
+                "body_he": "תפילה להריון בריא וללידה קלה.",
+                "body_en": "A prayer for a healthy pregnancy and an easy birth.",
             },
         ]
 
