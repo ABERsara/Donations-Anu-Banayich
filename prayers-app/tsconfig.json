@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ESNext",
+    "types": ["node"],
     "strict": true,
     "paths": {
       "@/*": ["./*"],
