@@ -73,6 +73,7 @@ class Donation(Base):
     stripe_payment_intent_id = Column(String, nullable=True)
     status = Column(String, default="pending")  # pending|success|failed|refunded
     donor_name = Column(String, nullable=False)
+    prayer_name = Column(String, nullable=True)
     donor_note = Column(String, nullable=True)
     is_anonymous = Column(Boolean, default=False)
     receipt_email = Column(String, nullable=True)

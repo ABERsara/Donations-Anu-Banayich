@@ -22,6 +22,7 @@ class DonationCreate(BaseModel):
     amount: int  # סנטים/אגורות
     currency: Currency
     donor_name: str
+    prayer_name: str | None = None
     donor_note: str | None = None
     save_card: bool = False
     quick_button_slug: str | None = None
