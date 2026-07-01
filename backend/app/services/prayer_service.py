@@ -51,7 +51,6 @@ def get_prayer_by_slug(db: Session, slug: str, lang: str = "he"):
 
     prayer.view_count += 1
     db.commit()
-    db.refresh(prayer)
 
     return _localize(prayer, lang)
 

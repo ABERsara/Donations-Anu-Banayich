@@ -62,7 +62,6 @@ class PrayerResponse(BaseModel):
 
     id: str
     slug: str
-    # TODO: למפות לפי שפה — title, body, seo_keywords, seo_description
     title: str | None = None
     body: str | None = None
     seo_description: str | None = Field(None, alias="seoDescription")
@@ -71,7 +70,7 @@ class PrayerResponse(BaseModel):
     category_id: str | None = Field(None, alias="categoryId")
     view_count: int
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 # ─── User ────────────────────────────────────────────────────
