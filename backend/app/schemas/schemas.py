@@ -62,8 +62,8 @@ class PrayerResponse(BaseModel):
 
     id: str
     slug: str
-    title: str | None = None
-    body: str | None = None
+    title: str
+    body: str
     seo_description: str | None = Field(None, alias="seoDescription")
     seo_keywords: list[str] = Field(default=[], alias="seoKeywords")
     lang: str
