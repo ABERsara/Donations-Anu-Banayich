@@ -72,7 +72,6 @@ export function usePrayer(slug: string): {
 //   },
 // ];
 
-//פונקציה לקבלת מערך התפילות בשפה המותאמת
 export function usePrayers(): {
   prayers: LocalizedPrayer[];
   isLoading: boolean;
@@ -92,7 +91,7 @@ export function usePrayers(): {
     //   .finally(() => setIsLoading(false));
     getPrayers()
       .then((data) => setPrayers(data as LocalizedPrayer[]))
-      .catch(() => setError('error.loading'))
+      .catch((err: Error) => setError(err.message))
       .finally(() => setIsLoading(false));
   }, [lang]);
 
