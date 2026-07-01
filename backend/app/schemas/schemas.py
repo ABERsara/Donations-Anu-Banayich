@@ -5,7 +5,7 @@ Pydantic Schemas — validation של request/response.
 
 from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class Currency(str, Enum):
@@ -62,11 +62,15 @@ class PrayerResponse(BaseModel):
 
     id: str
     slug: str
-    # TODO: למפות לפי שפה — title, body, seo_keywords, seo_description
-    title: str | None = None
-    body: str | None = None
+    title: str
+    body: str
+    seo_description: str | None = Field(None, alias="seoDescription")
+    seo_keywords: list[str] = Field(default=[], alias="seoKeywords")
+    lang: str
+    category_id: str | None = Field(None, alias="categoryId")
+    view_count: int
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 # ─── User ────────────────────────────────────────────────────
