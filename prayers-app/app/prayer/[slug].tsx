@@ -5,8 +5,6 @@
  * TODO:
  * 1. generateMetadata() עם title, description, keywords, hreflang
  * 2. JSON-LD schema.org/Article
- * 3. usePrayer(slug) לשליפת הנתונים
- * 4. DonationWidget + QuickButtons ב-sticky bottom bar
  * 5. "תפילות קשורות" בתחתית
  */
 import React from 'react';
@@ -29,7 +27,10 @@ export default function PrayerScreen() {
     return (
       <View>
         <Text>{t('prayer.not_found')}</Text>
-        <Button onPress={() => router.back()} label={t('common.back')} />
+        <Button
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+          label={t('common.back')}
+        />
       </View>
     );
 
