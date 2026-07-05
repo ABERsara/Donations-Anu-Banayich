@@ -26,7 +26,8 @@ export async function apiFetch<T>(url: string, options: RequestOptions = {}): Pr
 
 // ─── Prayers ────────────────────────────────────────────────
 export const getPrayers = () => apiFetch(API.PRAYERS);
-export const getPrayer = (slug: string) => apiFetch(API.PRAYER(slug));
+export const getPrayer = (slug: string, lang: string) =>
+  apiFetch(`${API.PRAYER(slug)}?lang=${lang}`);
 export const searchPrayers = (q: string) =>
   apiFetch(`${API.PRAYERS_SEARCH}?q=${encodeURIComponent(q)}`);
 

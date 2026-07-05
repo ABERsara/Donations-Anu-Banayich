@@ -1,12 +1,6 @@
-/**
- * TODO: לממש
- * - fetch GET /api/prayers/:slug
- * - מחזיר LocalizedPrayer לפי lang הנוכחי
- * - cache פשוט (SWR או React Query — לבחור)
- */
 import { useState, useEffect } from 'react';
 
-import { getPrayers } from '@/services/api';
+import { getPrayer, getPrayers } from '@/services/api';
 import { useLanguageStore } from '@/store/languageStore';
 import type { LocalizedPrayer } from '@/types/prayer.types';
 
@@ -15,8 +9,21 @@ export function usePrayer(slug: string): {
   isLoading: boolean;
   error: string | null;
 } {
-  // TODO: לממש
-  return { prayer: null, isLoading: true, error: null };
+  const { lang } = useLanguageStore();
+  const [prayer, setPrayer] = useState<LocalizedPrayer | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    getPrayer(slug, lang)
+      .then((data) => setPrayer(data as LocalizedPrayer))
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, [slug, lang]);
+
+  return { prayer, isLoading, error };
 }
 
 // const mockPrayers: LocalizedPrayer[] = [

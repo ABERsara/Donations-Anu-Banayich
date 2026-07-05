@@ -1,6 +1,7 @@
 {
   "common": {
     "app_name": "תפילות",
+    "back": "חזור",
     "donate": "תרום",
     "send_prayer": "שלח תפילה",
     "cancel": "ביטול",
@@ -10,6 +11,7 @@
     "download_app": "הורד את האפליקציה"
   },
   "prayer": {
+    "not_found": "תפילה לא נמצאה",
     "read_prayer": "קרא תפילה",
     "related_prayers": "תפילות קשורות",
     "share_prayer": "שתף תפילה",
@@ -17,6 +19,7 @@
   },
   "donation": {
     "choose_amount": "בחר סכום לתרומה",
+    "donate": "תרום",
     "your_name": "שם המתפלל",
     "other_amount": "סכום אחר",
     "save_card": "שמור כרטיס לפעם הבאה",

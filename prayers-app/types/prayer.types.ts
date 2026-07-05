@@ -53,7 +53,7 @@ export interface LocalizedPrayer {
   seoDescription: string;
   seoKeywords: string[];
   lang: SupportedLang;
-  categoryId: string;
+  categoryId: string | null;
 }
 
 export type PrayerSlug =
