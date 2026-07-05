@@ -11,17 +11,27 @@
  */
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+
 import { usePrayer } from '@/hooks/usePrayer';
-import { LoadingSpinner } from '@/components/common';
+import { LoadingSpinner, Button } from '@/components/common';
 import { DonationWidget } from '@/components/DonationWidget';
 
 export default function PrayerScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
-  const { prayer, isLoading } = usePrayer(slug);
+  const { prayer, isLoading, error } = usePrayer(slug);
+  const { t } = useTranslation();
+  const router = useRouter();
 
   if (isLoading) return <LoadingSpinner />;
-  if (!prayer) return <Text>לא נמצא</Text>;
+  if (error || !prayer)
+    return (
+      <View>
+        <Text>{t('prayer.not_found')}</Text>
+        <Button onPress={() => router.back()} label={t('common.back')} />
+      </View>
+    );
 
   return (
     <View style={{ flex: 1 }}>
