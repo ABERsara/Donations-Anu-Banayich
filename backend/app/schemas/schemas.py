@@ -19,9 +19,9 @@ class Currency(str, Enum):
 # ─── Donation ────────────────────────────────────────────────
 class DonationCreate(BaseModel):
     prayer_id: str
-    amount: int  # סנטים/אגורות
+    amount: int = Field(gt=0)  # סנטים/אגורות
     currency: Currency
-    donor_name: str
+    donor_name: str = Field(min_length=2)
     prayer_name: str | None = None
     donor_note: str | None = None
     save_card: bool = False

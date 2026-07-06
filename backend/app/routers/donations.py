@@ -21,6 +21,7 @@ from app.schemas.schemas import (
     RecurringDonationCreate,
     RecurringDonationResponse,
 )
+from app.services import donation_service
 
 router = APIRouter(prefix="/api/donations", tags=["donations"])
 
@@ -31,8 +32,7 @@ async def initiate_donation(
     uid=Depends(optional_firebase_token),
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.create_pending_donation(db, body, uid)
-    raise NotImplementedError
+    return await donation_service.create_pending_donation(db, body, uid)
 
 
 @router.post("/confirm")
@@ -41,8 +41,7 @@ async def confirm_donation(
     uid=Depends(optional_firebase_token),
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.confirm_donation(db, body.payment_intent_id)
-    raise NotImplementedError
+    return await donation_service.confirm_donation(db, body.payment_intent_id)
 
 
 @router.post("/quick")

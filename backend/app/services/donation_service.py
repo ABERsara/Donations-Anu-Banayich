@@ -5,34 +5,79 @@
 TODO (צוות הפרקטיקום): לממש.
 """
 
+import uuid
+
+import stripe as stripe_sdk
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-
-def create_pending_donation(db: Session, data, user_uid: str | None = None):
-    """TODO: create_payment_intent + שמירת Donation עם status=pending → client_secret."""
-    raise NotImplementedError
+from app.models import Donation, Prayer
+from app.services import stripe_service
 
 
-def confirm_donation(db: Session, payment_intent_id: str):
-    """TODO: עדכון Donation ל-status=success לאחר אישור תשלום."""
-    raise NotImplementedError
+async def create_pending_donation(db: Session, data, user_uid: str | None = None):
+    try:
+        prayer_uuid = uuid.UUID(data.prayer_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid prayer_id format")
+    prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
+    if prayer is None:
+        raise HTTPException(status_code=404, detail="Prayer not found")
+    try:
+        stripe_result = await stripe_service.create_payment_intent(
+            amount=data.amount,
+            currency=data.currency.value,
+            customer_id=None,
+        )
+    except stripe_sdk.error.StripeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+    donation = Donation(
+        user_id=user_uid,
+        prayer_id=prayer_uuid,
+        amount=data.amount,
+        currency=data.currency.value,
+        donor_name=data.donor_name,
+        prayer_name=data.prayer_name,
+        donor_note=data.donor_note,
+        receipt_email=data.receipt_email,
+        stripe_payment_intent_id=stripe_result["payment_intent_id"],
+    )
+    db.add(donation)
+    db.commit()
+
+    return {
+        "client_secret": stripe_result["client_secret"],
+        "payment_intent_id": stripe_result["payment_intent_id"],
+    }
 
 
-def quick_donation(db: Session, data, user_uid: str):
+async def confirm_donation(db: Session, payment_intent_id: str):
+    donation = (
+        db.query(Donation).filter(Donation.stripe_payment_intent_id == payment_intent_id).first()
+    )
+    if donation is None:
+        raise HTTPException(status_code=404, detail="Donation not found")
+    donation.status = "success"
+    db.commit()
+    return {"status": "success"}
+
+
+async def quick_donation(db: Session, data, user_uid: str):
     """TODO: charge_saved_card למשתמש עם כרטיס שמור (2 קליקים)."""
     raise NotImplementedError
 
 
-def list_history(db: Session, user_uid: str):
+async def list_history(db: Session, user_uid: str):
     """TODO: SELECT * FROM donations WHERE user_id = ... ORDER BY created_at DESC."""
     raise NotImplementedError
 
 
-def create_recurring(db: Session, data, user_uid: str):
+async def create_recurring(db: Session, data, user_uid: str):
     """TODO: create_subscription + שמירת RecurringDonation."""
     raise NotImplementedError
 
 
-def cancel_recurring(db: Session, recurring_id: str, user_uid: str):
+async def cancel_recurring(db: Session, recurring_id: str, user_uid: str):
     """TODO: cancel_subscription + UPDATE recurring_donations SET is_active=False."""
     raise NotImplementedError
