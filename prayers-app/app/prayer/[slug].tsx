@@ -8,7 +8,7 @@
  * 5. "תפילות קשורות" בתחתית
  */
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -25,7 +25,7 @@ export default function PrayerScreen() {
   if (isLoading) return <LoadingSpinner />;
   if (error || !prayer)
     return (
-      <View>
+      <View style={styles.notFound}>
         <Text>{t('prayer.not_found')}</Text>
         <Button
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
@@ -35,10 +35,10 @@ export default function PrayerScreen() {
     );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView>
-        <Text style={{ fontSize: 22, fontWeight: '700' }}>{prayer.title}</Text>
-        <Text style={{ lineHeight: 28 }}>{prayer.body}</Text>
+        <Text style={styles.title}>{prayer.title}</Text>
+        <Text style={styles.body}>{prayer.body}</Text>
         {/* TODO: JSON-LD, SEO meta */}
       </ScrollView>
 
@@ -47,3 +47,21 @@ export default function PrayerScreen() {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  body: {
+    lineHeight: 28,
+  },
+  notFound: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+});
