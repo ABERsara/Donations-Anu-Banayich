@@ -85,7 +85,7 @@ export function usePrayers(): {
   isLoading: boolean;
   error: string | null;
 } {
-  const { lang } = useLanguageStore();
+  const { lang } = useLanguage();
   const [prayers, setPrayers] = useState<LocalizedPrayer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
