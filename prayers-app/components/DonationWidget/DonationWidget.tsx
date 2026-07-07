@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDonationStore } from '@/store/donationStore';
 import { DONATION_TIERS } from '@/constants/donations';
 import { Button } from '@/components/common';
-import type { DonationTier } from '@/types/donation.types';
+import { useLanguageStore } from '@/store/languageStore';
 
 interface DonationWidgetProps {
   prayerId: string;
@@ -17,11 +17,11 @@ interface DonationWidgetProps {
 
 export function DonationWidget({ prayerId }: DonationWidgetProps) {
   const { t } = useTranslation();
-
+  const { rtl } = useLanguageStore();
   const { selectedTier, currency, selectTier } = useDonationStore();
   const tiers = DONATION_TIERS[currency] ?? DONATION_TIERS.ILS;
   return (
-    <View>
+    <View style={[styles.tiersContainer, { flexDirection: rtl ? 'row-reverse' : 'row' }]}>
       {tiers.map((tier) => (
         <TouchableOpacity
           key={tier.amount}
@@ -55,5 +55,8 @@ const styles = StyleSheet.create({
   tierButtonSelected: {
     borderColor: '#000',
     backgroundColor: '#f0f0f0',
+  },
+  tiersContainer: {
+    flexWrap: 'wrap',
   },
 });
