@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { getPrayer, getPrayers } from '@/services/api';
 import { useLanguageStore } from '@/store/languageStore';
 import type { LocalizedPrayer } from '@/types/prayer.types';
+import { useLanguage } from './useLanguage';
 
 export function usePrayer(slug: string): {
   prayer: LocalizedPrayer | null;
   isLoading: boolean;
   error: string | null;
 } {
-  const { lang } = useLanguageStore();
+  const { lang } = useLanguage();
   const [prayer, setPrayer] = useState<LocalizedPrayer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -17,8 +17,8 @@ interface DonationWidgetProps {
 
 export function DonationWidget({ prayerId }: DonationWidgetProps) {
   const { t } = useTranslation();
-  const { rtl } = useLanguageStore();
-  const { selectedTier, currency, selectTier } = useDonationStore();
+  const { rtl, currency } = useLanguageStore();
+  const { selectedTier, selectTier } = useDonationStore();
   const tiers = DONATION_TIERS[currency] ?? DONATION_TIERS.ILS;
   return (
     <View style={[styles.tiersContainer, { flexDirection: rtl ? 'row-reverse' : 'row' }]}>
