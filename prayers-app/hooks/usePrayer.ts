@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 import { getPrayer, getPrayers } from '@/services/api';
-import { useLanguageStore } from '@/store/languageStore';
 import type { LocalizedPrayer } from '@/types/prayer.types';
 import { useLanguage } from './useLanguage';
 
