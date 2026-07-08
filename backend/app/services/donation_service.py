@@ -11,7 +11,7 @@ import stripe as stripe_sdk
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models import Donation, Prayer
+from app.models.models import Donation, Prayer
 from app.services import stripe_service
 
 
