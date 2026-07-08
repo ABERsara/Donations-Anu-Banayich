@@ -3,7 +3,7 @@ import type { SupportedLang } from './i18n.types';
 export interface Prayer {
   id: string;
   slug: string;
-  categoryId: string;
+  categoryId: string | null;
 
   // תוכן רב-לשוני
   titleHe: string;
@@ -53,7 +53,7 @@ export interface LocalizedPrayer {
   seoDescription: string;
   seoKeywords: string[];
   lang: SupportedLang;
-  categoryId: string;
+  categoryId: string | null;
 }
 
 export type PrayerSlug =
