@@ -9,16 +9,33 @@ POST /api/webhooks/stripe
   - customer.subscription.deleted → UPDATE recurring_donations SET is_active=False
 """
 
-from fastapi import APIRouter, Request
+import stripe
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.services import donation_service, stripe_service
 
 router = APIRouter(prefix="/api/webhooks", tags=["webhooks"])
 
 
 @router.post("/stripe")
-async def stripe_webhook(request: Request):
+async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
 
+    try:
+        event = stripe_service.construct_webhook_event(payload, sig_header)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid payload") from e
+    except stripe.error.SignatureVerificationError as e:
+        raise HTTPException(status_code=400, detail="Invalid signature") from e
+    if event["type"] == "payment_intent.succeeded":
+        payment_intent_id = event["data"]["object"]["id"]
+        await donation_service.confirm_donation(db, payment_intent_id)
+    elif event["type"] == "payment_intent.payment_failed":
+        payment_intent_id = event["data"]["object"]["id"]
+        await donation_service.fail_donation(db, payment_intent_id)
     # TODO:
     # event = stripe.Webhook.construct_event(payload, sig_header, STRIPE_WEBHOOK_SECRET)
     # if event["type"] == "payment_intent.succeeded": ...
