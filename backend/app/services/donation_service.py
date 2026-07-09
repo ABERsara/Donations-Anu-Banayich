@@ -11,11 +11,17 @@ import stripe as stripe_sdk
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models.models import Donation, Prayer
+from app.core.constants import DONATION_STATUS_SUCCESS
+from app.models.models import Donation, Prayer, User
 from app.services import stripe_service
 
 
 async def create_pending_donation(db: Session, data, user_uid: str | None = None):
+    user_id = None
+    if user_uid:
+        user = db.query(User).filter(User.firebase_uid == user_uid).first()
+        if user:
+            user_id = user.id
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
     except ValueError:
@@ -33,7 +39,7 @@ async def create_pending_donation(db: Session, data, user_uid: str | None = None
         raise HTTPException(status_code=502, detail=str(e))
 
     donation = Donation(
-        user_id=user_uid,
+        user_id=user_id,
         prayer_id=prayer_uuid,
         amount=data.amount,
         currency=data.currency.value,
@@ -58,7 +64,7 @@ async def confirm_donation(db: Session, payment_intent_id: str):
     )
     if donation is None:
         raise HTTPException(status_code=404, detail="Donation not found")
-    donation.status = "success"
+    donation.status = DONATION_STATUS_SUCCESS
     db.commit()
     return {"status": "success"}
 
