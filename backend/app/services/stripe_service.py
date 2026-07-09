@@ -5,10 +5,30 @@
 TODO (צוות הפרקטיקום): לממש מול ה-SDK (stripe==15.x) ו-settings.STRIPE_SECRET_KEY.
 """
 
+import asyncio
+
+import stripe
+
+from app.core.config import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 async def create_payment_intent(amount: int, currency: str, customer_id: str | None = None):
-    """TODO: stripe.PaymentIntent.create(...) → להחזיר client_secret + payment_intent_id."""
-    raise NotImplementedError
+    params = {
+        "amount": amount,
+        "currency": currency.lower(),
+        "automatic_payment_methods": {"enabled": True},
+    }
+    if customer_id:
+        params["customer"] = customer_id
+
+    intent = await asyncio.to_thread(stripe.PaymentIntent.create, **params)
+
+    return {
+        "client_secret": intent.client_secret,
+        "payment_intent_id": intent.id,
+    }
 
 
 async def charge_saved_card(customer_id: str, amount: int, currency: str):
@@ -32,5 +52,8 @@ async def detach_payment_method(payment_method_id: str):
 
 
 def construct_webhook_event(payload: bytes, sig_header: str):
-    """TODO: stripe.Webhook.construct_event(...) — אימות חתימה עם STRIPE_WEBHOOK_SECRET."""
-    raise NotImplementedError
+    return stripe.Webhook.construct_event(
+        payload=payload,
+        sig_header=sig_header,
+        secret=settings.STRIPE_WEBHOOK_SECRET,
+    )
