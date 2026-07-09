@@ -1,4 +1,9 @@
-import { initStripe, presentPaymentSheet, createPaymentMethod } from '@stripe/stripe-react-native';
+import {
+  initStripe,
+  initPaymentSheet,
+  presentPaymentSheet,
+  createPaymentMethod,
+} from '@stripe/stripe-react-native';
 
 /** לקרוא פעם אחת ב-app/_layout.tsx */
 export async function initializeStripe() {
@@ -14,9 +19,17 @@ export async function initializeStripe() {
  */
 export async function openPaymentSheet(clientSecret: string): Promise<boolean> {
   // TODO: להגדיר setupIntent / customFlow לפי הצורך
-  const { error } = await presentPaymentSheet();
-  if (error) {
-    console.warn('Stripe error:', error.message);
+  const { error: initError } = await initPaymentSheet({
+    paymentIntentClientSecret: clientSecret,
+    merchantDisplayName: 'Prayers App',
+  });
+  if (initError) {
+    console.warn('Stripe init error:', initError.message);
+    return false;
+  }
+  const { error: presentError } = await presentPaymentSheet();
+  if (presentError) {
+    console.warn('Stripe error:', presentError.message);
     return false;
   }
   return true;
