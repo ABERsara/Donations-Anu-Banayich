@@ -9,12 +9,16 @@ POST /api/webhooks/stripe
   - customer.subscription.deleted → UPDATE recurring_donations SET is_active=False
 """
 
+import logging
+
 import stripe
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.services import donation_service, stripe_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/webhooks", tags=["webhooks"])
 
@@ -32,12 +36,21 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid signature") from e
     if event["type"] == "payment_intent.succeeded":
         payment_intent_id = event["data"]["object"]["id"]
-        await donation_service.confirm_donation(db, payment_intent_id)
+        try:
+            await donation_service.confirm_donation(db, payment_intent_id)
+        except HTTPException as e:
+            if e.status_code == 404:
+                logger.warning(f"Donation not found for payment_intent_id={payment_intent_id}")
+            else:
+                raise
     elif event["type"] == "payment_intent.payment_failed":
         payment_intent_id = event["data"]["object"]["id"]
-        await donation_service.fail_donation(db, payment_intent_id)
-    # TODO:
-    # event = stripe.Webhook.construct_event(payload, sig_header, STRIPE_WEBHOOK_SECRET)
-    # if event["type"] == "payment_intent.succeeded": ...
+        try:
+            await donation_service.fail_donation(db, payment_intent_id)
+        except HTTPException as e:
+            if e.status_code == 404:
+                logger.warning(f"Donation not found for payment_intent_id={payment_intent_id}")
+            else:
+                raise
 
     return {"received": True}
