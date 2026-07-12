@@ -31,7 +31,9 @@ export function DonationWidget({ prayerId }: DonationWidgetProps) {
             }}
             style={[
               styles.tierButton,
-              selectedTier?.amount === tier.amount && styles.tierButtonSelected,
+              (selectedTier?.amount === tier.amount ||
+                (isCustom && tier.amount === CUSTOM_AMOUNT_VALUE)) &&
+                styles.tierButtonSelected,
             ]}
           >
             <Text>{tier.display}</Text>
