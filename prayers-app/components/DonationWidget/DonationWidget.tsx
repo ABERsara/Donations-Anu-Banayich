@@ -40,7 +40,7 @@ export function DonationWidget({ prayerId }: DonationWidgetProps) {
       </View>
       {isCustom && (
         <TextInput
-          placeholder={t('donation.other_amount')}
+          placeholder={t('donation.custom_amount')}
           keyboardType="numeric"
           onChangeText={(text) => {
             const amount = Number(text) * 100;
