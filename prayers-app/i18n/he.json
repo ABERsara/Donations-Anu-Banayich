@@ -19,6 +19,7 @@
   },
   "donation": {
     "choose_amount": "בחר סכום לתרומה",
+    "custom_amount": "הזן סכום",
     "donate": "תרום",
     "your_name": "שם המתפלל",
     "other_amount": "סכום אחר",

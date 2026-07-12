@@ -41,3 +41,4 @@ export const DONATION_TIERS: Record<Currency, DonationTier[]> = {
 
 /** -1 מסמן "סכום חופשי" — יפתח שדה input */
 export const CUSTOM_AMOUNT_VALUE = -1;
+export const PRAYER_NAME_MIN_AMOUNT = 1800;
