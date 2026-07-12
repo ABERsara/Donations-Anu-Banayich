@@ -43,7 +43,7 @@ export function DonationWidget({ prayerId }: DonationWidgetProps) {
           placeholder={t('donation.custom_amount')}
           keyboardType="numeric"
           onChangeText={(text) => {
-            const amount = Number(text) * 100;
+            const amount = Math.round(Number(text) * 100);
             setCustomAmount(amount);
           }}
         />
