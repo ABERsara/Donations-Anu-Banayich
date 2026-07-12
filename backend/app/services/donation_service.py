@@ -11,7 +11,7 @@ import stripe as stripe_sdk
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.constants import DONATION_STATUS_SUCCESS
+from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
 from app.models.models import Donation, Prayer, User
 from app.services import stripe_service
 
@@ -24,8 +24,8 @@ async def create_pending_donation(db: Session, data, user_uid: str | None = None
             user_id = user.id
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid prayer_id format")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid prayer_id format") from e
     prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
@@ -67,6 +67,17 @@ async def confirm_donation(db: Session, payment_intent_id: str):
     donation.status = DONATION_STATUS_SUCCESS
     db.commit()
     return {"status": "success"}
+
+
+async def fail_donation(db: Session, payment_intent_id: str):
+    donation = (
+        db.query(Donation).filter(Donation.stripe_payment_intent_id == payment_intent_id).first()
+    )
+    if donation is None:
+        raise HTTPException(status_code=404, detail="Donation not found")
+    donation.status = DONATION_STATUS_FAILED
+    db.commit()
+    return {"status": "failed"}
 
 
 async def quick_donation(db: Session, data, user_uid: str):
