@@ -17,22 +17,28 @@ export function DonationWidget({ prayerId }: DonationWidgetProps) {
   const { selectedTier, selectTier, setCustomAmount } = useDonationStore();
   const tiers = DONATION_TIERS[currency] ?? DONATION_TIERS.ILS;
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
   return (
-    <View style={[styles.tiersContainer, { flexDirection: rtl ? 'row-reverse' : 'row' }]}>
-      {tiers.map((tier) => (
-        <TouchableOpacity
-          key={tier.amount}
-          onPress={() => selectTier(tier)}
-          style={[
-            styles.tierButton,
-            selectedTier?.amount === tier.amount && styles.tierButtonSelected,
-          ]}
-        >
-          <Text>{tier.display}</Text>
-        </TouchableOpacity>
-      ))}
-      {selectedTier?.amount === CUSTOM_AMOUNT_VALUE && (
+    <View>
+      <View style={[styles.tiersContainer, { flexDirection: rtl ? 'row-reverse' : 'row' }]}>
+        {tiers.map((tier) => (
+          <TouchableOpacity
+            key={tier.amount}
+            onPress={() => {
+              selectTier(tier);
+              setIsCustom(tier.amount === CUSTOM_AMOUNT_VALUE);
+            }}
+            style={[
+              styles.tierButton,
+              selectedTier?.amount === tier.amount && styles.tierButtonSelected,
+            ]}
+          >
+            <Text>{tier.display}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {isCustom && (
         <TextInput
           placeholder={t('donation.other_amount')}
           keyboardType="numeric"
@@ -42,18 +48,11 @@ export function DonationWidget({ prayerId }: DonationWidgetProps) {
           }}
         />
       )}
-      <Button
-        label={t('donation.donate')}
-        onPress={() => {
-          setSheetOpen(true);
-        }}
-      />
+      <Button label={t('donation.donate')} onPress={() => setSheetOpen(true)} />
       <DonationBottomSheet
         prayerId={prayerId}
         isVisible={sheetOpen}
-        onClose={() => {
-          setSheetOpen(false);
-        }}
+        onClose={() => setSheetOpen(false)}
       />
     </View>
   );
