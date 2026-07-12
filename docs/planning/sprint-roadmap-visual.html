@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תוכנית 5 ספרינטים — Anu Banecha Donations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f5f0;
+    color: #222;
+    direction: rtl;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 70px 40px;
+    text-align: center;
+  }
+  .cover .emoji { font-size: 64px; margin-bottom: 20px; }
+  .cover h1 { font-size: 38px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
+  .cover .sprint-title {
+    font-size: 22px; opacity: 0.85; margin-bottom: 8px;
+    background: rgba(255,255,255,0.12); border-radius: 10px;
+    display: inline-block; padding: 6px 24px;
+  }
+  .cover .subtitle { font-size: 17px; opacity: 0.75; margin-bottom: 28px; }
+  .cover .meta {
+    display: inline-flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+    background: rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 28px;
+  }
+  .cover .meta span { font-size: 13px; opacity: 0.85; }
+  .cover .meta strong { opacity: 1; }
+
+  /* ── GOAL BANNER ── */
+  .goal-banner {
+    background: linear-gradient(90deg, #0f3460, #1a4a7a);
+    color: white;
+    padding: 24px 40px;
+    text-align: center;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .goal-banner strong { font-size: 19px; display: block; margin-bottom: 6px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: white; border-radius: 16px; padding: 28px 32px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07); margin-bottom: 40px;
+  }
+  .toc h2 { font-size: 18px; color: #0f3460; margin-bottom: 16px; border-bottom: 2px solid #e8e8e8; padding-bottom: 10px; }
+  .toc ol { padding-right: 20px; columns: 2; column-gap: 32px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: #0f3460; text-decoration: none; font-size: 14px; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── SECTIONS ── */
+  .section {
+    background: white; border-radius: 16px; padding: 32px 36px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07); margin-bottom: 28px;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 14px;
+    border-bottom: 3px solid #f0f0f0;
+  }
+  .section-number {
+    background: #0f3460; color: white; border-radius: 50%;
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-number.blocker { background: #dc2626; }
+  .section-number.green   { background: #16a34a; }
+  .section-number.purple  { background: #7c3aed; }
+  .section-number.orange  { background: #d97706; }
+  .section h2 { font-size: 22px; color: #0f3460; }
+  .section h3 { font-size: 17px; color: #1a1a2e; margin: 22px 0 10px; padding-right: 12px; border-right: 4px solid #0f3460; }
+  .section h4 { font-size: 15px; color: #444; margin: 16px 0 8px; font-weight: 600; }
+  .section p  { margin-bottom: 12px; color: #333; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th { background: #0f3460; color: white; padding: 10px 14px; text-align: right; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:nth-child(even) { background: #f8f9ff; }
+  tr:hover { background: #f0f4ff; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin: 2px;
+  }
+  .badge-green  { background: #d4edda; color: #155724; }
+  .badge-red    { background: #f8d7da; color: #721c24; }
+  .badge-blue   { background: #d1ecf1; color: #0c5460; }
+  .badge-orange { background: #fff3cd; color: #856404; }
+  .badge-purple { background: #e8d5f5; color: #6a0dad; }
+  .badge-grey   { background: #e9ecef; color: #495057; }
+  .badge-teal   { background: #d1fae5; color: #065f46; }
+  .badge-yellow { background: #fef9c3; color: #713f12; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+    border-right: 5px solid; font-size: 14px;
+  }
+  .callout-blue   { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+  .callout-green  { background: #f0fdf4; border-color: #22c55e; color: #166534; }
+  .callout-orange { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+  .callout-red    { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+  .callout-purple { background: #faf5ff; border-color: #a855f7; color: #581c87; }
+  .callout-yellow { background: #fefce8; border-color: #eab308; color: #713f12; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    background: #f8f9ff; border-radius: 10px; padding: 20px;
+    margin: 14px 0; font-family: 'Courier New', monospace;
+    font-size: 13px; color: #222; direction: rtl; text-align: right;
+    line-height: 2;
+  }
+  .flow .arrow { color: #0f3460; font-weight: bold; font-size: 16px; }
+  .flow .box {
+    display: inline-block; background: white; border: 2px solid #0f3460;
+    border-radius: 8px; padding: 4px 14px; margin: 2px;
+    font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px;
+  }
+  .flow .box-red   { border-color: #dc2626; }
+  .flow .box-green { border-color: #16a34a; }
+  .flow .step { text-align: center; margin: 6px 0; }
+
+  /* ── SPRINT CARD ── */
+  .sprint-card {
+    border-radius: 16px; border: 3px solid #e0e8ff;
+    margin-bottom: 32px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .sprint-card-header {
+    padding: 22px 28px;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .sprint-card-header.s1 { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-bottom: 3px solid #93c5fd; }
+  .sprint-card-header.s2 { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-bottom: 3px solid #86efac; }
+  .sprint-card-header.s3 { background: linear-gradient(135deg, #ffedd5, #fed7aa); border-bottom: 3px solid #fdba74; }
+  .sprint-card-header.s4 { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border-bottom: 3px solid #c4b5fd; }
+  .sprint-card-header.s5 { background: linear-gradient(135deg, #fee2e2, #fecaca); border-bottom: 3px solid #fca5a5; }
+  .sprint-card-body { padding: 24px 28px; }
+  .sprint-number {
+    font-size: 40px; font-weight: 900; opacity: 0.25; line-height: 1;
+    position: absolute; left: 28px; top: 50%; transform: translateY(-50%);
+  }
+  .sprint-label { font-size: 13px; font-weight: 700; letter-spacing: 1px; opacity: 0.65; }
+  .sprint-title { font-size: 22px; font-weight: 800; flex: 1; }
+  .sprint-weeks { font-size: 14px; opacity: 0.7; }
+  .sprint-goal {
+    font-size: 15px; color: #333; margin: 0 0 20px 0;
+    padding: 14px 18px; background: rgba(0,0,0,0.04);
+    border-radius: 10px; border-right: 4px solid rgba(0,0,0,0.15);
+  }
+
+  /* ── FEATURE ROW ── */
+  .feature-list { list-style: none; padding: 0; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-code { font-weight: 700; min-width: 36px; color: #0f3460; }
+  .feature-name { flex: 1; }
+  .feature-effort { font-size: 12px; opacity: 0.65; min-width: 30px; text-align: left; }
+  .feature-type { font-size: 11px; min-width: 60px; }
+
+  /* ── SYNC BOX ── */
+  .sync-box {
+    background: #fefce8; border: 2px solid #fde047; border-radius: 10px;
+    padding: 16px 20px; margin: 12px 0; font-size: 14px;
+  }
+  .sync-box strong { color: #713f12; }
+
+  /* ── DEP GRAPH ── */
+  .dep-graph {
+    background: #f8f9ff; border-radius: 12px; padding: 20px;
+    margin: 14px 0; direction: ltr; text-align: center; overflow-x: auto;
+  }
+  .dep-row { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .dep-node {
+    background: white; border: 2px solid #0f3460; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 600; color: #0f3460;
+    text-align: center; white-space: nowrap;
+  }
+  .dep-node small { display: block; font-size: 11px; font-weight: 400; opacity: 0.65; }
+  .dep-node.blocker { border-color: #dc2626; color: #dc2626; background: #fff5f5; }
+  .dep-node.parallel { border-color: #7c3aed; color: #7c3aed; background: #faf5ff; }
+  .dep-node.fe { border-color: #0d9488; color: #0d9488; background: #f0fdfa; }
+  .dep-node.done { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+  .dep-arrow { color: #94a3b8; font-size: 18px; font-weight: bold; }
+  .dep-sep { color: #94a3b8; font-size: 13px; margin: 0 4px; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding: 0; margin: 20px 0; }
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+  .timeline-dot {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; color: white; margin-top: 2px;
+  }
+  .timeline-dot.s1 { background: #0f3460; }
+  .timeline-dot.s2 { background: #16a34a; }
+  .timeline-dot.s3 { background: #d97706; }
+  .timeline-dot.s4 { background: #7c3aed; }
+  .timeline-dot.s5 { background: #dc2626; }
+  .timeline-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-content p  { font-size: 14px; color: #555; margin: 0; }
+
+  /* ── RISK TABLE ── */
+  .risk-high { background: #fef2f2 !important; }
+  .risk-mid  { background: #fffbeb !important; }
+  .risk-low  { background: #f0fdf4 !important; }
+
+  /* ── BEFORE/AFTER ── */
+  .before-after {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0;
+  }
+  .before-card { background: #fff5f5; border: 2px solid #fecaca; border-radius: 10px; padding: 18px 20px; }
+  .after-card  { background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 10px; padding: 18px 20px; }
+  .before-card h4 { color: #991b1b; margin-bottom: 10px; }
+  .after-card  h4 { color: #166534; margin-bottom: 10px; }
+  .before-card ul, .after-card ul { padding-right: 18px; font-size: 14px; }
+  .before-card li, .after-card li { margin-bottom: 6px; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; padding: 0; margin: 10px 0; }
+  .checklist li {
+    padding: 6px 0 6px 28px; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+    position: relative;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐'; position: absolute; left: 4px;
+    color: #0f3460; font-size: 16px;
+  }
+
+  /* ── OVERVIEW GRID ── */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 20px 0;
+  }
+  .overview-cell {
+    border-radius: 12px; padding: 18px 14px; text-align: center;
+    transition: transform 0.15s;
+  }
+  .overview-cell:hover { transform: translateY(-2px); }
+  .overview-cell.s1 { background: linear-gradient(160deg, #1e3a5f, #0f3460); color: white; }
+  .overview-cell.s2 { background: linear-gradient(160deg, #14532d, #16a34a); color: white; }
+  .overview-cell.s3 { background: linear-gradient(160deg, #92400e, #d97706); color: white; }
+  .overview-cell.s4 { background: linear-gradient(160deg, #4c1d95, #7c3aed); color: white; }
+  .overview-cell.s5 { background: linear-gradient(160deg, #7f1d1d, #dc2626); color: white; }
+  .overview-cell .s-num { font-size: 32px; font-weight: 900; opacity: 0.4; line-height: 1; }
+  .overview-cell .s-weeks { font-size: 11px; opacity: 0.75; margin-bottom: 6px; }
+  .overview-cell .s-name { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .overview-cell .s-features { font-size: 12px; opacity: 0.85; }
+  .overview-cell .s-goal { font-size: 12px; opacity: 0.75; margin-top: 8px; line-height: 1.4; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; }
+    .section, .sprint-card { box-shadow: none; border: 1px solid #ddd; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 700px) {
+    .cover h1 { font-size: 26px; }
+    .toc ol { columns: 1; }
+    .section { padding: 20px; }
+    .before-after, .overview-grid { grid-template-columns: 1fr 1fr; }
+    .sprint-card-body { padding: 18px 20px; }
+  }
+  @media (max-width: 500px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .before-after { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="emoji">🗺️</div>
+  <h1>תוכנית 5 ספרינטים</h1>
+  <div class="sprint-title">Anu Banecha Donations — מפת הדרכים</div>
+  <div class="subtitle">מסביבת עבודה ריקה → אפליקציה בפרודקשן עם תשלומים, Auth, SEO ו-Mobile</div>
+  <div class="meta">
+    <span>📅 <strong>10 שבועות</strong></span>
+    <span>👩‍💻 <strong>2 ג'וניורות</strong></span>
+    <span>🎯 <strong>33 משימות</strong></span>
+    <span>🏗️ <strong>FastAPI + Expo + Stripe + Firebase</strong></span>
+    <span>✅ <strong>בחירת משימות עצמית</strong></span>
+  </div>
+</div>
+
+<!-- GOAL BANNER -->
+<div class="goal-banner">
+  <strong>🎯 חזון סופי</strong>
+  אתר web + אפליקציה מובייל (iOS + Android) שמאפשרים לגולשים לתרום לתפילות בעברית ו-5 שפות נוספות,
+  עם תשלום Stripe, כרטיס שמור לתרומה מהירה, SEO מלא, ומשתמשים מאומתים דרך Firebase.
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<div class="toc">
+  <h2>📋 תוכן עניינים</h2>
+  <ol>
+    <li><a href="#s1">מבט-על — 5 ספרינטים</a></li>
+    <li><a href="#s2">גרף תלויות בין ספרינטים</a></li>
+    <li><a href="#s3">ציר זמן — 10 שבועות</a></li>
+    <li><a href="#s4">ספרינט 1 — פונדמנט + תפילות</a></li>
+    <li><a href="#s5">ספרינט 2 — תרומה בסיסית + ענן</a></li>
+    <li><a href="#s6">ספרינט 3 — Auth + כרטיס שמור + Quick</a></li>
+    <li><a href="#s7">ספרינט 4 — פרופיל + רב-לשוני + SEO</a></li>
+    <li><a href="#s8">ספרינט 5 — Mobile + חיפוש + פרודקשן</a></li>
+    <li><a href="#s9">נקודות Sync — ה-contract בכל ספרינט</a></li>
+    <li><a href="#s10">Risk Register</a></li>
+    <li><a href="#s11">Backlog</a></li>
+    <li><a href="#s12">הגדרת "סיום" — אפליקציה בפרודקשן</a></li>
+  </ol>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 1 — OVERVIEW -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>מבט-על — 5 ספרינטים</h2>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-cell s1">
+      <div class="s-num">1</div>
+      <div class="s-weeks">שבועות 1–2</div>
+      <div class="s-name">פונדמנט + תפילות</div>
+      <div class="s-features">7 משימות</div>
+      <div class="s-goal">סביבה עולה, 5 תפילות בעברית ב-DB, API ו-UI חי</div>
+    </div>
+    <div class="overview-cell s2">
+      <div class="s-num">2</div>
+      <div class="s-weeks">שבועות 3–4</div>
+      <div class="s-name">תרומה + ענן</div>
+      <div class="s-features">6 משימות</div>
+      <div class="s-goal">Stripe מקצה לקצה + staging חי ב-Render/Vercel</div>
+    </div>
+    <div class="overview-cell s3">
+      <div class="s-num">3</div>
+      <div class="s-weeks">שבועות 5–6</div>
+      <div class="s-name">Auth + Quick</div>
+      <div class="s-features">6 משימות</div>
+      <div class="s-goal">Google Login, כרטיס שמור, תרומה ב-2 קליקים</div>
+    </div>
+    <div class="overview-cell s4">
+      <div class="s-num">4</div>
+      <div class="s-weeks">שבועות 7–8</div>
+      <div class="s-name">רב-לשוני + SEO</div>
+      <div class="s-features">6 משימות</div>
+      <div class="s-goal">6 שפות, RTL, פרופיל, geo-IP מטבע, SEO מלא</div>
+    </div>
+    <div class="overview-cell s5">
+      <div class="s-num">5</div>
+      <div class="s-weeks">שבועות 9–10</div>
+      <div class="s-name">Mobile + פרודקשן</div>
+      <div class="s-features">8 משימות</div>
+      <div class="s-goal">EAS iOS/Android, SSR, rate limiting, חיפוש, פוליש</div>
+    </div>
+  </div>
+
+  <h3>טבלת מבט-על</h3>
+  <table>
+    <tr>
+      <th>ספרינט</th><th>שבועות</th><th>מטרה</th><th>🚨 BLOCKER</th><th>נקודת Sync</th><th>פיצ'רים</th>
+    </tr>
+    <tr>
+      <td><strong>1</strong></td><td>1–2</td>
+      <td>פונדמנט + תפילות עולות</td>
+      <td>F1 סביבה → F2 מיגרציה → F3 seed</td>
+      <td><code>PrayerResponse ↔ LocalizedPrayer</code></td>
+      <td><span class="badge badge-blue">7</span></td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td><td>3–4</td>
+      <td>תרומה (Stripe) + staging</td>
+      <td>F1 Payment Intent</td>
+      <td><code>DonationResponse</code> (client_secret, pi_id)</td>
+      <td><span class="badge badge-green">6</span></td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td><td>5–6</td>
+      <td>Auth + כרטיס שמור + Quick</td>
+      <td>F1 Firebase Middleware</td>
+      <td><code>UserResponse</code> (has_saved_card, last4, brand)</td>
+      <td><span class="badge badge-orange">6</span></td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td><td>7–8</td>
+      <td>פרופיל + רב-לשוני + SEO + מטבע</td>
+      <td>אין — כל F עצמאי יחסית</td>
+      <td>פרמטר <code>?lang=</code> + פורמט חיפוש</td>
+      <td><span class="badge badge-purple">6</span></td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td><td>9–10</td>
+      <td>Mobile + חיפוש + באנר + פרודקשן</td>
+      <td>F1 הקשחת backend (gates EAS, SSR)</td>
+      <td>משתני סביבה ב-<code>.env.example</code></td>
+      <td><span class="badge badge-red">8</span></td>
+    </tr>
+  </table>
+
+  <div class="callout callout-blue">
+    💡 <strong>איך עובדים:</strong> אין הקצאת בעלים. כל משימה היא פרוסה אנכית (backend → frontend → הרצה). כל מפתחת בוחרת משימה מהמאגר. משימות 🚨 BLOCKER נלקחות ראשונות כי הן חוסמות אחרות. <strong>קבצי ה-scaffold הם דוגמות ייחוס — לא נוגעים.</strong>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 2 — DEPENDENCY GRAPH -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <h2>גרף תלויות בין ספרינטים</h2>
+  </div>
+
+  <p>כל ספרינט מניח את הספרינט שלפניו. תלויות <em>בתוך</em> ספרינט מפורטות בסעיפים הספציפיים.</p>
+
+  <div class="dep-graph">
+    <!-- Sprints in sequence -->
+    <div class="dep-row">
+      <div class="dep-node blocker" style="min-width:160px;">
+        ספרינט 1
+        <small>פונדמנט + API תפילות</small>
+      </div>
+    </div>
+    <div class="dep-row"><span class="dep-arrow">↓</span></div>
+    <div class="dep-row">
+      <div class="dep-node" style="min-width:160px;border-color:#16a34a;color:#16a34a;background:#f0fdf4;">
+        ספרינט 2
+        <small>Stripe + Render/Vercel staging</small>
+      </div>
+    </div>
+    <div class="dep-row"><span class="dep-arrow">↓</span></div>
+    <div class="dep-row">
+      <div class="dep-node" style="min-width:160px;border-color:#d97706;color:#d97706;background:#fffbeb;">
+        ספרינט 3
+        <small>Firebase Auth + כרטיס שמור</small>
+      </div>
+    </div>
+    <div class="dep-row"><span class="dep-arrow">↓</span></div>
+    <div class="dep-row">
+      <div class="dep-node" style="min-width:160px;border-color:#7c3aed;color:#7c3aed;background:#faf5ff;">
+        ספרינט 4
+        <small>i18n + SEO + פרופיל</small>
+      </div>
+    </div>
+    <div class="dep-row"><span class="dep-arrow">↓</span></div>
+    <div class="dep-row">
+      <div class="dep-node" style="min-width:160px;border-color:#dc2626;color:#dc2626;background:#fff5f5;">
+        ספרינט 5
+        <small>הקשחה + EAS + SSR</small>
+        <small>(תלוי ב-ס2 F5 לdeploy קיים)</small>
+      </div>
+    </div>
+  </div>
+
+  <h3>תלויות חוצות ספרינטים</h3>
+  <table>
+    <tr><th>ספרינט</th><th>תלוי ב</th><th>מה בדיוק נדרש</th></tr>
+    <tr>
+      <td>ספרינט 2</td><td>ספרינט 1 — F4 (seed)</td>
+      <td>5 תפילות ב-DB — Payment Intent מקושר ל-prayer_id</td>
+    </tr>
+    <tr>
+      <td>ספרינט 3</td><td>ספרינט 2 — F1 (Stripe service)</td>
+      <td><code>confirm_donation</code> מורחב לתמיכה ב-<code>save_card</code></td>
+    </tr>
+    <tr>
+      <td>ספרינט 4</td><td>ספרינט 1 — F4 (seed)</td>
+      <td>seed מורחב עם שדות EN ל-5 תפילות קיימות</td>
+    </tr>
+    <tr>
+      <td>ספרינט 5 — F1</td><td>ספרינט 2 — F5 (Render staging)</td>
+      <td>ה-deploy קיים — מקשיחים אותו, לא מתחילים מאפס</td>
+    </tr>
+    <tr>
+      <td>ספרינט 5 — F3</td><td>ספרינט 2 — F6 (Vercel staging)</td>
+      <td>מחליפים output ל-SSR על deploy קיים</td>
+    </tr>
+    <tr>
+      <td>ספרינט 5 — F7</td><td>ספרינט 4 — F2 (seed EN + search)</td>
+      <td>חיפוש רב-לשוני חייב תוכן EN ו-ILIKE מורחב</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 3 — TIMELINE -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <h2>ציר זמן — 10 שבועות</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot s1">1</div>
+      <div class="timeline-content">
+        <h4>שבועות 1–2 — ספרינט 1: פונדמנט + תפילות</h4>
+        <p>סביבה עולה לוקאלית, מיגרציית Alembic ראשונה, seed 5 תפילות, Prayers API (4 endpoints), בוטסטרפ אפליקציה, מסך בית ועמוד תפילה חיים. <strong>סיום:</strong> גולשת רואה 5 תפילות, נכנסת לאחת, ורואה כפתורי תרומה סטטיים.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot s2">2</div>
+      <div class="timeline-content">
+        <h4>שבועות 3–4 — ספרינט 2: תרומה + ענן</h4>
+        <p>Stripe Payment Intent + Webhook, DonationWidget מלא, Bottom Sheet עם donor_name + prayer_name, הצלחה אנימציה, deploy Render + Vercel. <strong>סיום:</strong> תרומת טסט אמיתית עם כרטיס 4242 עוברת ונשמרת ב-DB, האתר חי.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot s3">3</div>
+      <div class="timeline-content">
+        <h4>שבועות 5–6 — ספרינט 3: Auth + כרטיס שמור + Quick</h4>
+        <p>Firebase Auth middleware, Google/Apple Sign-In, שמירת כרטיס Stripe, Quick Donate (2 קליקים), Quick Buttons במסך הבית. <strong>סיום:</strong> "יש לי מבחן" → אישור → תרומה עם כרטיס שמור.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot s4">4</div>
+      <div class="timeline-content">
+        <h4>שבועות 7–8 — ספרינט 4: רב-לשוני + SEO + פרופיל</h4>
+        <p>מסך פרופיל (היסטוריה + כרטיס + התנתקות), LanguagePicker 6 שפות + RTL/LTR, geo-IP מטבע, SEO מלא (meta/OG/hreflang/JSON-LD). <strong>סיום:</strong> view-source מציג HTML SEO, Arabic → RTL.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot s5">5</div>
+      <div class="timeline-content">
+        <h4>שבועות 9–10 — ספרינט 5: Mobile + פרודקשן + פוליש</h4>
+        <p>הקשחת backend (מפתחות live, CORS, webhook פרודקשן), SSR על Vercel, EAS build iOS+Android, Rate Limiting, חיפוש עם debounce, App Download Banner, Error/Loading states אחיד, UX Polish. <strong>סיום:</strong> אפליקציה חיה בחנויות.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-orange">
+    ⚠️ <strong>סיכון זמן — ספרינט 5:</strong> תלויות חיצוניות (אישורי App Store + Google Play) לוקחות 2–7 ימים. פתחו חשבונות חנויות בספרינט 4 כדי שהאישורים לא יחסמו את ספרינט 5.
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 4 — SPRINT 1 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>ספרינט 1 — פונדמנט + תפילות | שבועות 1–2</h2>
+  </div>
+
+  <div class="sprint-card">
+    <div class="sprint-card-header s1">
+      <div>
+        <div class="sprint-label">ספרינט 1 · 7 משימות · S1–S7</div>
+        <div class="sprint-title">🏗️ פונדמנט + תפילות</div>
+      </div>
+      <div class="sprint-weeks">📅 שבועות 1–2</div>
+    </div>
+    <div class="sprint-card-body">
+
+      <p class="sprint-goal">
+        <strong>🎯 מטרה:</strong> הסביבה עולה אצל שתי הבנות, DB מאוכלס ב-5 תפילות, ה-API מחזיר אותן, ומסך הבית + עמוד התפילה מציגים אותן בפועל. בסוף הספרינט: גולשת רואה 5 תפילות, נכנסת לאחת, וקוראת את הטקסט המלא.
+      </p>
+
+      <h4>מאגר משימות</h4>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-code">F1 🚨</span>
+          <span class="feature-name"><strong>סביבת עבודה עולה לוקאלית</strong> — Docker + .env + uvicorn + /health</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-blue">S</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F2 🚨</span>
+          <span class="feature-name"><strong>מודל Donation + מיגרציית Alembic ראשונה</strong> — הוספת <code>prayer_name</code>, 6 טבלאות</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-blue">S</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F3 🚨</span>
+          <span class="feature-name"><strong>Seed script</strong> — <code>scripts/seed.py</code>, 5 קטגוריות + 5 תפילות בעברית, אידמפוטנטי</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F4</span>
+          <span class="feature-name"><strong>Prayers API</strong> — service + router: 4 endpoints (list, slug, category, search) + <code>_localize</code> + view_count</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F5</span>
+          <span class="feature-name"><strong>בוטסטרפ אפליקציה</strong> — <code>_layout.tsx</code>: i18n + StripeProvider + signInAnon (עצמאי, מיום 1)</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F6</span>
+          <span class="feature-name"><strong>מסך הבית</strong> — <code>usePrayers()</code> + FlatList + PrayerCard + loading/error</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F7</span>
+          <span class="feature-name"><strong>עמוד תפילה</strong> — <code>usePrayer(slug)</code> + ScrollView + not-found + DonationWidget (סטטי)</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+      </ul>
+
+      <h4>גרף תלויות — ספרינט 1</h4>
+      <div class="dep-graph">
+        <div class="dep-row">
+          <div class="dep-node blocker">🚨 F1 — סביבה<small>none</small></div>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <div class="dep-node blocker">🚨 F2 — מיגרציה<small>← F1</small></div>
+          <span class="dep-sep">‖</span>
+          <div class="dep-node parallel" style="margin-right:20px;">F5 — בוטסטרפ<small>עצמאי, מיום 1</small></div>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div class="dep-row">
+          <div class="dep-node blocker">🚨 F3 — Seed<small>← F2</small></div>
+          <span style="width:120px;"></span>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <div class="dep-node">F4 — Prayers API<small>← F3</small></div>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <div class="dep-node fe">F6 — מסך בית<small>← F4 + F5</small></div>
+          <span class="dep-sep">+</span>
+          <div class="dep-node fe">F7 — עמוד תפילה<small>← F4 + F5</small></div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        ✅ <strong>מה עובד בסוף ספרינט 1:</strong> פתיחת אפליקציה → Firebase Anonymous Login שקט → 5 תפילות → כניסה לתפילה → טקסט מלא → כפתורי ₪18/₪36/₪72 גלויים (לא פעילים).
+      </div>
+
+      <h4>קומפוננטות זמינות בסיום ספרינט 1</h4>
+      <table>
+        <tr><th>קומפוננטה / hook</th><th>ייבוא</th><th>סטטוס</th></tr>
+        <tr><td><code>Button</code></td><td><code>@/components/common</code></td><td><span class="badge badge-green">מלאה (scaffold)</span></td></tr>
+        <tr><td><code>LoadingSpinner</code></td><td><code>@/components/common</code></td><td><span class="badge badge-green">עובד (scaffold)</span></td></tr>
+        <tr><td><code>PrayerCard</code></td><td><code>@/components/PrayerCard</code></td><td><span class="badge badge-green">מלאה — לא נוגעים (scaffold)</span></td></tr>
+        <tr><td><code>DonationWidget</code></td><td><code>@/components/DonationWidget</code></td><td><span class="badge badge-orange">כפתורי סכום בלבד, ללא תשלום</span></td></tr>
+        <tr><td><code>usePrayers()</code></td><td><code>@/hooks/usePrayer</code></td><td><span class="badge badge-green">מלא</span></td></tr>
+        <tr><td><code>usePrayer(slug)</code></td><td><code>@/hooks/usePrayer</code></td><td><span class="badge badge-green">מלא</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 5 — SPRINT 2 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-number" style="background:#16a34a;">2</div>
+    <h2>ספרינט 2 — תרומה בסיסית + עלייה לענן | שבועות 3–4</h2>
+  </div>
+
+  <div class="sprint-card">
+    <div class="sprint-card-header s2">
+      <div>
+        <div class="sprint-label">ספרינט 2 · 6 משימות</div>
+        <div class="sprint-title">💳 תרומה (Stripe) + Staging</div>
+      </div>
+      <div class="sprint-weeks">📅 שבועות 3–4</div>
+    </div>
+    <div class="sprint-card-body">
+
+      <p class="sprint-goal">
+        <strong>🎯 מטרה:</strong> משתמשת בוחרת סכום, מזינה שם תורם + "שם לתפילה" (מסף ₪72), משלמת דרך Stripe, ורואה אנימציית הצלחה. האתר חי ב-Render + Vercel.
+      </p>
+
+      <h4>מאגר משימות</h4>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-code">F1 🚨</span>
+          <span class="feature-name"><strong>Payment Intent + תרומה pending</strong> — <code>stripe_service</code> + <code>donation_service</code>: initiate/confirm, <code>DonationResponse</code></span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F2</span>
+          <span class="feature-name"><strong>Stripe Webhook</strong> — signature validation, payment_intent.succeeded → success, failed → failed</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F3</span>
+          <span class="feature-name"><strong>DonationWidget: בחירת סכום</strong> — DONATION_TIERS, highlight, "אחר", כפתור "תרום" פותח גיליון, קבוע PRAYER_NAME_MIN_AMOUNT</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F4</span>
+          <span class="feature-name"><strong>DonationBottomSheet + Payment Sheet + הצלחה</strong> — donor_name (חובה), prayer_name (מסף), <code>openPaymentSheet</code>, SuccessAnimation</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F5</span>
+          <span class="feature-name"><strong>Deploy backend ל-Render</strong> — Managed Postgres + Web Service, alembic + seed על prod DB, CORS</span>
+          <span class="feature-type"><span class="badge badge-purple">DevOps</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F6</span>
+          <span class="feature-name"><strong>Deploy web ל-Vercel</strong> — Expo web export, EXPO_PUBLIC_API_URL → Render, E2E טסט חי</span>
+          <span class="feature-type"><span class="badge badge-purple">DevOps</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+      </ul>
+
+      <h4>גרף תלויות — ספרינט 2</h4>
+      <div class="dep-graph">
+        <div class="dep-row">
+          <div class="dep-node blocker">🚨 F1 — Payment Intent<small>none</small></div>
+          <span class="dep-sep">&nbsp;&nbsp;</span>
+          <div class="dep-node parallel">F3 — DonationWidget<small>עצמאי</small></div>
+        </div>
+        <div class="dep-row">
+          <span class="dep-arrow">↓</span>
+          <span style="width: 120px;">&nbsp;</span>
+          <span class="dep-arrow">↓</span>
+        </div>
+        <div class="dep-row">
+          <div class="dep-node">F2 — Webhook<small>← F1</small></div>
+          <span class="dep-sep">&nbsp;&nbsp;</span>
+          <div class="dep-node fe">F4 — Bottom Sheet<small>← F1 + F3</small></div>
+          <span class="dep-sep">&nbsp;&nbsp;</span>
+          <div class="dep-node">F5 — Render<small>← F1</small></div>
+        </div>
+        <div class="dep-row">
+          <span style="width: 160px;">&nbsp;</span>
+          <span class="dep-arrow">↓</span>
+        </div>
+        <div class="dep-row">
+          <span style="width: 160px;">&nbsp;</span>
+          <div class="dep-node">F6 — Vercel<small>← F5</small></div>
+        </div>
+      </div>
+
+      <div class="callout callout-yellow">
+        🔑 <strong>מודל תרומות:</strong> תרומה רגילה = כל סכום. מסף <code>PRAYER_NAME_MIN_AMOUNT</code> (ILS=7200 אגורות = ₪72) ומעלה — שדה "שם לתפילה" מופיע ב-UI. <code>donor_name</code> (לקבלה) נפרד מ-<code>prayer_name</code>. השרת רק שומר — לא אוכף סף.
+      </div>
+
+      <div class="callout callout-green">
+        ✅ <strong>מה עובד בסוף ספרינט 2:</strong> כרטיס טסט 4242 → תרומה נשמרת <code>status="success"</code> ב-DB. האתר חי בכתובת Vercel ציבורית.
+      </div>
+
+      <h4>קומפוננטות נוספות בסיום ספרינט 2</h4>
+      <table>
+        <tr><th>קומפוננטה / hook</th><th>ייבוא</th><th>מה נוסף</th></tr>
+        <tr><td><code>DonationWidget</code></td><td><code>@/components/DonationWidget</code></td><td>בחירת סכום, "אחר", פותח גיליון</td></tr>
+        <tr><td><code>DonationBottomSheet</code></td><td><code>@/components/DonationWidget</code></td><td>donor_name + prayer_name + Payment Sheet</td></tr>
+        <tr><td><code>SuccessAnimation</code></td><td><code>@/components/DonationWidget</code></td><td>checkmark + "תפילתך נשלחה ✨"</td></tr>
+        <tr><td><code>useDonation()</code></td><td><code>@/hooks/useDonation</code></td><td>initiate → Payment Sheet → confirm → success/error</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 6 — SPRINT 3 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-number" style="background:#d97706;">3</div>
+    <h2>ספרינט 3 — Auth + כרטיס שמור + Quick Buttons | שבועות 5–6</h2>
+  </div>
+
+  <div class="sprint-card">
+    <div class="sprint-card-header s3">
+      <div>
+        <div class="sprint-label">ספרינט 3 · 6 משימות</div>
+        <div class="sprint-title">🔐 Auth + כרטיס שמור + Quick</div>
+      </div>
+      <div class="sprint-weeks">📅 שבועות 5–6</div>
+    </div>
+    <div class="sprint-card-body">
+
+      <p class="sprint-goal">
+        <strong>🎯 מטרה:</strong> משתמשת מתחברת עם Google, שומרת כרטיס, ותורמת ב-2 קליקים דרך Quick Button. בסוף: "יש לי מבחן" → אישור → תרומה עם כרטיס שמור.
+      </p>
+
+      <h4>מאגר משימות</h4>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-code">F1 🚨</span>
+          <span class="feature-name"><strong>Firebase Auth Middleware + get_or_create_user</strong> — <code>verify_firebase_token</code>, <code>optional_firebase_token</code>, User ב-DB</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F2</span>
+          <span class="feature-name"><strong>כרטיס שמור + /users/me</strong> — Stripe Customer, attach/detach PM, last4+brand, GET/PATCH/DELETE</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F3</span>
+          <span class="feature-name"><strong>Quick Donate</strong> — <code>/quick</code>: charge_saved_card, off_session, requires auth, 400 בלי כרטיס</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F4</span>
+          <span class="feature-name"><strong>Firebase Auth Flow + מסך התחברות</strong> — <code>useAuth</code>, Google + Apple (iOS), linkWithCredential, authStore</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F5</span>
+          <span class="feature-name"><strong>Bottom Sheet מזהה כרטיס שמור</strong> — עם כרטיס: "VISA ****4242" + כפתור אחד; בלי: Payment Sheet + checkbox</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F6</span>
+          <span class="feature-name"><strong>Quick Buttons פועלים</strong> — 5 כפתורי אירוע, QUICK_BUTTONS constant, lחיצה → גיליון + quick donate</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+      </ul>
+
+      <h4>גרף תלויות — ספרינט 3</h4>
+      <div class="dep-graph">
+        <div class="dep-row">
+          <div class="dep-node blocker">🚨 F1 — Auth Middleware<small>none</small></div>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <div class="dep-node">F2 — כרטיס שמור<small>← F1</small></div>
+          <span class="dep-sep">&nbsp;&nbsp;</span>
+          <div class="dep-node fe">F4 — Auth Flow<small>← F1 + F2</small></div>
+        </div>
+        <div class="dep-row"><span class="dep-arrow">↓</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <div class="dep-node">F3 — Quick Donate<small>← F1 + F2</small></div>
+          <span class="dep-sep">&nbsp;&nbsp;</span>
+          <div class="dep-node fe">F5 — גיליון כרטיס<small>← F3 + F4</small></div>
+        </div>
+        <div class="dep-row"><span style="width:100px;"></span> <span class="dep-arrow">↓</span></div>
+        <div class="dep-row">
+          <span style="width:100px;"></span>
+          <div class="dep-node fe">F6 — Quick Buttons<small>← F3 + F5</small></div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        ✅ <strong>מה עובד בסוף ספרינט 3:</strong> Google Login → כרטיס שמור → "יש לי מבחן" → גיליון עם VISA ****4242 → כפתור אחד → תרומה מיידית.
+      </div>
+
+      <h4>קומפוננטות נוספות בסיום ספרינט 3</h4>
+      <table>
+        <tr><th>קומפוננטה / hook</th><th>מה נוסף</th></tr>
+        <tr><td><code>DonationBottomSheet</code> (עדכון)</td><td>תצוגת כרטיס שמור (last4 + brand) vs. Payment Sheet + checkbox</td></tr>
+        <tr><td><code>QuickButtons</code></td><td>5 כפתורי emoji + label[lang] + quick donate</td></tr>
+        <tr><td><code>authStore</code> (עדכון)</td><td>user + hasSavedCard + last4 + brand</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 7 — SPRINT 4 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="section-number" style="background:#7c3aed;">4</div>
+    <h2>ספרינט 4 — פרופיל + רב-לשוני + SEO + מטבע | שבועות 7–8</h2>
+  </div>
+
+  <div class="sprint-card">
+    <div class="sprint-card-header s4">
+      <div>
+        <div class="sprint-label">ספרינט 4 · 6 משימות</div>
+        <div class="sprint-title">🌍 רב-לשוני + SEO + פרופיל</div>
+      </div>
+      <div class="sprint-weeks">📅 שבועות 7–8</div>
+    </div>
+    <div class="sprint-card-body">
+
+      <p class="sprint-goal">
+        <strong>🎯 מטרה:</strong> פרופיל עם היסטוריה, 6 שפות עם RTL, מטבע לפי מיקום, ו-SEO מלא. חיפוש ובאנר הורדה הוזזו לספרינט 5 כדי לאזן עומס.
+      </p>
+
+      <h4>מאגר משימות</h4>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-code">F1</span>
+          <span class="feature-name"><strong>היסטוריית תרומות</strong> — <code>GET /history</code>: 20 אחרונות ממוין, עם auth, slug+title תפילה</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F2</span>
+          <span class="feature-name"><strong>Seed רב-לשוני + חיפוש</strong> — <code>title_en</code>/<code>body_en</code>/<code>seo_*_en</code> ל-5 תפילות, ILIKE מורחב + fallback</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F3</span>
+          <span class="feature-name"><strong>מסך פרופיל</strong> — פרטים, כרטיס + מחיקה, היסטוריה FlatList, התנתקות, מצב לא-מחובר</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F4</span>
+          <span class="feature-name"><strong>LanguagePicker + RTL/LTR + i18n</strong> — 6 שפות, I18nManager.forceRTL, השלמת <code>en/fr/ru/es/ar.json</code></span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F5</span>
+          <span class="feature-name"><strong>Geo-IP מטבע</strong> — <code>detectCurrency</code> ← ipapi.co, AsyncStorage, DonationWidget לפי currency</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F6</span>
+          <span class="feature-name"><strong>SEO מלא + עמוד רב-לשוני</strong> — <code>generateMetadata</code>, JSON-LD, hreflang×6, canonical, <code>[lang]/prayer/[slug]</code></span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+      </ul>
+
+      <div class="callout callout-purple">
+        💡 <strong>אין BLOCKER בספרינט 4!</strong> F1+F2 (backend) וF4+F5 (frontend) עצמאיים וניתנים לפיתוח במקביל מיום 1 של הספרינט. F3 תלוי F1; F6 תלוי F2.
+      </div>
+
+      <div class="callout callout-orange">
+        ⚠️ <strong>עכשיו הזמן:</strong> פתחו חשבון App Store Developer ו-Google Play Console בספרינט 4. אישורי החנויות לוקחים 2–7 ימים ויחסמו את ספרינט 5 אם לא עשיתם זאת מראש.
+      </div>
+
+      <div class="callout callout-green">
+        ✅ <strong>מה עובד בסוף ספרינט 4:</strong> <code>view-source</code> על <code>/prayer/health</code> מציג title/description/hreflang×6/JSON-LD. בחירת ערבית → UI הופך ל-RTL. VPN ארה"ב → סכומים ב-$$.
+      </div>
+
+      <h4>קומפוננטות נוספות בסיום ספרינט 4</h4>
+      <table>
+        <tr><th>קומפוננטה / hook</th><th>מה נוסף</th></tr>
+        <tr><td><code>LanguagePicker</code></td><td>6 שפות + RTL toggle</td></tr>
+        <tr><td><code>useLanguage()</code></td><td>lang + isRTL + changeLanguage</td></tr>
+        <tr><td><code>languageStore</code></td><td>lang, isRTL, currency</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 8 — SPRINT 5 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-number blocker">5</div>
+    <h2>ספרינט 5 — Mobile + חיפוש + באנר + פרודקשן | שבועות 9–10</h2>
+  </div>
+
+  <div class="sprint-card">
+    <div class="sprint-card-header s5">
+      <div>
+        <div class="sprint-label">ספרינט 5 · 8 משימות · הספרינט הגדול ביותר</div>
+        <div class="sprint-title">🚀 Mobile + פרודקשן + פוליש</div>
+      </div>
+      <div class="sprint-weeks">📅 שבועות 9–10</div>
+    </div>
+    <div class="sprint-card-body">
+
+      <p class="sprint-goal">
+        <strong>🎯 מטרה:</strong> staging מספרינט 2 הופך לפרודקשן מוקשח (Stripe live, CORS סגור, webhook), SSR לSEO, EAS build iOS+Android לטסטרים, חיפוש, באנר הורדה, שגיאות אחיד, ופוליש.
+      </p>
+
+      <h4>מאגר משימות</h4>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-code">F1 🚨</span>
+          <span class="feature-name"><strong>הקשחת backend לפרודקשן</strong> — Stripe webhook prod + מפתחות live + CORS סגור לכתובות פרודקשן</span>
+          <span class="feature-type"><span class="badge badge-purple">DevOps</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F2</span>
+          <span class="feature-name"><strong>Rate Limiting</strong> — slowapi: GET 100/min, POST donations 10/min, webhooks ללא הגבלה, 429 נכון</span>
+          <span class="feature-type"><span class="badge badge-grey">Backend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F3</span>
+          <span class="feature-name"><strong>SSR על Vercel הקיים</strong> — <code>app.json: web.output: "server"</code>, EXPO_PUBLIC_API_URL → prod, view-source = HTML מלא</span>
+          <span class="feature-type"><span class="badge badge-purple">DevOps</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F4</span>
+          <span class="feature-name"><strong>EAS Build — iOS + Android</strong> — bundle ids, eas.json, Internal Testing בשתי חנויות</span>
+          <span class="feature-type"><span class="badge badge-purple">Mobile</span></span>
+          <span class="feature-effort"><span class="badge badge-red">L</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F5</span>
+          <span class="feature-name"><strong>Error/Loading States</strong> — offline banner (netinfo), 401 → logout, אחידות כל המסכים</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F6</span>
+          <span class="feature-name"><strong>UX Polish</strong> — SuccessAnimation משופרת, haptics, KeyboardAvoiding, tab icons, splash</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F7</span>
+          <span class="feature-name"><strong>מסך חיפוש</strong> — debounce 300ms, <code>GET /search?q=&amp;lang=</code>, FlatList PrayerCard, empty + initial states</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+        <li>
+          <span class="feature-code">F8</span>
+          <span class="feature-name"><strong>App Download Banner</strong> — web בלבד, userAgent iOS/Android/Desktop, X → AsyncStorage, לא חוזר</span>
+          <span class="feature-type"><span class="badge badge-teal">Frontend</span></span>
+          <span class="feature-effort"><span class="badge badge-orange">M</span></span>
+        </li>
+      </ul>
+
+      <div class="callout callout-red">
+        🚨 <strong>F1 חוסמת F3 ו-F4</strong> — הקשחת backend (webhook live + CORS) חייבת לקדום את ה-EAS build ואת ה-SSR, כדי שהאפליקציה בחנויות תעבוד מול שרת prod מאובטח. F2/F5/F6/F7/F8 עצמאיות.
+      </div>
+
+      <div class="callout callout-orange">
+        ⚠️ <strong>ספרינט 5 הוא הגדול ביותר — 8 משימות.</strong> F5/F6/F8 קלות יחסית ויכולות להידחות אם יש לחץ זמן. עדיפות: F1 → F3/F4 (deploy prod) → F7 (חיפוש) → שאר.
+      </div>
+
+      <div class="callout callout-green">
+        ✅ <strong>מה עובד בסוף ספרינט 5 — פרודקשן:</strong> אפליקציה מותקנת על מכשיר iOS + Android, <code>view-source</code> = HTML מלא, תרומה אמיתית עם כרטיס live עוברת, כיבוי WiFi → באנר offline.
+      </div>
+
+      <h4>קומפוננטות נוספות בסיום ספרינט 5 — Pool מלא</h4>
+      <table>
+        <tr><th>קומפוננטה / hook</th><th>מה נוסף</th></tr>
+        <tr><td><code>AppDownloadBanner</code></td><td>web בלבד: iOS/Android/Desktop, X → AsyncStorage</td></tr>
+        <tr><td><code>SearchScreen</code></td><td>חיפוש טקסט + debounce + תוצאות</td></tr>
+        <tr><td><code>ErrorState / EmptyState</code></td><td>כל המסכים מטופלים אחיד</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 9 — SYNC POINTS -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <div class="section-number" style="background:#0d9488;">9</div>
+    <h2>נקודות Sync — ה-contract בכל ספרינט</h2>
+  </div>
+
+  <p>לפני שמתחילות לבנות את <strong>שני הצדדים</strong> של כל ספרינט — שיחה קצרה של 5 דקות על ה-contract. זה חוסך יום debugging.</p>
+
+  <table>
+    <tr><th>ספרינט</th><th>מה לסכם לפני בנייה</th><th>מי מסכמות</th></tr>
+    <tr>
+      <td><span class="badge badge-blue">1</span></td>
+      <td><code>PrayerResponse</code> (backend F4) ↔ <code>types/prayer.types.ts LocalizedPrayer</code> (frontend F6/F7) — 8 שדות: id, slug, title, body, seo_description, seo_keywords, lang, category_id</td>
+      <td>מפתחת F4 + מפתחת F6</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-green">2</span></td>
+      <td><code>DonationResponse</code>: שמות השדות <code>client_secret</code> ו-<code>payment_intent_id</code> בדיוק. רשימת משתני סביבה ל-deploy (<code>.env.example</code> מעודכן).</td>
+      <td>מפתחת F1 + מפתחת F4</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-orange">3</span></td>
+      <td><code>UserResponse</code>: <code>has_saved_card: bool</code>, <code>saved_card_last4: str | None</code>, <code>saved_card_brand: str | None</code> — camelCase בclient.</td>
+      <td>מפתחת F2 + מפתחת F5</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-purple">4</span></td>
+      <td>פרמטר <code>?lang=</code> — ערכים מדויקים (he/en/fr/ru/es/ar). פורמט תוצאות חיפוש (זהה ל-<code>PrayerResponse</code>) לקראת ספרינט 5.</td>
+      <td>מפתחת F2 + מפתחת F4</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-red">5</span></td>
+      <td>כל משתני סביבה ב-<code>.env.example</code> מעודכנים ומסונכרנים בין Render + Vercel + eas.json.</td>
+      <td>מפתחת F1 + מפתחת F4</td>
+    </tr>
+  </table>
+
+  <div class="sync-box">
+    <strong>📋 כלל הזהב:</strong> לפני כל F שנוגע ב-API contract — 5 דקות ביחד, מאמתות שהשמות תואמים. <code>snake_case</code> בbackend ↔ <code>camelCase</code> בfrontend — מסכמות מפורשות מה הממיר.
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 10 — RISK REGISTER -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <div class="section-number blocker">!</div>
+    <h2>Risk Register</h2>
+  </div>
+
+  <table>
+    <tr><th>סיכון</th><th>חומרה</th><th>ספרינט</th><th>מה עושים</th></tr>
+    <tr class="risk-high">
+      <td>ספרינט 5 גדול מדי — 8 משימות</td>
+      <td><span class="badge badge-red">גבוה</span></td>
+      <td>5</td>
+      <td>F5/F6/F8 קלות ויכולות להיסגר מהר. עדיפות: F1 → F3/F4 → F7. לא לקחת F8 ראשונה.</td>
+    </tr>
+    <tr class="risk-high">
+      <td>App Store / Google Play — אישורים לוקחים 2–7 ימים</td>
+      <td><span class="badge badge-red">גבוה</span></td>
+      <td>5</td>
+      <td>פותחות חשבונות חנויות <strong>בספרינט 4</strong>. לא מחכות לספרינט 5.</td>
+    </tr>
+    <tr class="risk-mid">
+      <td>ספרינט 2 — deploy F5/F6 בסוף הספרינט</td>
+      <td><span class="badge badge-orange">בינוני</span></td>
+      <td>2</td>
+      <td>לא משאירות deploy לסוף — מתחילות F5 מוקדם, לא תלויה ב-F4.</td>
+    </tr>
+    <tr class="risk-mid">
+      <td>ספרינט 1 — תלות גבוהה, F5 אחרי F4 אחרי F3 אחרי F2</td>
+      <td><span class="badge badge-orange">בינוני</span></td>
+      <td>1</td>
+      <td>מפתחת 2 מתחילה F5 (בוטסטרפ, עצמאי) ביום 1 בלי להמתין לbackend.</td>
+    </tr>
+    <tr class="risk-low">
+      <td>RecurringDonation — מודל קיים בקוד, לא מתוכנן</td>
+      <td><span class="badge badge-green">נמוך</span></td>
+      <td>—</td>
+      <td>פער מוכר. מופנה ל-backlog. לא מתחייבות עכשיו.</td>
+    </tr>
+    <tr class="risk-low">
+      <td>תרגום תוכן fr/ru/es/ar — עמודות קיימות, ריקות</td>
+      <td><span class="badge badge-green">נמוך</span></td>
+      <td>—</td>
+      <td>עבודת תוכן (לא קוד). backlog תוכן נפרד.</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 11 — BACKLOG -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header">
+    <div class="section-number" style="background:#6b7280;">B</div>
+    <h2>Backlog — לא בספרינטים 1–5</h2>
+  </div>
+
+  <div class="callout callout-blue">
+    אלה פריטים שהמודל / הקוד שלהם קיים בשלד, אך הם לא חלק מה-MVP של 5 הספרינטים. לא נשמטו בשקט — פתוחים ומתועדים כאן.
+  </div>
+
+  <table>
+    <tr><th>פריט</th><th>סוג</th><th>סיבה לדחייה</th></tr>
+    <tr>
+      <td><strong>תרומה חוזרת (Recurring)</strong> — <code>RecurringDonation</code> service + UI</td>
+      <td><span class="badge badge-grey">backlog</span></td>
+      <td>מודל קיים, service TODO. לא ב-SPEC כפיצ'ר ספרינט. ספרינט עתידי.</td>
+    </tr>
+    <tr>
+      <td><strong>תרגום תוכן תפילות</strong> — fr/ru/es/ar</td>
+      <td><span class="badge badge-grey">backlog תוכן</span></td>
+      <td>עמודות DB קיימות. זו עבודת תוכן, לא קוד. מחוץ לסקופ.</td>
+    </tr>
+    <tr>
+      <td><strong>Push Notifications</strong></td>
+      <td><span class="badge badge-grey">backlog</span></td>
+      <td>"נחמד שיהיה" באפיון. מעבר ל-MVP.</td>
+    </tr>
+    <tr>
+      <td><strong>WhatsApp / Social Share</strong></td>
+      <td><span class="badge badge-grey">backlog</span></td>
+      <td>"נחמד שיהיה" באפיון. מעבר ל-MVP.</td>
+    </tr>
+    <tr>
+      <td><strong>Admin CMS</strong></td>
+      <td><span class="badge badge-grey">backlog</span></td>
+      <td>מעבר ל-MVP. תפילות מנוהלות ע"י seed + DB ישיר בינתיים.</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 12 — DEFINITION OF DONE -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header">
+    <div class="section-number green">✓</div>
+    <h2>הגדרת "סיום" — אפליקציה בפרודקשן</h2>
+  </div>
+
+  <div class="callout callout-green">
+    ✅ הפרויקט הושלם כשאדם שלא מכיר את הקוד יכול לעשות את כל הבאות מהתחלה לסוף ללא שגיאות:
+  </div>
+
+  <h3>מסלול בדיקה מקצה לקצה</h3>
+  <div class="flow">
+    <div class="step"><span class="box">פותח את <code>https://your-app.vercel.app</code></span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">רואה 5 תפילות בעברית (SSR — view-source = HTML מלא)</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">לוחץ "כניסה עם Google" → מחובר, כרטיס לא שמור</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">בוחר "תפילה לרפואה שלמה" → עמוד תפילה עם SEO</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">בוחר ₪72 → גיליון → שם תורם + שם לתפילה → Stripe → הצלחה</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">DB: <code>status="success", amount=7200, donor_name, prayer_name</code></span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">פרופיל → היסטוריית תרומות מציגה את התרומה</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">בוחר FR → UI מחליף לצרפתית מיד</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">מוריד אפליקציה → iOS + Android → אותה חוויה</span></div>
+  </div>
+
+  <h3>Checklist פרודקשן</h3>
+  <ul class="checklist">
+    <li>אתר web חי ב-Vercel עם SSR — <code>view-source</code> מציג HTML מלא עם SEO</li>
+    <li>תרומה אמיתית עם כרטיס live עוברת ונשמרת <code>status="success"</code></li>
+    <li>Stripe webhook פרודקשן מאומת ומעדכן אוטומטית</li>
+    <li>Firebase Auth Google Login עובד</li>
+    <li>כרטיס שמור → Quick Donate ב-2 קליקים</li>
+    <li>5 Quick Buttons פועלים עם כרטיס שמור</li>
+    <li>6 שפות + RTL לערבית ועברית</li>
+    <li>Geo-IP מטבע: VPN ארה"ב → $, ישראל → ₪</li>
+    <li>מסך פרופיל: פרטים + כרטיס + היסטוריה + התנתקות</li>
+    <li>חיפוש עם debounce בhe + en</li>
+    <li>כיבוי WiFi → banner "אין חיבור" → חזרה → נעלם</li>
+    <li>Rate limiting: מעל 10 תרומות/דקה → 429</li>
+    <li>EAS build מותקן על מכשיר iOS + Android אמיתי</li>
+    <li>CORS סגור לכתובות פרודקשן בלבד</li>
+    <li><code>ruff check .</code> עובר על Backend</li>
+    <li><code>npm run type-check</code> ו-<code>npm run lint</code> עוברים</li>
+    <li>כל ה-PRs עברו review + אישור שרה לפני מיזוג</li>
+  </ul>
+
+  <h3>סיכום — מה קיבלנו</h3>
+  <div class="before-after">
+    <div class="before-card">
+      <h4>❌ יום 0</h4>
+      <ul>
+        <li>Scaffold עם TODO בכל מקום</li>
+        <li>DB ריק, endpoints מחזירים []</li>
+        <li>אין deploy, אין auth, אין תשלום</li>
+        <li>רק עברית, לא מובייל</li>
+      </ul>
+    </div>
+    <div class="after-card">
+      <h4>✅ ספרינט 5 הושלם</h4>
+      <ul>
+        <li>אתר + אפליקציה iOS + Android חיים</li>
+        <li>Stripe live, Firebase Auth, Quick Donate</li>
+        <li>6 שפות, RTL, SEO מלא, geo-IP מטבע</li>
+        <li>SSR, Rate Limiting, webhook prod, CORS</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="text-align:center; padding: 40px 0; color: #999; font-size: 13px;">
+  Anu Banecha Donations · תוכנית 5 ספרינטים · 2026 · גרסה 1.0
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

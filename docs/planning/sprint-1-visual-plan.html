@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ספרינט 1 — בסיס + תפילות | Anu Banecha Donations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f5f0;
+    color: #222;
+    direction: rtl;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 70px 40px;
+    text-align: center;
+  }
+  .cover .emoji { font-size: 64px; margin-bottom: 20px; }
+  .cover h1 { font-size: 38px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
+  .cover .sprint-title {
+    font-size: 22px; opacity: 0.85; margin-bottom: 8px;
+    background: rgba(255,255,255,0.12); border-radius: 10px;
+    display: inline-block; padding: 6px 24px;
+  }
+  .cover .subtitle { font-size: 17px; opacity: 0.75; margin-bottom: 28px; }
+  .cover .meta {
+    display: inline-flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+    background: rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 28px;
+  }
+  .cover .meta span { font-size: 13px; opacity: 0.85; }
+  .cover .meta strong { opacity: 1; }
+
+  /* ── GOAL BANNER ── */
+  .goal-banner {
+    background: linear-gradient(90deg, #0f3460, #1a4a7a);
+    color: white;
+    padding: 24px 40px;
+    text-align: center;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .goal-banner strong { font-size: 19px; display: block; margin-bottom: 6px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1000px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: white; border-radius: 16px; padding: 28px 32px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07); margin-bottom: 40px;
+  }
+  .toc h2 { font-size: 18px; color: #0f3460; margin-bottom: 16px; border-bottom: 2px solid #e8e8e8; padding-bottom: 10px; }
+  .toc ol { padding-right: 20px; columns: 2; column-gap: 32px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: #0f3460; text-decoration: none; font-size: 14px; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── SECTIONS ── */
+  .section {
+    background: white; border-radius: 16px; padding: 32px 36px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07); margin-bottom: 28px;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px; padding-bottom: 14px;
+    border-bottom: 3px solid #f0f0f0;
+  }
+  .section-number {
+    background: #0f3460; color: white; border-radius: 50%;
+    width: 36px; height: 36px; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .section-number.blocker { background: #dc2626; }
+  .section-number.green { background: #16a34a; }
+  .section-number.prereq { background: #7c3aed; }
+  .section h2 { font-size: 22px; color: #0f3460; }
+  .section h3 { font-size: 17px; color: #1a1a2e; margin: 22px 0 10px; padding-right: 12px; border-right: 4px solid #0f3460; }
+  .section h4 { font-size: 15px; color: #444; margin: 16px 0 8px; font-weight: 600; }
+  .section p { margin-bottom: 12px; color: #333; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th { background: #0f3460; color: white; padding: 10px 14px; text-align: right; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  tr:nth-child(even) { background: #f8f9ff; }
+  tr:hover { background: #f0f4ff; }
+
+  /* ── CODE ── */
+  pre {
+    background: #1e1e2e; color: #cdd6f4; border-radius: 10px;
+    padding: 18px 20px; margin: 14px 0; overflow-x: auto;
+    font-size: 13px; font-family: 'Courier New', monospace; line-height: 1.5;
+    direction: ltr; text-align: left;
+  }
+  code {
+    background: #f0f4ff; color: #0f3460; padding: 2px 6px;
+    border-radius: 4px; font-size: 13px; font-family: 'Courier New', monospace;
+  }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin: 2px;
+  }
+  .badge-green  { background: #d4edda; color: #155724; }
+  .badge-red    { background: #f8d7da; color: #721c24; }
+  .badge-blue   { background: #d1ecf1; color: #0c5460; }
+  .badge-orange { background: #fff3cd; color: #856404; }
+  .badge-purple { background: #e8d5f5; color: #6a0dad; }
+  .badge-grey   { background: #e9ecef; color: #495057; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+    border-right: 5px solid; font-size: 14px;
+  }
+  .callout-blue   { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+  .callout-green  { background: #f0fdf4; border-color: #22c55e; color: #166534; }
+  .callout-orange { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+  .callout-red    { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+  .callout-purple { background: #faf5ff; border-color: #a855f7; color: #581c87; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    background: #f8f9ff; border-radius: 10px; padding: 20px;
+    margin: 14px 0; font-family: 'Courier New', monospace;
+    font-size: 13px; color: #222; direction: rtl; text-align: right;
+    line-height: 2;
+  }
+  .flow .arrow { color: #0f3460; font-weight: bold; font-size: 16px; }
+  .flow .box {
+    display: inline-block; background: white; border: 2px solid #0f3460;
+    border-radius: 8px; padding: 4px 14px; margin: 2px; font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
+  }
+  .flow .box-red   { border-color: #dc2626; }
+  .flow .box-green { border-color: #16a34a; }
+  .flow .box-purple { border-color: #7c3aed; }
+  .flow .step { text-align: center; margin: 6px 0; }
+  .flow .step-left { text-align: right; margin: 6px 0; padding-right: 20px; }
+
+  /* ── FILE TREE ── */
+  .filetree {
+    background: #1e1e2e; color: #a6e3a1; border-radius: 10px;
+    padding: 18px 20px; font-family: 'Courier New', monospace;
+    font-size: 13px; direction: ltr; text-align: left; line-height: 1.8;
+    margin: 14px 0; overflow-x: auto;
+  }
+  .filetree .folder { color: #89b4fa; }
+  .filetree .file   { color: #cdd6f4; }
+  .filetree .comment { color: #6c7086; }
+  .filetree .new    { color: #a6e3a1; font-weight: bold; }
+  .filetree .modify { color: #fab387; font-weight: bold; }
+  .filetree .exists { color: #6c7086; }
+
+  /* ── UI MOCKUP ── */
+  .mockup {
+    background: #1e1e2e; color: #cdd6f4; border-radius: 10px;
+    padding: 18px 20px; font-family: 'Courier New', monospace;
+    font-size: 13px; direction: ltr; text-align: left;
+    margin: 14px 0; line-height: 1.8;
+  }
+
+  /* ── TASK CARD ── */
+  .task-card {
+    border-radius: 12px; border: 2px solid #e0e8ff;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .task-card-header {
+    padding: 16px 22px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .task-card-header.color-blue   { background: #dbeafe; border-bottom: 2px solid #bfdbfe; }
+  .task-card-header.color-red    { background: #fee2e2; border-bottom: 2px solid #fecaca; }
+  .task-card-header.color-green  { background: #dcfce7; border-bottom: 2px solid #bbf7d0; }
+  .task-card-header.color-purple { background: #ede9fe; border-bottom: 2px solid #ddd6fe; }
+  .task-card-header.color-orange { background: #ffedd5; border-bottom: 2px solid #fed7aa; }
+  .task-card-body { padding: 20px 22px; }
+  .task-jira {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 3px 10px; border-radius: 6px; background: rgba(0,0,0,0.08);
+  }
+  .task-title { font-size: 18px; font-weight: 700; flex: 1; }
+  .task-effort { font-size: 13px; opacity: 0.75; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; padding: 0; margin: 10px 0; }
+  .checklist li {
+    padding: 6px 0 6px 28px; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+    position: relative;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐'; position: absolute; right: auto; left: 4px;
+    color: #0f3460; font-size: 16px;
+  }
+
+  /* ── DEPENDENCY GRAPH ── */
+  .dep-graph {
+    background: #f8f9ff; border-radius: 12px; padding: 24px;
+    margin: 14px 0; direction: ltr; text-align: center;
+  }
+  .dep-row { display: flex; justify-content: center; align-items: flex-start; gap: 0; margin: 0; }
+  .dep-node {
+    background: white; border: 2px solid #0f3460; border-radius: 10px;
+    padding: 10px 18px; font-size: 14px; font-weight: 600; color: #0f3460;
+    min-width: 180px; text-align: center; position: relative; margin: 4px;
+  }
+  .dep-node.blocker { border-color: #dc2626; color: #dc2626; background: #fff5f5; }
+  .dep-node.prereq  { border-color: #7c3aed; color: #7c3aed; background: #faf5ff; }
+  .dep-node.done    { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+  .dep-node small { display: block; font-size: 11px; font-weight: 400; opacity: 0.75; margin-top: 2px; }
+  .dep-arrow-v {
+    width: 2px; height: 28px; background: #94a3b8;
+    margin: 0 auto; position: relative;
+  }
+  .dep-arrow-v::after {
+    content: '▼'; position: absolute; bottom: -8px; left: -6px;
+    color: #94a3b8; font-size: 12px;
+  }
+  .dep-connector {
+    display: flex; justify-content: center; gap: 0;
+    position: relative; margin: 4px 0;
+  }
+
+  /* ── BEFORE/AFTER ── */
+  .before-after {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0;
+  }
+  .before-card, .after-card {
+    border-radius: 10px; padding: 18px 20px;
+  }
+  .before-card { background: #fff5f5; border: 2px solid #fecaca; }
+  .after-card  { background: #f0fdf4; border: 2px solid #bbf7d0; }
+  .before-card h4 { color: #991b1b; margin-bottom: 10px; }
+  .after-card h4  { color: #166534; margin-bottom: 10px; }
+  .before-card ul, .after-card ul { padding-right: 18px; font-size: 14px; }
+  .before-card li, .after-card li { margin-bottom: 6px; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding: 0; margin: 20px 0; }
+  .timeline-item {
+    display: flex; gap: 16px; margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .timeline-dot {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white;
+    margin-top: 2px;
+  }
+  .timeline-dot.blue   { background: #0f3460; }
+  .timeline-dot.red    { background: #dc2626; }
+  .timeline-dot.green  { background: #16a34a; }
+  .timeline-dot.purple { background: #7c3aed; }
+  .timeline-dot.orange { background: #d97706; }
+  .timeline-content { flex: 1; }
+  .timeline-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-content p  { font-size: 14px; color: #555; margin: 0; }
+
+  /* ── DELIVERABLE GRID ── */
+  .deliverable-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin: 14px 0;
+  }
+  .deliverable-card {
+    background: #f8f9ff; border: 2px solid #e0e8ff; border-radius: 12px;
+    padding: 16px; transition: border-color 0.2s;
+  }
+  .deliverable-card:hover { border-color: #0f3460; }
+  .deliverable-card .layer { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; }
+  .deliverable-card .name  { font-size: 15px; font-weight: 700; color: #0f3460; margin: 4px 0; }
+  .deliverable-card .desc  { font-size: 12px; color: #555; }
+
+  /* ── SYNC POINT ── */
+  .sync-box {
+    background: #fefce8; border: 2px solid #fde047; border-radius: 10px;
+    padding: 16px 20px; margin: 12px 0; font-size: 14px;
+  }
+  .sync-box strong { color: #713f12; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 600px) {
+    .cover h1 { font-size: 26px; }
+    .toc ol { columns: 1; }
+    .section { padding: 20px; }
+    .before-after { grid-template-columns: 1fr; }
+    .deliverable-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="emoji">🏗️</div>
+  <h1>ספרינט 1</h1>
+  <div class="sprint-title">בסיס + תפילות</div>
+  <div class="subtitle">Anu Banecha Donations — תוכנית ויזואלית לג'וניורות</div>
+  <div class="meta">
+    <span>📅 <strong>שבועות 1–2</strong></span>
+    <span>👩‍💻 <strong>2 ג'וניורות</strong></span>
+    <span>🎯 <strong>6 משימות</strong></span>
+    <span>🏷️ <strong>ABD-5 → ABD-10</strong></span>
+    <span>✅ <strong>מטרה: רשימת תפילות חיה</strong></span>
+  </div>
+</div>
+
+<!-- GOAL BANNER -->
+<div class="goal-banner">
+  <strong>🎯 מטרת הספרינט</strong>
+  PostgreSQL רץ מקומית, 5 תפילות בעברית ב-DB, ה-API מחזיר נתונים אמיתיים, והאפליקציה מציגה את רשימת התפילות עם ניווט לעמוד תפילה שמציג כפתורי תרומה סטטיים.
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<div class="toc">
+  <h2>📋 תוכן עניינים</h2>
+  <ol>
+    <li><a href="#s1">מה קיים ↔ מה ייבנה</a></li>
+    <li><a href="#s2">גרף תלויות — סדר עבודה</a></li>
+    <li><a href="#s3">ציר זמן — 2 שבועות</a></li>
+    <li><a href="#s4">מה נוצר בסוף הספרינט</a></li>
+    <li><a href="#s5">Prereq — הכנת סביבת פיתוח</a></li>
+    <li><a href="#s6">F2 🚨 BLOCKER — Migration + Seed</a></li>
+    <li><a href="#s7">F3 — Prayers API Backend</a></li>
+    <li><a href="#s8">F4 — App Foundation (_layout)</a></li>
+    <li><a href="#s9">F5 — Home Screen: רשימת תפילות</a></li>
+    <li><a href="#s10">F6 — Prayer Page + DonationWidget</a></li>
+    <li><a href="#s11">נקודות סנכרון</a></li>
+    <li><a href="#s12">ה-App בסוף הספרינט</a></li>
+    <li><a href="#s13">הגדרת "סיום"</a></li>
+  </ol>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 1 — BEFORE / AFTER -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>מה קיים ↔ מה ייבנה</h2>
+  </div>
+
+  <div class="callout callout-blue">
+    ה-Scaffold כבר מכיל הרבה קוד — <strong>אל תכתבו מחדש</strong> דברים שקיימים. המשימות של הספרינט ממלאות פערים ספציפיים מאוד.
+  </div>
+
+  <h3>Backend — מה קיים vs מה ספרינט 1 מוסיף</h3>
+  <table>
+    <tr><th>קובץ / רכיב</th><th>מצב עכשיו</th><th>מה ספרינט 1 עושה</th></tr>
+    <tr><td><code>main.py</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים</td></tr>
+    <tr><td><code>models/models.py</code></td><td><span class="badge badge-orange">⚠️ חסר עמודה</span></td><td>F2: מוסיפות <code>prayer_name</code> ל-Donation</td></tr>
+    <tr><td><code>schemas/schemas.py</code></td><td><span class="badge badge-orange">⚠️ PrayerResponse חלקי</span></td><td>F3: מרחיבות PrayerResponse ל-8 שדות</td></tr>
+    <tr><td><code>alembic/versions/</code></td><td><span class="badge badge-red">❌ ריק</span></td><td>F2: יוצרות migration ראשוני — כל 6 טבלאות</td></tr>
+    <tr><td><code>scripts/seed.py</code></td><td><span class="badge badge-red">❌ לא קיים</span></td><td>F2: כותבות seed עם 5 קטגוריות + 5 תפילות</td></tr>
+    <tr><td><code>services/prayer_service.py</code></td><td><span class="badge badge-red">❌ NotImplementedError</span></td><td>F3: מממשות 4 פונקציות + helper <code>_localize</code></td></tr>
+    <tr><td><code>routers/prayers.py</code></td><td><span class="badge badge-red">❌ מחזיר רשימות ריקות</span></td><td>F3: מחברות ל-service, 4 endpoints אמיתיים</td></tr>
+    <tr><td><code>middleware/auth.py</code></td><td><span class="badge badge-grey">🔜 ספרינט 3</span></td><td>לא נוגעים</td></tr>
+    <tr><td><code>services/stripe_service.py</code></td><td><span class="badge badge-grey">🔜 ספרינט 2</span></td><td>לא נוגעים</td></tr>
+  </table>
+
+  <h3>Frontend — מה קיים vs מה ספרינט 1 מוסיף</h3>
+  <table>
+    <tr><th>קובץ / רכיב</th><th>מצב עכשיו</th><th>מה ספרינט 1 עושה</th></tr>
+    <tr><td><code>services/api.ts</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים — קומפוננטת דוגמא</td></tr>
+    <tr><td><code>store/authStore.ts</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים — קומפוננטת דוגמא</td></tr>
+    <tr><td><code>store/donationStore.ts</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים — F6 קוראת לו</td></tr>
+    <tr><td><code>constants/*</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים</td></tr>
+    <tr><td><code>types/*</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים</td></tr>
+    <tr><td><code>components/PrayerCard/</code></td><td><span class="badge badge-green">✅ מלא</span></td><td>לא נוגעים — קומפוננטת דוגמא</td></tr>
+    <tr><td><code>app/_layout.tsx</code></td><td><span class="badge badge-orange">⚠️ חסרות 3 שורות</span></td><td>F4: מוסיפות signInAnon + StripeProvider + useAuth</td></tr>
+    <tr><td><code>hooks/usePrayer.ts</code></td><td><span class="badge badge-red">❌ stub ריק</span></td><td>F5: ממלאות usePrayers() | F6: ממלאות usePrayer(slug)</td></tr>
+    <tr><td><code>app/(tabs)/index.tsx</code></td><td><span class="badge badge-orange">⚠️ TODO ברשימה</span></td><td>F5: FlatList עם PrayerCard + loading/error</td></tr>
+    <tr><td><code>app/prayer/[slug].tsx</code></td><td><span class="badge badge-orange">⚠️ חסר not-found + polish</span></td><td>F6: מצב not-found, layout מסודר</td></tr>
+    <tr><td><code>components/DonationWidget/</code></td><td><span class="badge badge-red">❌ TODO stub</span></td><td>F6: כפתורי tier עם highlight, כפתור "תרום" ריק</td></tr>
+    <tr><td><code>components/DonationBottomSheet/</code></td><td><span class="badge badge-grey">🔜 ספרינט 2</span></td><td>לא נוגעים</td></tr>
+    <tr><td><code>components/QuickButtons/</code></td><td><span class="badge badge-grey">🔜 ספרינט 3</span></td><td>stub בלבד — לא קורסת</td></tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 2 — DEPENDENCY GRAPH -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <h2>גרף תלויות — סדר עבודה</h2>
+  </div>
+
+  <div class="callout callout-red">
+    🚨 <strong>כלל הברזל:</strong> F2 (Migration + Seed) חייבת להתמזג ל-main לפני שמתחילים F3. F3 חייבת להתמזג לפני שמסיימות F5. F5 לפני F6. לא מדלגות על הסדר הזה.
+  </div>
+
+  <div class="dep-graph">
+
+    <!-- Prereq -->
+    <div style="display:flex;justify-content:center;gap:20px;margin-bottom:0;">
+      <div class="dep-node prereq" style="min-width:220px;">
+        🟣 Prereq — Dev Setup
+        <small>ABD-5 · שתי המפתחות</small>
+      </div>
+    </div>
+
+    <!-- Arrow down + split -->
+    <div style="display:flex;justify-content:center;align-items:flex-start;gap:80px;margin:0 0 0 0;">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="dep-arrow-v"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="dep-arrow-v"></div>
+      </div>
+    </div>
+
+    <!-- F2 + F4 (parallel) -->
+    <div style="display:flex;justify-content:center;gap:40px;margin-bottom:0;">
+      <div class="dep-node blocker" style="min-width:220px;">
+        🚨 F2 — Migration + Seed
+        <small>ABD-6 · M · BLOCKER</small>
+      </div>
+      <div class="dep-node" style="min-width:220px;border-color:#7c3aed;color:#7c3aed;background:#faf5ff;">
+        🟣 F4 — App Foundation
+        <small>ABD-8 · S · עצמאית</small>
+      </div>
+    </div>
+
+    <!-- Arrow down from F2 -->
+    <div style="display:flex;justify-content:center;gap:40px;">
+      <div style="display:flex;flex-direction:column;align-items:center;width:220px;">
+        <div class="dep-arrow-v"></div>
+      </div>
+      <div style="width:220px;"></div>
+    </div>
+
+    <!-- F3 -->
+    <div style="display:flex;justify-content:center;gap:40px;margin-bottom:0;">
+      <div class="dep-node" style="min-width:220px;">
+        🔵 F3 — Prayers API
+        <small>ABD-7 · M · Backend</small>
+      </div>
+      <div style="width:220px;"></div>
+    </div>
+
+    <!-- Arrow down from F3 -->
+    <div style="display:flex;justify-content:center;gap:40px;">
+      <div style="display:flex;flex-direction:column;align-items:center;width:220px;">
+        <div class="dep-arrow-v"></div>
+      </div>
+      <div style="width:220px;"></div>
+    </div>
+
+    <!-- F5 (F3 + F4 both feed into F5) -->
+    <div style="display:flex;justify-content:center;gap:40px;margin-bottom:0;">
+      <div class="dep-node" style="min-width:460px;border-color:#0d9488;color:#0d9488;background:#f0fdfa;">
+        🟢 F5 — Home Screen: Prayer List
+        <small>ABD-9 · M · תלוי F3 + F4</small>
+      </div>
+    </div>
+
+    <!-- Arrow down from F5 -->
+    <div style="display:flex;justify-content:center;">
+      <div style="display:flex;flex-direction:column;align-items:center;width:460px;">
+        <div class="dep-arrow-v"></div>
+      </div>
+    </div>
+
+    <!-- F6 -->
+    <div style="display:flex;justify-content:center;">
+      <div class="dep-node" style="min-width:460px;border-color:#0d9488;color:#0d9488;background:#f0fdfa;">
+        🟢 F6 — Prayer Page + DonationWidget
+        <small>ABD-10 · M · תלוי F5</small>
+      </div>
+    </div>
+
+  </div>
+
+  <h3>טבלת בחירת משימות — Self-Select</h3>
+  <table>
+    <tr><th>משימה</th><th>Jira</th><th>גודל</th><th>תלויה ב</th><th>מי יכולה לבחור</th></tr>
+    <tr>
+      <td>Prereq — Dev Setup</td><td>ABD-5</td><td><span class="badge badge-blue">S</span></td>
+      <td>—</td><td><span class="badge badge-purple">שתי המפתחות — חובה</span></td>
+    </tr>
+    <tr style="background:#fff5f5;">
+      <td><strong>🚨 F2 — Migration + Seed</strong></td><td>ABD-6</td><td><span class="badge badge-orange">M</span></td>
+      <td>Prereq</td><td><span class="badge badge-red">קחי ראשונה — gates הכל</span></td>
+    </tr>
+    <tr>
+      <td>F3 — Prayers API</td><td>ABD-7</td><td><span class="badge badge-orange">M</span></td>
+      <td>F2</td><td>זמינה לאחר מיזוג F2</td>
+    </tr>
+    <tr>
+      <td>F4 — App Foundation</td><td>ABD-8</td><td><span class="badge badge-blue">S</span></td>
+      <td>Prereq</td><td><span class="badge badge-green">עצמאית — תוכלי להתחיל מיד</span></td>
+    </tr>
+    <tr>
+      <td>F5 — Home Screen</td><td>ABD-9</td><td><span class="badge badge-orange">M</span></td>
+      <td>F3 + F4</td><td>UI ניתן לפתח עם mock data לפני F3</td>
+    </tr>
+    <tr>
+      <td>F6 — Prayer Page</td><td>ABD-10</td><td><span class="badge badge-orange">M</span></td>
+      <td>F5</td><td>זמינה לאחר מיזוג F5</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-green">
+    ✅ <strong>חלוקת עבודה מומלצת:</strong> מפתחת 1 לוקחת F2 → F3 (backend-first). מפתחת 2 לוקחת F4 → F5 עם mock data → F6. ב-Day 6 בערך F3 נמזג ו-F5 עובר ל-API אמיתי.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 3 — TIMELINE -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <h2>ציר זמן — 2 שבועות</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot purple">0</div>
+      <div class="timeline-content">
+        <h4>יום 0 — לפני שמתחילות</h4>
+        <p>שתי המפתחות מקיימות את Prereq: Docker עולה, Backend רץ, Frontend עולה, שתיהן מאשרות <code>GET /health → 200</code> ו-Expo web טוען. גם: שיחת 5 דקות על contract של <code>PrayerResponse ↔ LocalizedPrayer</code>.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot red">1–3</div>
+      <div class="timeline-content">
+        <h4>ימים 1–3 — F2 🚨 + F4</h4>
+        <p><strong>מפתחת 1:</strong> מוסיפה <code>prayer_name</code> ל-Donation model, מריצה Alembic autogenerate, בודקת את קובץ ה-migration, מריצה <code>upgrade head</code>, כותבת <code>seed.py</code> ומריצה אותו. 5 תפילות ב-DB. פותחת PR → review → מיזוג.</p>
+        <p><strong>מפתחת 2:</strong> עובדת על F4 — מוסיפה <code>signInAnon()</code> + <code>StripeProvider</code> + <code>useAuth()</code> ל-<code>_layout.tsx</code> (פחות מיום). אחרי זה מתחילה F5 עם mock data.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot blue">4–6</div>
+      <div class="timeline-content">
+        <h4>ימים 4–6 — F3 + F5</h4>
+        <p><strong>מפתחת 1:</strong> F3 — מרחיבה <code>PrayerResponse</code>, כותבת <code>_localize()</code> helper, מממשת 4 service functions, מחברת router. מאשרת: <code>GET /api/prayers → 5 תפילות</code>.</p>
+        <p><strong>מפתחת 2:</strong> F5 — מוסיפה <code>usePrayers()</code> hook, מחברת FlatList ל-index.tsx עם loading/error states. ברגע שF3 נמזג — מסירה mock ועוברת ל-API אמיתי.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot green">7–10</div>
+      <div class="timeline-content">
+        <h4>ימים 7–10 — F6 + בדיקות</h4>
+        <p>אחרי מיזוג F5: <strong>אחת מהמפתחות</strong> (או שתיהן יחד) עובדת על F6 — ממלאת <code>usePrayer(slug)</code>, מסיימת את עמוד התפילה, מממשת <code>DonationWidget</code> עם כפתורי tier + highlight.</p>
+        <p>בסוף שבוע 2: flow שלם מהבית → תפילה → כפתורי תרומה עובד. כל ה-PRs עברו review + אישור של שרה.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 4 — DELIVERABLES -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-number green">4</div>
+    <h2>מה נוצר בסוף הספרינט</h2>
+  </div>
+
+  <h3>קבצים חדשים שנכתבים מאפס</h3>
+  <div class="deliverable-grid">
+    <div class="deliverable-card">
+      <div class="layer">Backend · F2</div>
+      <div class="name">alembic/versions/xxxx_initial.py</div>
+      <div class="desc">migration ראשוני — יוצר 6 טבלאות כולל prayer_name</div>
+    </div>
+    <div class="deliverable-card">
+      <div class="layer">Backend · F2</div>
+      <div class="name">scripts/seed.py</div>
+      <div class="desc">seed: 5 קטגוריות + 5 תפילות בעברית ב-DB</div>
+    </div>
+  </div>
+
+  <h3>קבצים קיימים שמשתנים</h3>
+  <table>
+    <tr><th>קובץ</th><th>שינוי</th><th>מי</th></tr>
+    <tr><td><code>backend/app/models/models.py</code></td><td>שורה אחת: <code>prayer_name = Column(String, nullable=True)</code></td><td>F2</td></tr>
+    <tr><td><code>backend/app/schemas/schemas.py</code></td><td>PrayerResponse מורחב + prayer_name ב-DonationCreate</td><td>F2+F3</td></tr>
+    <tr><td><code>backend/app/services/prayer_service.py</code></td><td>4 functions + _localize helper (מ-NotImplementedError לקוד אמיתי)</td><td>F3</td></tr>
+    <tr><td><code>backend/app/routers/prayers.py</code></td><td>4 endpoints מחוברים לservice (מ-stub לעובד)</td><td>F3</td></tr>
+    <tr><td><code>prayers-app/app/_layout.tsx</code></td><td>signInAnon() + StripeProvider + useAuth() (3 הוספות קטנות)</td><td>F4</td></tr>
+    <tr><td><code>prayers-app/hooks/usePrayer.ts</code></td><td>usePrayers() נוסף + usePrayer(slug) ממומש</td><td>F5+F6</td></tr>
+    <tr><td><code>prayers-app/app/(tabs)/index.tsx</code></td><td>FlatList + LoadingSpinner + error state</td><td>F5</td></tr>
+    <tr><td><code>prayers-app/app/prayer/[slug].tsx</code></td><td>not-found state + layout polish</td><td>F6</td></tr>
+    <tr><td><code>prayers-app/components/DonationWidget/DonationWidget.tsx</code></td><td>tier buttons עם selection highlight + כפתור תרום (ריק)</td><td>F6</td></tr>
+    <tr><td><code>prayers-app/i18n/he.json</code></td><td>מפתחות: error.loading, prayer.not_found, common.back, donation.donate</td><td>F5+F6</td></tr>
+  </table>
+
+  <h3>מה שעובד בסוף הספרינט — end-to-end flow</h3>
+  <div class="flow">
+    <div class="step"><span class="box">🌐 פותחת את האפליקציה (web)</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">Firebase Anonymous Login 🔕 (ברקע, ללא UI)</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">📋 מסך הבית — רשימת 5 תפילות בעברית</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">לוחצת על "תפילה לרפואה שלמה"</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">📖 עמוד תפילה — כותרת + טקסט מלא</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">💰 DonationWidget — כפתורים: ₪18 / ₪36 / ₪72 / ₪180 / ₪360</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">לוחצת ₪72 → הכפתור מתהדר (highlighted)</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box box-red">לוחצת "תרום" → כלום (TODO Sprint 2) ✅ נורמלי</span></div>
+  </div>
+
+  <div class="callout callout-orange">
+    ⚠️ <strong>מה לא עובד בסוף הספרינט (בכוונה):</strong> תשלום אמיתי (Sprint 2), כפתורי Quick Actions (Sprint 3), LanguagePicker/RTL (Sprint 4), חיפוש (Sprint 5). זה OK — ספרינט 1 הוא בסיס.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 5 — PREREQ -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="task-card">
+    <div class="task-card-header color-purple">
+      <div class="task-jira">ABD-5</div>
+      <div class="task-title">🟣 Prereq — הכנת סביבת פיתוח</div>
+      <div class="task-effort">S · שתי המפתחות · לפני הכל</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="callout callout-purple">
+        זו <strong>לא משימה לבחירה</strong> — שתי המפתחות חייבות לסיים את זה לפני שמתחילים לפתח.
+      </div>
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני</h4>
+          <ul>
+            <li>Docker לא רץ / לא מותקן</li>
+            <li>לא נוצר .env מ-.env.example</li>
+            <li>אין Firebase service account JSON</li>
+            <li>האפליקציה לא עולה</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי</h4>
+          <ul>
+            <li><code>GET localhost:8000/health → 200</code></li>
+            <li><code>localhost:8000/docs</code> פתוח ועובד</li>
+            <li>Expo web רץ (<code>npx expo start → w</code>)</li>
+            <li>שתי המפתחות הראו זו לזו את /health</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Backend — שלבים</h4>
+      <pre>cd backend
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+# source .venv/bin/activate     # Mac/Linux
+pip install -r requirements.txt -r requirements-dev.txt
+
+cp .env.example .env            # ואז ממלאות:
+# DATABASE_URL=postgresql://user:password@localhost:5432/prayers_db
+# STRIPE_SECRET_KEY=sk_test_...
+# FIREBASE_CREDENTIALS_PATH=./firebase-service-account.json
+
+docker-compose up -d            # PostgreSQL על port 5432
+uvicorn app.main:app --reload   # Server על port 8000
+
+# בדיקה:
+curl http://localhost:8000/health   # → {"status": "ok"}</pre>
+
+      <h4>Frontend — שלבים</h4>
+      <pre>cd prayers-app
+npm install
+cp .env.example .env            # ואז ממלאות:
+# EXPO_PUBLIC_API_URL=http://localhost:8000
+# EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+# EXPO_PUBLIC_FIREBASE_API_KEY=...  (4 משתנים נוספים)
+
+npx expo start
+# → לוחצות w לפתוח web</pre>
+
+      <h4>⚠️ מלכודות נפוצות</h4>
+      <ul style="font-size:14px;padding-right:18px;">
+        <li>Firebase: מורידות <code>serviceAccountKey.json</code> מ-Firebase Console → שמות ב-<code>backend/firebase-service-account.json</code> → <strong>מוסיפות ל-.gitignore לפני כל commit</strong></li>
+        <li>Stripe: <code>sk_test_...</code> הולך ל-<code>backend/.env</code>. <code>pk_test_...</code> הולך ל-<code>prayers-app/.env</code>. לא לבלבל.</li>
+        <li><code>EXPO_PUBLIC_*</code> הולכים רק ל-<code>prayers-app/.env</code>, לא ל-<code>backend/.env</code></li>
+        <li>Docker Desktop חייב לרוץ לפני <code>docker-compose up</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 6 — F2 BLOCKER -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="task-card">
+    <div class="task-card-header color-red">
+      <div class="task-jira">ABD-6</div>
+      <div class="task-title">🚨 F2 — DB Migration + Seed (BLOCKER)</div>
+      <div class="task-effort">M · ~2–3 ימים · Gates F3, F5, F6</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="callout callout-red">
+        🚨 <strong>BLOCKER</strong> — בלי מיזוג של F2, אין טבלאות ב-DB → F3 לא יכולה להתחיל → F5 לא יכולה לסיים → F6 חסומה. קחי את זה <strong>ראשונה</strong>.
+      </div>
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני F2</h4>
+          <ul>
+            <li><code>alembic/versions/</code> ריק</li>
+            <li>אין טבלאות ב-PostgreSQL</li>
+            <li><code>prayer_name</code> חסר מ-Donation</li>
+            <li><code>seed.py</code> לא קיים</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי F2</h4>
+          <ul>
+            <li>6 טבלאות ב-DB (כולל <code>prayer_name</code>)</li>
+            <li>5 קטגוריות + 5 תפילות בעברית ב-DB</li>
+            <li><code>GET /api/prayers → []</code> (ריק, עד F3)</li>
+            <li><code>seed.py</code> אידמפוטנטי — בטוח לרוץ שוב</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>שלב 1 — הוספת prayer_name למודל</h4>
+      <p>פותחות <code>backend/app/models/models.py</code>, מוצאות את class <code>Donation</code> (שורה ~65). אחרי <code>donor_name</code>:</p>
+      <pre># backend/app/models/models.py — בתוך class Donation:
+prayer_name = Column(String, nullable=True)  # שם לתפילה — שונה מ-donor_name (שם לקבלה)</pre>
+
+      <h4>שלב 2 — הוספה ל-Schema</h4>
+      <pre># backend/app/schemas/schemas.py — בתוך DonationCreate:
+prayer_name: str | None = None</pre>
+
+      <h4>שלב 3 — Autogenerate migration</h4>
+      <pre>cd backend
+alembic revision --autogenerate -m "initial"
+# → נוצר backend/alembic/versions/xxxx_initial.py
+
+# ⚠️ פתחי את הקובץ שנוצר ובדקי:
+# ✅ op.create_table('prayers', ...)
+# ✅ op.create_table('donations', ...) — כולל prayer_name
+# ✅ 6 טבלאות: prayers, users, donations, categories, quick_buttons, recurring_donations
+# אם prayer_name חסר → מחקי את הקובץ, חזרי לשלב 1</pre>
+
+      <h4>שלב 4 — Apply migration</h4>
+      <pre>alembic upgrade head
+# → No errors
+
+# ואז בדיקה ב-psql (או pgAdmin):
+\dt   # → 6 טבלאות
+SELECT column_name FROM information_schema.columns WHERE table_name='donations';
+# → חייב להופיע: prayer_name</pre>
+
+      <h4>שלב 5 — כתיבת seed.py</h4>
+      <p>יוצרות <code>backend/scripts/seed.py</code> (לא קיים). מריצות <strong>מתוך</strong> תיקיית backend:</p>
+      <pre>cd backend
+python scripts/seed.py
+# → Categories ready: 5
+# → Prayers seeded: 5 new
+
+# בדיקה:
+SELECT COUNT(*) FROM prayers;     # → 5
+SELECT COUNT(*) FROM categories;  # → 5</pre>
+
+      <h4>✅ קריטריוני קבלה</h4>
+      <ul class="checklist">
+        <li><code>prayer_name = Column(String, nullable=True)</code> קיים ב-Donation model</li>
+        <li>קובץ migration קיים ב-<code>alembic/versions/</code> ואוּמת ידנית</li>
+        <li><code>alembic upgrade head</code> רץ ללא שגיאות</li>
+        <li><code>SELECT COUNT(*) FROM prayers → 5</code></li>
+        <li><code>SELECT COUNT(*) FROM categories → 5</code></li>
+        <li>הרצה כפולה של seed.py לא יוצרת כפילויות (אידמפוטנטי)</li>
+        <li>PR עבר review של המפתחת השנייה + אישור שרה</li>
+      </ul>
+
+      <div class="callout callout-orange">
+        ⚠️ <strong>מלכודת נפוצה:</strong> כשמריצות autogenerate, SQLAlchemy חייב להיות מחובר ל-DB (docker-compose up). אם <code>alembic</code> לא מוצא את המודלים — בדקי שה-venv פעיל ו-<code>sys.path</code> בـenv.py מכיל את <code>app</code>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 7 — F3 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="task-card">
+    <div class="task-card-header color-blue">
+      <div class="task-jira">ABD-7</div>
+      <div class="task-title">🔵 F3 — Prayers API Backend</div>
+      <div class="task-effort">M · ~2–3 ימים · תלוי F2</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני F3</h4>
+          <ul>
+            <li>service functions: <code>raise NotImplementedError</code></li>
+            <li>Router מחזיר <code>[]</code> ו-<code>{}</code> ריקים</li>
+            <li>PrayerResponse: רק id+slug</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי F3</h4>
+          <ul>
+            <li><code>GET /api/prayers?lang=he → 5 תפילות</code></li>
+            <li><code>GET /api/prayers/health → תפילה בודדת + view_count++</code></li>
+            <li><code>GET /api/prayers/search?q=רפואה → תוצאה</code></li>
+            <li><code>GET /api/prayers/category/health → תפילה</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Contract קריטי — Backend ↔ Frontend</h4>
+      <div class="callout callout-blue">
+        📋 <strong>לפני שמתחילות לבנות</strong> — שיחה של 5 דקות עם המפתחת שעובדת על F5. מאמתות שהשדות תואמים:
+      </div>
+      <table>
+        <tr><th>Backend PrayerResponse</th><th>Frontend LocalizedPrayer</th><th>מיפוי</th></tr>
+        <tr><td><code>id</code></td><td><code>id</code></td><td>str(prayer.id)</td></tr>
+        <tr><td><code>slug</code></td><td><code>slug</code></td><td>ישיר</td></tr>
+        <tr><td><code>title</code></td><td><code>title</code></td><td>מ-<code>title_{lang}</code></td></tr>
+        <tr><td><code>body</code></td><td><code>body</code></td><td>מ-<code>body_{lang}</code></td></tr>
+        <tr><td><code>seo_description</code></td><td><code>seoDescription</code></td><td>camelCase בצד frontend</td></tr>
+        <tr><td><code>seo_keywords</code></td><td><code>seoKeywords</code></td><td>camelCase בצד frontend</td></tr>
+        <tr><td><code>lang</code></td><td><code>lang</code></td><td>ישיר</td></tr>
+        <tr><td><code>category_id</code></td><td><code>categoryId</code></td><td>camelCase בצד frontend</td></tr>
+      </table>
+
+      <h4>שלב 1 — הרחבת PrayerResponse ב-schemas.py</h4>
+      <pre># backend/app/schemas/schemas.py
+class PrayerResponse(BaseModel):
+    id: str
+    slug: str
+    title: str | None = None
+    body: str | None = None
+    seo_description: str | None = None
+    seo_keywords: list[str] | None = None
+    lang: str = "he"
+    category_id: str | None = None
+    view_count: int = 0
+
+    model_config = ConfigDict(from_attributes=True)</pre>
+
+      <h4>שלב 2 — _localize helper ב-prayer_service.py</h4>
+      <pre># backend/app/services/prayer_service.py
+def _localize(prayer: PrayerModel, lang: str) -> PrayerResponse:
+    """Map Prayer ORM → PrayerResponse for a given lang, with Hebrew fallback."""
+    supported = ["he", "en", "fr", "ru", "es", "ar"]
+    if lang not in supported:
+        lang = "he"
+
+    title   = getattr(prayer, f"title_{lang}", None)   or prayer.title_he
+    body    = getattr(prayer, f"body_{lang}", None)    or prayer.body_he
+    seo_d   = getattr(prayer, f"seo_description_{lang}", None) or prayer.seo_description_he
+    seo_kw  = getattr(prayer, f"seo_keywords_{lang}", None)    or prayer.seo_keywords_he or []
+
+    return PrayerResponse(
+        id=str(prayer.id),
+        slug=prayer.slug,
+        title=title, body=body,
+        seo_description=seo_d, seo_keywords=seo_kw,
+        lang=lang,
+        category_id=str(prayer.category_id) if prayer.category_id else None,
+        view_count=prayer.view_count,
+    )</pre>
+
+      <h4>שלב 3 — 4 service functions</h4>
+      <pre># list_prayers
+def list_prayers(db, lang="he"):
+    prayers = db.query(PrayerModel).filter(PrayerModel.is_active == True).all()
+    return [_localize(p, lang) for p in prayers]
+
+# get_prayer_by_slug — מגדיל view_count!
+def get_prayer_by_slug(db, slug, lang="he"):
+    prayer = db.query(PrayerModel).filter(
+        PrayerModel.slug == slug, PrayerModel.is_active == True
+    ).first()
+    if not prayer:
+        raise HTTPException(status_code=404, detail="Prayer not found")
+    prayer.view_count += 1
+    db.commit()
+    return _localize(prayer, lang)
+
+# list_by_category
+def list_by_category(db, category, lang="he"):
+    prayers = (db.query(PrayerModel)
+        .join(Category, PrayerModel.category_id == Category.id)
+        .filter(Category.slug == category, PrayerModel.is_active == True).all())
+    return [_localize(p, lang) for p in prayers]
+
+# search_prayers
+def search_prayers(db, q, lang="he"):
+    title_col = getattr(PrayerModel, f"title_{lang}")
+    body_col  = getattr(PrayerModel, f"body_{lang}")
+    prayers = (db.query(PrayerModel)
+        .filter(PrayerModel.is_active == True,
+                (title_col.ilike(f"%{q}%") | body_col.ilike(f"%{q}%"))).all())
+    return [_localize(p, lang) for p in prayers]</pre>
+
+      <h4>שלב 4 — Router (סדר חשוב!)</h4>
+      <pre># backend/app/routers/prayers.py
+# ⚠️ סדר חשוב: /search ו-/category/{cat} חייבים לפני /{slug}
+# אחרת FastAPI יתפוס "search" כ-slug!
+
+@router.get("/", response_model=list[PrayerResponse])
+def list_prayers(lang: str = "he", db = Depends(get_db)):
+    return prayer_service.list_prayers(db, lang)
+
+@router.get("/search", response_model=list[PrayerResponse])
+def search(q: str, lang: str = "he", db = Depends(get_db)):
+    return prayer_service.search_prayers(db, q, lang)
+
+@router.get("/category/{category}", response_model=list[PrayerResponse])
+def by_category(category: str, lang: str = "he", db = Depends(get_db)):
+    return prayer_service.list_by_category(db, category, lang)
+
+@router.get("/{slug}", response_model=PrayerResponse)
+def get_prayer(slug: str, lang: str = "he", db = Depends(get_db)):
+    return prayer_service.get_prayer_by_slug(db, slug, lang)</pre>
+
+      <h4>✅ קריטריוני קבלה</h4>
+      <ul class="checklist">
+        <li><code>GET /api/prayers?lang=he</code> → 5 תפילות עם כל 8 שדות</li>
+        <li><code>GET /api/prayers/health?lang=he</code> → <code>title: "תפילה לרפואה שלמה"</code></li>
+        <li>2 קריאות ל-<code>/api/prayers/health</code> → <code>view_count</code> עלה ב-DB</li>
+        <li><code>GET /api/prayers/search?q=רפואה</code> → מחזיר תפילת health</li>
+        <li><code>GET /api/prayers/category/health</code> → מחזיר תפילת health</li>
+        <li><code>GET /api/prayers/nonexistent</code> → 404 (לא 500)</li>
+        <li>Router לא מכיל לוגיקה עסקית — רק קריאה ל-service</li>
+        <li><code>ruff check .</code> עובר ללא שגיאות</li>
+        <li>PR עבר review + אישור שרה</li>
+      </ul>
+
+      <div class="callout callout-orange">
+        ⚠️ <strong>מלכודת:</strong> <code>getattr(PrayerModel, f"title_{lang}")</code> (על המחלקה) מחזיר SQLAlchemy column — עובד ב-<code>.ilike()</code>. <code>getattr(prayer_instance, f"title_{lang}")</code> (על אובייקט) מחזיר string — עובד ב-_localize. לא לבלבל.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 8 — F4 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="task-card">
+    <div class="task-card-header color-purple">
+      <div class="task-jira">ABD-8</div>
+      <div class="task-title">🟣 F4 — App Foundation: השלמת _layout.tsx</div>
+      <div class="task-effort">S · ~1 יום · עצמאית (מקבילה ל-F2)</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="callout callout-green">
+        ✅ <strong>עצמאית מ-F2/F3!</strong> ניתן לעבוד על זה במקביל לבניית ה-backend. גודל S — מספר שורות קוד.
+      </div>
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני F4</h4>
+          <ul>
+            <li>לא מתבצע Firebase anonymous login</li>
+            <li>StripeProvider לא עוטף את ה-navigator</li>
+            <li><code>useAuth()</code> לא נקרא</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי F4</h4>
+          <ul>
+            <li>Firebase Console מציג user אנונימי חדש</li>
+            <li>StripeProvider עוטף את השורש</li>
+            <li>האפליקציה נפתחת ללא קריסות</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>3 שינויים ב-_layout.tsx</h4>
+
+      <p><strong>1. הוסיפי import:</strong></p>
+      <pre>import { signInAnon } from '@/services/firebase';
+import { StripeProvider } from '@stripe/stripe-react-native';
+import { useAuth } from '@/hooks/useAuth';</pre>
+
+      <p><strong>2. הוסיפי signInAnon() ל-Promise.all:</strong></p>
+      <pre>Promise.all([
+  initI18n(),
+  initializeStripe(),
+  signInAnon(),   // ← הוסיפי שורה זו
+]).then(() => setReady(true));</pre>
+
+      <p><strong>3. עטפי עם StripeProvider + הוסיפי useAuth():</strong></p>
+      <pre>// בתוך function RootLayout():
+useAuth(); // stub — Sprint 3 ימלא
+
+// בתוך ה-return:
+&lt;StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''}&gt;
+  &lt;I18nextProvider i18n={i18n}&gt;
+    &lt;Stack screenOptions={{ headerShown: false }} /&gt;
+  &lt;/I18nextProvider&gt;
+&lt;/StripeProvider&gt;</pre>
+
+      <h4>✅ קריטריוני קבלה</h4>
+      <ul class="checklist">
+        <li>האפליקציה נפתחת ב-web ללא מסך שגיאה אדום</li>
+        <li>Firebase Console → Authentication → Users מציג user אנונימי חדש (תוך דקה)</li>
+        <li><code>npm run type-check</code> עובר</li>
+        <li><code>npm run lint</code> עובר</li>
+        <li>PR עבר review + אישור שרה</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 9 — F5 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="task-card">
+    <div class="task-card-header color-orange">
+      <div class="task-jira">ABD-9</div>
+      <div class="task-title">🟠 F5 — Home Screen: רשימת תפילות</div>
+      <div class="task-effort">M · ~2–3 ימים · תלוי F4 + F3 (UI = מוקדם, Integration = אחרי F3)</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="callout callout-blue">
+        💡 <strong>ניתן להתחיל לפני F3!</strong> פותחות F5 עם mock data בתוך <code>usePrayers()</code>. ברגע שF3 נמזג — מסירות את ה-mock ועוברות ל-API אמיתי. מסירות mock <strong>לפני</strong> פתיחת PR.
+      </div>
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני F5</h4>
+          <ul>
+            <li><code>usePrayers()</code> לא קיים</li>
+            <li>index.tsx מכיל TODO comment</li>
+            <li>מסך ריק / skeleton בלבד</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי F5</h4>
+          <ul>
+            <li>5 PrayerCards עם כותרות בעברית</li>
+            <li>LoadingSpinner בזמן loading</li>
+            <li>Error state בעברית אם API נופל</li>
+            <li>Tap על card → ניווט לעמוד תפילה</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>שלב 1 — usePrayers() ב-hooks/usePrayer.ts</h4>
+      <div class="callout callout-orange">
+        ⚠️ <strong>הוסיפי מתחת ל-stub הקיים</strong> של <code>usePrayer(slug)</code>. אל תמחקי אותו — F6 תצטרך אותו!
+      </div>
+      <pre>// hooks/usePrayer.ts — הוסיפי אחרי ה-stub הקיים:
+export function usePrayers(): {
+  prayers: LocalizedPrayer[];
+  isLoading: boolean;
+  error: string | null;
+} {
+  const { lang } = useLanguageStore();
+  const [prayers, setPrayers] = useState&lt;LocalizedPrayer[]&gt;([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    getPrayers()
+      .then((data) => setPrayers(data as LocalizedPrayer[]))
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, [lang]);
+
+  return { prayers, isLoading, error };
+}</pre>
+
+      <h4>שלב 2 — Wire ל-index.tsx</h4>
+      <pre>// app/(tabs)/index.tsx
+export default function HomeScreen() {
+  const { t } = useTranslation();
+  const { prayers, isLoading, error } = usePrayers();
+
+  if (isLoading) return &lt;LoadingSpinner /&gt;;
+  if (error)     return &lt;Text&gt;{t('error.loading')}&lt;/Text&gt;;
+
+  return (
+    &lt;View style={styles.screen}&gt;
+      &lt;AppDownloadBanner /&gt;     {/* stub — Sprint 5 */}
+      &lt;QuickButtons /&gt;          {/* stub — Sprint 3 */}
+      &lt;FlatList
+        data={prayers}
+        keyExtractor={(p) => p.slug}
+        renderItem={({ item }) =&gt; &lt;PrayerCard prayer={item} /&gt;}
+      /&gt;
+    &lt;/View&gt;
+  );
+}</pre>
+
+      <h4>שלב 3 — מפתח i18n חדש</h4>
+      <pre>// i18n/he.json — הוסיפי אם לא קיים:
+"error": {
+  "loading": "שגיאה בטעינה, נסה שוב"
+}</pre>
+
+      <h4>✅ קריטריוני קבלה</h4>
+      <ul class="checklist">
+        <li>מסך הבית מציג 5 PrayerCards עם כותרות בעברית</li>
+        <li>LoadingSpinner גלוי בזמן loading</li>
+        <li>Error state בעברית כשה-API לא רץ (לא מסך ריק)</li>
+        <li>Tap על card → ניווט ל-<code>/prayer/[slug]</code></li>
+        <li>אין hardcoded עברית ב-JSX — הכל דרך <code>t('key')</code></li>
+        <li><code>npm run lint</code> + <code>npm run type-check</code> עוברים</li>
+        <li>PR עבר review + אישור שרה</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 10 — F6 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="task-card">
+    <div class="task-card-header color-green">
+      <div class="task-jira">ABD-10</div>
+      <div class="task-title">🟢 F6 — Prayer Page + DonationWidget</div>
+      <div class="task-effort">M · ~2–3 ימים · תלוי F5</div>
+    </div>
+    <div class="task-card-body">
+
+      <div class="before-after">
+        <div class="before-card">
+          <h4>❌ לפני F6</h4>
+          <ul>
+            <li><code>usePrayer(slug)</code> תמיד מחזיר <code>null</code></li>
+            <li>DonationWidget: <code>&lt;Text&gt;TODO&lt;/Text&gt;</code></li>
+            <li>אין not-found state</li>
+          </ul>
+        </div>
+        <div class="after-card">
+          <h4>✅ אחרי F6</h4>
+          <ul>
+            <li>כותרת + טקסט תפילה מלא מה-API</li>
+            <li>5 כפתורי tier (₪18/₪36/₪72/₪180/₪360)</li>
+            <li>Tap על tier → highlight</li>
+            <li>"תפילה לא נמצאה" + כפתור חזרה</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>שלב 1 — מלאי את usePrayer(slug)</h4>
+      <div class="callout callout-orange">
+        ⚠️ <strong>אם F5 ו-F6 אצל מפתחות שונות</strong>: PR של F5 חייב להתמזג קודם — אחרת יהיה merge conflict על <code>usePrayer.ts</code>.
+      </div>
+      <pre>// hooks/usePrayer.ts — ממלאות את הגוף של usePrayer(slug):
+export function usePrayer(slug: string) {
+  const { lang } = useLanguageStore();
+  const [prayer, setPrayer] = useState&lt;LocalizedPrayer | null&gt;(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+
+  useEffect(() => {
+    if (!slug) return;
+    setIsLoading(true);
+    getPrayer(slug)
+      .then((data) => setPrayer(data as LocalizedPrayer))
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, [slug, lang]);
+
+  return { prayer, isLoading, error };
+}</pre>
+
+      <h4>שלב 2 — עמוד תפילה (app/prayer/[slug].tsx)</h4>
+      <pre>export default function PrayerScreen() {
+  const { slug } = useLocalSearchParams&lt;{ slug: string }&gt;();
+  const { prayer, isLoading, error } = usePrayer(slug);
+  const { t } = useTranslation();
+
+  if (isLoading) return &lt;LoadingSpinner /&gt;;
+
+  if (!prayer || error) return (
+    &lt;View style={styles.center}&gt;
+      &lt;Text&gt;{t('prayer.not_found')}&lt;/Text&gt;
+      &lt;Button label={t('common.back')} onPress={() =&gt; router.back()} /&gt;
+    &lt;/View&gt;
+  );
+
+  return (
+    &lt;View style={styles.screen}&gt;
+      &lt;ScrollView&gt;
+        &lt;Text style={styles.title}&gt;{prayer.title}&lt;/Text&gt;
+        &lt;Text style={styles.body}&gt;{prayer.body}&lt;/Text&gt;
+      &lt;/ScrollView&gt;
+      &lt;View style={styles.bottomBar}&gt;
+        &lt;DonationWidget prayerId={prayer.id} /&gt;
+      &lt;/View&gt;
+    &lt;/View&gt;
+  );
+}</pre>
+
+      <h4>שלב 3 — DonationWidget.tsx</h4>
+      <div class="callout callout-blue">
+        💡 <strong>לפני שכותבות:</strong> פתחו <code>constants/donations.ts</code> ווודאו את שמות השדות ב-DonationTier. פתחו <code>components/common/Button.tsx</code> ווודאו את שם ה-prop (<code>label</code> לא <code>text</code> לא <code>title</code>).
+      </div>
+      <pre>export function DonationWidget({ prayerId }: { prayerId: string }) {
+  const { t } = useTranslation();
+  const { currency } = useLanguageStore();
+  const { selectedTier, selectTier } = useDonationStore();
+
+  const tiers = DONATION_TIERS[currency] ?? DONATION_TIERS.ILS;
+
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;View style={styles.tiersRow}&gt;
+        {tiers.map((tier) =&gt; {
+          const isSelected = selectedTier?.amount === tier.amount;
+          return (
+            &lt;TouchableOpacity
+              key={tier.amount}
+              style={[styles.tierBtn, isSelected &amp;&amp; styles.selected]}
+              onPress={() =&gt; selectTier(tier)}
+            &gt;
+              &lt;Text style={[styles.tierLabel, isSelected &amp;&amp; styles.selectedLabel]}&gt;
+                {tier.display}
+              &lt;/Text&gt;
+            &lt;/TouchableOpacity&gt;
+          );
+        })}
+      &lt;/View&gt;
+
+      &lt;Button
+        label={t('donation.donate')}
+        onPress={() =&gt; {
+          // TODO Sprint 2: setSheetOpen(true)
+        }}
+      /&gt;
+    &lt;/View&gt;
+  );
+}</pre>
+
+      <h4>✅ קריטריוני קבלה</h4>
+      <ul class="checklist">
+        <li>ניווט: בית → tap card → עמוד תפילה עם כותרת + גוף בעברית</li>
+        <li>LoadingSpinner מוצג בזמן loading</li>
+        <li>Slug לא תקין → "תפילה לא נמצאה" + כפתור חזרה</li>
+        <li>5 כפתורי tier גלויים (₪18/₪36/₪72/₪180/₪360)</li>
+        <li>Tap על tier → כפתור מוהדר (highlighted), הקודם מבוטל</li>
+        <li>כפתור "תרום" גלוי אך ה-onPress ריק (comment: TODO Sprint 2)</li>
+        <li>אין hardcoded עברית — הכל דרך <code>t('key')</code></li>
+        <li><code>npm run lint</code> + <code>npm run type-check</code> עוברים</li>
+        <li>PR עבר review + אישור שרה</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 11 — SYNC POINTS -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header">
+    <div class="section-number">11</div>
+    <h2>נקודות סנכרון — מתי מדברות</h2>
+  </div>
+
+  <div class="sync-box">
+    <strong>📋 יום 0 (לפני שמתחילות F5/F6) — 5 דקות ביחד:</strong><br>
+    עברו על טבלת הקומפוננטות המשתמשות בספרינט זה שורה אחת שורה אחת. ודאו שאף אחת לא מתכננת לכתוב מחדש קומפוננטה שכבר קיימת.
+  </div>
+
+  <div class="sync-box">
+    <strong>📋 יום 0 — Contract PrayerResponse ↔ LocalizedPrayer:</strong><br>
+    מפתחת F3 משתפת את ה-PrayerResponse המורחב. מפתחת F5 מאשרת שזה תואם ל-<code>types/prayer.types.ts</code>. 5 דקות שיחה חוסכת יום debugging.
+  </div>
+
+  <div class="sync-box">
+    <strong>📋 לפני שמתחילות F5 ו-F6 — קומפוננטות משותפות:</strong><br>
+    שתי המפתחות בודקות יחד: <code>Button</code>, <code>LoadingSpinner</code>, <code>PrayerCard</code> — מה מלא, מה stub, מי משתמשת במה.
+  </div>
+
+  <div class="sync-box">
+    <strong>📋 ברגע שF3 נמזג — Integration Day:</strong><br>
+    מפתחת F5 מסירה את ה-mock מ-<code>usePrayers()</code> ועוברת ל-API אמיתי. מריצה end-to-end test. אם הכל עובד — commits, PR.
+  </div>
+
+  <h3>קומפוננטות משותפות בספרינט 1 — לא כותבות מחדש!</h3>
+  <table>
+    <tr><th>קומפוננטה</th><th>ייבוא</th><th>מצב</th><th>מי משתמשת</th></tr>
+    <tr>
+      <td><code>Button</code></td>
+      <td><code>@/components/common</code></td>
+      <td><span class="badge badge-green">✅ מלאה</span></td>
+      <td>F6 (not-found + DonationWidget)</td>
+    </tr>
+    <tr>
+      <td><code>LoadingSpinner</code></td>
+      <td><code>@/components/common</code></td>
+      <td><span class="badge badge-orange">⚠️ stub — עובד</span></td>
+      <td>F5 (בית) + F6 (עמוד תפילה)</td>
+    </tr>
+    <tr>
+      <td><code>PrayerCard</code></td>
+      <td><code>@/components/PrayerCard</code></td>
+      <td><span class="badge badge-green">✅ מלאה — קומפוננטת דוגמא</span></td>
+      <td>F5 (בית)</td>
+    </tr>
+    <tr>
+      <td><code>Input</code></td>
+      <td><code>@/components/common</code></td>
+      <td><span class="badge badge-grey">stub — לא נדרש</span></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><code>AppBottomSheet</code></td>
+      <td><code>@/components/common</code></td>
+      <td><span class="badge badge-grey">stub — ספרינט 2</span></td>
+      <td>—</td>
+    </tr>
+  </table>
+
+  <h3>⚠️ נקודת מיזוג קריטית — usePrayer.ts</h3>
+  <div class="callout callout-red">
+    שתי הפונקציות יושבות <strong>באותו קובץ</strong>:<br>
+    F5 מוסיפה <code>usePrayers()</code> — F6 ממלאת <code>usePrayer(slug)</code><br><br>
+    אם מפתחות שונות עובדות על F5 ו-F6: ה-PR של F5 <strong>חייב להתמזג לפני שמתחילות F6</strong>. אחרת merge conflict.
+  </div>
+
+  <h3>שער Review — כל PR</h3>
+  <div class="flow">
+    <div class="step"><span class="box">כותבת פותחת PR</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box">המפתחת השנייה עושה review</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box box-red">שרה מאשרת</span></div>
+    <div class="step"><span class="arrow">↓</span></div>
+    <div class="step"><span class="box box-green">מיזוג ל-main</span></div>
+  </div>
+  <div class="callout callout-red">🚫 <strong>אין merge ללא אישור שרה.</strong> ללא יוצא מן הכלל.</div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 12 — UI MOCKUP END STATE -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header">
+    <div class="section-number">12</div>
+    <h2>ה-App בסוף הספרינט — ככה זה ייראה</h2>
+  </div>
+
+  <h3>מסך הבית — רשימת תפילות</h3>
+  <div class="mockup">
+┌─────────────────────────────────────┐
+│  [AppDownloadBanner stub — Sprint 5]│
+├─────────────────────────────────────┤
+│  [QuickButtons stub — Sprint 3]     │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌─────────────────────────────┐    │
+│  │ 🏥 תפילה לרפואה שלמה       │    │
+│  │ רבונו של עולם, אתה...      │    │
+│  └─────────────────────────────┘    │
+│                                     │
+│  ┌─────────────────────────────┐    │
+│  │ ⭐ תפילה להצלחה              │    │
+│  │ ריבונו של עולם, בידך...    │    │
+│  └─────────────────────────────┘    │
+│                                     │
+│  ┌─────────────────────────────┐    │
+│  │ 📚 תפילה לפני מבחן          │    │
+│  │ אנא ה׳, פתח לבי...         │    │
+│  └─────────────────────────────┘    │
+│                                     │
+│  [תפילה לנסיעה בטוחה...]           │
+│  [תפילה לברכת ילדים...]            │
+│                                     │
+│  ←────────────── scroll ──────────→ │
+└─────────────────────────────────────┘
+  </div>
+
+  <h3>עמוד תפילה + DonationWidget</h3>
+  <div class="mockup">
+┌─────────────────────────────────────┐
+│  ← חזרה    תפילה לרפואה שלמה       │
+├─────────────────────────────────────┤
+│                                     │
+│  [ScrollView — RTL]                 │
+│                                     │
+│  תפילה לרפואה שלמה                 │
+│  ─────────────────────              │
+│                                     │
+│  רבונו של עולם, אתה רופא            │
+│  כל בשר ומפליא לעשות.               │
+│  בקשתי לפניך שתשלח רפואה           │
+│  שלמה מן השמים...                   │
+│                                     │
+│  [המשך גלילה...]                    │
+│                                     │
+├─────────────────────────────────────┤
+│  [Sticky Bottom — DonationWidget]   │
+│                                     │
+│   ₪360  ₪180  [₪72]  ₪36  ₪18      │
+│          ← RTL row →                │
+│                                     │
+│  ┌──────────────────────────────┐   │
+│  │          💙 תרום             │   │
+│  └──────────────────────────────┘   │
+│  (onPress = כלום — TODO Sprint 2)   │
+└─────────────────────────────────────┘
+  </div>
+  <p style="font-size:13px;color:#666;text-align:center;">[₪72] = highlighted (נבחר) | שאר הכפתורים = רגילים</p>
+
+  <h3>מצב "תפילה לא נמצאה" (slug שגוי)</h3>
+  <div class="mockup">
+┌─────────────────────────────────────┐
+│                                     │
+│          תפילה לא נמצאה            │
+│                                     │
+│       ┌──────────────────┐          │
+│       │     ← חזרה       │          │
+│       └──────────────────┘          │
+│                                     │
+└─────────────────────────────────────┘
+  </div>
+
+  <h3>מה <em>לא</em> עובד — ובכוונה</h3>
+  <table>
+    <tr><th>פיצ'ר</th><th>מצב בסוף Sprint 1</th><th>ספרינט</th></tr>
+    <tr><td>תשלום אמיתי (Stripe)</td><td><span class="badge badge-grey">כפתור "תרום" ריק</span></td><td>Sprint 2</td></tr>
+    <tr><td>DonationBottomSheet</td><td><span class="badge badge-grey">stub ריק</span></td><td>Sprint 2</td></tr>
+    <tr><td>Google/Apple Login</td><td><span class="badge badge-grey">Anonymous בלבד</span></td><td>Sprint 3</td></tr>
+    <tr><td>Quick Buttons (ממש)</td><td><span class="badge badge-grey">stub מציג Text</span></td><td>Sprint 3</td></tr>
+    <tr><td>LanguagePicker / RTL</td><td><span class="badge badge-grey">עברית בלבד</span></td><td>Sprint 4</td></tr>
+    <tr><td>SEO / SSR</td><td><span class="badge badge-grey">Client-side only</span></td><td>Sprint 5</td></tr>
+    <tr><td>EAS mobile build</td><td><span class="badge badge-grey">Web בלבד</span></td><td>Sprint 5</td></tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 13 — DEFINITION OF DONE -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="section-header">
+    <div class="section-number green">13</div>
+    <h2>הגדרת "סיום" — ספרינט 1 הושלם כשכל זה עובד</h2>
+  </div>
+
+  <div class="callout callout-green">
+    ✅ ספרינט 1 הושלם כשמישהי מהצוות יכולה לבצע את ה-flow הבא <strong>מהתחלה לסוף ללא שגיאות</strong>:
+  </div>
+
+  <ul class="checklist">
+    <li><code>docker-compose up -d && uvicorn app.main:app --reload</code> → Backend עולה</li>
+    <li><code>npx expo start → w</code> → האפליקציה נפתחת בדפדפן</li>
+    <li>Firebase Console מציג anonymous user חדש תוך דקה</li>
+    <li><code>GET localhost:8000/api/prayers</code> → JSON עם 5 תפילות עברית מלאות</li>
+    <li>מסך הבית מציג 5 PrayerCards עם כותרות בעברית</li>
+    <li>Tap על "תפילה לרפואה שלמה" → ניווט לעמוד תפילה</li>
+    <li>עמוד תפילה: כותרת + גוף מלא מ-API</li>
+    <li>DonationWidget: 5 כפתורי tier גלויים</li>
+    <li>Tap על ₪72 → הכפתור מוהדר</li>
+    <li>Tap על ₪36 → ₪72 מתבטל, ₪36 מוהדר</li>
+    <li>Tap "תרום" → כלום קורה (OK — Sprint 2)</li>
+    <li>Slug שגוי → "תפילה לא נמצאה" + כפתור חזרה</li>
+    <li>כל 6 ה-PRs עברו review של המפתחת השנייה</li>
+    <li>כל 6 ה-PRs קיבלו <strong>אישור שרה</strong> לפני מיזוג</li>
+    <li><code>npm run type-check</code> ו-<code>npm run lint</code> עוברים ללא שגיאות</li>
+    <li><code>ruff check .</code> עובר על Backend</li>
+  </ul>
+
+  <h3>🗺️ מה מחכה בספרינטים הבאים</h3>
+  <table>
+    <tr><th>ספרינט</th><th>נושא</th><th>עיקרי</th></tr>
+    <tr><td><span class="badge badge-blue">Sprint 2</span></td><td>תשלום</td><td>Stripe PaymentIntent, DonationBottomSheet, Webhook, Deploy ל-Render+Vercel</td></tr>
+    <tr><td><span class="badge badge-orange">Sprint 3</span></td><td>Auth + Quick</td><td>Firebase Auth middleware, Google/Apple Sign-In, כרטיס שמור, Quick Donate, QuickButtons</td></tr>
+    <tr><td><span class="badge badge-purple">Sprint 4</span></td><td>רב-לשוני</td><td>LanguagePicker, RTL/LTR, geo-IP currency, היסטוריית תרומות, Seed רב-שפתי</td></tr>
+    <tr><td><span class="badge badge-green">Sprint 5</span></td><td>פרודקשן</td><td>SSR+SEO, EAS mobile build, App Store/Play, rate limiting, AppDownloadBanner, חיפוש</td></tr>
+  </table>
+
+</div>
+
+<!-- FOOTER -->
+<div style="text-align:center; padding: 32px 0; color: #999; font-size: 13px;">
+  Anu Banecha Donations · ספרינט 1 · 2026 · גרסה 1.0
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
