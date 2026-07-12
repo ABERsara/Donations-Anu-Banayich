@@ -40,7 +40,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
             await donation_service.confirm_donation(db, payment_intent_id)
         except HTTPException as e:
             if e.status_code == 404:
-                logger.warning(f"Donation not found for payment_intent_id={payment_intent_id}")
+                logger.warning("Donation not found for payment_intent_id=%s", payment_intent_id)
             else:
                 raise
     elif event["type"] == "payment_intent.payment_failed":
@@ -49,7 +49,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
             await donation_service.fail_donation(db, payment_intent_id)
         except HTTPException as e:
             if e.status_code == 404:
-                logger.warning(f"Donation not found for payment_intent_id={payment_intent_id}")
+                logger.warning("Donation not found for payment_intent_id=%s", payment_intent_id)
             else:
                 raise
 
