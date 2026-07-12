@@ -43,3 +43,7 @@ Thumbs.db
 .idea/
 .vscode/
 *.tsbuildinfo
+
+# --- Claude Code ---
+.claude/
+.mcp.json
