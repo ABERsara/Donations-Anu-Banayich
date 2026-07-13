@@ -1,10 +1,4 @@
 /**
- * TODO: לממש — flow תרומה מלא:
- * 1. POST /api/donations/initiate → מקבל clientSecret
- * 2. פתיחת Stripe Payment Sheet
- * 3. POST /api/donations/confirm → שמירה ב-DB
- * 4. עדכון donationStore לSuccess
- *
  * quick donate (כרטיס שמור):
  * POST /api/donations/quick (צריך auth token)
  */
@@ -12,15 +6,12 @@ import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
 import { openPaymentSheet } from '@/services/stripe';
 import { initiateDonation as apiInitiateDonation, confirmDonation } from '@/services/api';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants/donations';
-interface InitiateResponse {
-  client_secret: string;
-  payment_intent_id: string;
-}
 
 export function useDonation() {
   const {
-    donorName,
     prayerName,
+    currency,
+    donorName,
     isProcessing,
     isSuccess,
     error,
@@ -34,14 +25,15 @@ export function useDonation() {
     setProcessing(true);
     setError(null);
     try {
-      const data = (await apiInitiateDonation({
-        prayer_id: prayerId,
+      const data = await apiInitiateDonation({
+        prayerId,
         amount,
-        donor_name: donorName,
-        prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
-      })) as InitiateResponse;
+        currency,
+        donorName,
+        prayerName: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+      });
 
-      const succeeded = await openPaymentSheet(data.client_secret);
+      const succeeded = await openPaymentSheet(data.clientSecret);
       if (!succeeded) {
         setError('התשלום בוטל או נכשל');
         setProcessing(false);
@@ -49,7 +41,7 @@ export function useDonation() {
       }
 
       await confirmDonation({
-        payment_intent_id: data.payment_intent_id,
+        paymentIntentId: data.paymentIntentId,
       });
 
       setSuccess(true);
@@ -61,9 +53,7 @@ export function useDonation() {
     }
   };
 
-  const quickDonate = async (_prayerId: string, _quickButtonSlug: string) => {
-    // מחוץ לטווח המשימה הנוכחית
-  };
+  const quickDonate = async (_prayerId: string, _quickButtonSlug: string) => {};
   return {
     initiateDonation,
     quickDonate,

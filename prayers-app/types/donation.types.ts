@@ -52,6 +52,7 @@ export interface InitiateDonationPayload {
   currency: Currency;
   donorName: string;
   donorNote?: string;
+  prayerName?: string;
   saveCard?: boolean;
   quickButtonSlug?: string;
 }
@@ -60,4 +61,13 @@ export interface InitiateDonationPayload {
 export interface InitiateDonationResponse {
   clientSecret: string;
   paymentIntentId: string;
+}
+/** Payload לאישור תשלום */
+export interface ConfirmDonationPayload {
+  paymentIntentId: string;
+}
+
+/** תשובה מהשרת לאישור */
+export interface ConfirmDonationResponse {
+  status: DonationStatus;
 }

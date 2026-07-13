@@ -1,4 +1,10 @@
 import { API } from '@/constants/api';
+import {
+  ConfirmDonationPayload,
+  ConfirmDonationResponse,
+  InitiateDonationPayload,
+  InitiateDonationResponse,
+} from '@/types';
 
 interface RequestOptions extends RequestInit {
   token?: string;
@@ -32,11 +38,19 @@ export const searchPrayers = (q: string) =>
   apiFetch(`${API.PRAYERS_SEARCH}?q=${encodeURIComponent(q)}`);
 
 // ─── Donations ──────────────────────────────────────────────
-export const initiateDonation = (payload: unknown, token?: string) =>
-  apiFetch(API.DONATE_INITIATE, { method: 'POST', body: JSON.stringify(payload), token });
+export const initiateDonation = (payload: InitiateDonationPayload, token?: string) =>
+  apiFetch<InitiateDonationResponse>(API.DONATE_INITIATE, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    token,
+  });
 
-export const confirmDonation = (payload: unknown, token?: string) =>
-  apiFetch(API.DONATE_CONFIRM, { method: 'POST', body: JSON.stringify(payload), token });
+export const confirmDonation = (payload: ConfirmDonationPayload, token?: string) =>
+  apiFetch<ConfirmDonationResponse>(API.DONATE_CONFIRM, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    token,
+  });
 
 export const quickDonate = (payload: unknown, token: string) =>
   apiFetch(API.DONATE_QUICK, { method: 'POST', body: JSON.stringify(payload), token });
