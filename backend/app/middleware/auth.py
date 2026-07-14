@@ -3,32 +3,39 @@ Firebase Token Verification Middleware
 TODO: לאתחל firebase-admin ב-main.py לפני שימוש
 """
 
-from fastapi import Header, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
+from firebase_admin import auth as firebase_auth
+from sqlalchemy.orm import Session
 
-# import firebase_admin
-# from firebase_admin import auth as firebase_auth
+from app.database import get_db
+from app.services import user_service
 
 
-async def verify_firebase_token(authorization: str = Header(...)):
-    """
-    Dependency — מאמתת Bearer token מ-Firebase.
-    שימוש: user = Depends(verify_firebase_token)
-
-    TODO:
-    1. חלץ token מ-"Bearer <token>"
-    2. firebase_auth.verify_id_token(token)
-    3. החזר uid
-    """
-    # TODO: לממש
+async def verify_firebase_token(
+    authorization: str = Header(default=""), db: Session = Depends(get_db)
+):
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    # token = authorization.split("Bearer ")[1]
-    # decoded = firebase_auth.verify_id_token(token)
-    # return decoded["uid"]
-    raise HTTPException(status_code=501, detail="Auth not implemented yet")
+    token = authorization.split("Bearer ")[1]
+    try:
+        decoded_token = firebase_auth.verify_id_token(token)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
+        ) from e
+    uid = decoded_token["uid"]
+    email = decoded_token.get("email")
+    user = user_service.get_or_create_user(db, uid, email)
+    return user
 
 
-async def optional_firebase_token(authorization: str = Header(default="")):
-    """כמו verify_firebase_token אבל מחזיר None אם אין token (ל-anonymous donations)"""
-    # TODO: לממש
-    return None
+async def optional_firebase_token(
+    authorization: str = Header(default=""), db: Session = Depends(get_db)
+):
+    if not authorization:
+        return None
+
+    try:
+        return await verify_firebase_token(authorization=authorization, db=db)
+    except HTTPException:
+        return None

@@ -3,15 +3,14 @@
 מבנה השכבות: router → schema → service → model (ראה CONTRIBUTING.md).
 """
 
-from dotenv import load_dotenv
+import firebase_admin
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from firebase_admin import credentials
 
 from app.core.config import settings
 from app.middleware.rate_limit import init_rate_limit
 from app.routers import donations, prayers, users, webhooks
-
-load_dotenv()
 
 app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 
@@ -28,10 +27,9 @@ app.add_middleware(
 init_rate_limit(app)
 
 # ─── Firebase Admin ──────────────────────────────────────────
-# TODO (צוות הפרקטיקום): לאתחל firebase-admin עם settings.FIREBASE_CREDENTIALS
-#   import firebase_admin
-#   from firebase_admin import credentials
-#   firebase_admin.initialize_app(credentials.Certificate(...))
+cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
+firebase_admin.initialize_app(cred)
+
 
 # ─── Routers ─────────────────────────────────────────────────
 app.include_router(prayers.router)
