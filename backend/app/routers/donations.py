@@ -29,10 +29,10 @@ router = APIRouter(prefix="/api/donations", tags=["donations"])
 @router.post("/initiate", response_model=DonationResponse)
 async def initiate_donation(
     body: DonationCreate,
-    uid=Depends(optional_firebase_token),
+    current_user=Depends(optional_firebase_token),
     db: Session = Depends(get_db),
 ):
-    return await donation_service.create_pending_donation(db, body, uid)
+    return await donation_service.create_pending_donation(db, body, current_user)
 
 
 @router.post("/confirm")

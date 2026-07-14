@@ -17,6 +17,7 @@ def get_or_create_user(db: Session, firebase_uid: str, email: str | None = None)
     user = User(firebase_uid=firebase_uid, email=email)
     db.add(user)
     db.commit()
+    db.refresh(user)
     return user
 
 

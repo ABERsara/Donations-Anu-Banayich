@@ -27,6 +27,12 @@ app.add_middleware(
 init_rate_limit(app)
 
 # ─── Firebase Admin ──────────────────────────────────────────
+if not settings.FIREBASE_CREDENTIALS_PATH:
+    raise RuntimeError(
+        "FIREBASE_CREDENTIALS_PATH is not set. "
+        "Add it to your .env file (see README for setup instructions)."
+    )
+
 cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
 firebase_admin.initialize_app(cred)
 

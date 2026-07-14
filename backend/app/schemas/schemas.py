@@ -85,7 +85,7 @@ class UserResponse(BaseModel):
     saved_card_last4: str | None = Field(None, alias="savedCardLast4")
     saved_card_brand: str | None = Field(None, alias="savedCardBrand")
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 class UserUpdate(BaseModel):
