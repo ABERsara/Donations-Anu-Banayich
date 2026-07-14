@@ -22,6 +22,8 @@
     "custom_amount": "הזן סכום",
     "donate": "תרום",
     "your_name": "שם המתפלל",
+    "name_required": "יש להזין שם",
+    "prayer_name":"שם לתפילה",
     "other_amount": "סכום אחר",
     "save_card": "שמור כרטיס לפעם הבאה",
     "confirm_donation": "אשר תרומה של {{amount}}",
