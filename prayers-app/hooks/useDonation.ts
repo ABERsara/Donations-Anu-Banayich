@@ -33,7 +33,7 @@ export function useDonation() {
         prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
       });
 
-      const succeeded = await openPaymentSheet(data.clientSecret);
+      const succeeded = await openPaymentSheet(data.client_secret);
       if (!succeeded) {
         setError('התשלום בוטל או נכשל');
         setProcessing(false);
@@ -41,7 +41,7 @@ export function useDonation() {
       }
 
       await confirmDonation({
-        paymentIntentId: data.paymentIntentId,
+        payment_intent_id: data.payment_intent_id,
       });
 
       setSuccess(true);

@@ -59,12 +59,12 @@ export interface InitiateDonationPayload {
 
 /** תשובה מהשרת */
 export interface InitiateDonationResponse {
-  clientSecret: string;
-  paymentIntentId: string;
+  client_secret: string;
+  payment_intent_id: string;
 }
 /** Payload לאישור תשלום */
 export interface ConfirmDonationPayload {
-  paymentIntentId: string;
+  payment_intent_id: string;
 }
 
 /** תשובה מהשרת לאישור */
