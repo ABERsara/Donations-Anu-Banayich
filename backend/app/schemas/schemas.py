@@ -76,16 +76,16 @@ class PrayerResponse(BaseModel):
 # ─── User ────────────────────────────────────────────────────
 class UserResponse(BaseModel):
     id: str
-    firebase_uid: str
+    firebase_uid: str = Field(alias="firebaseUid")
     email: EmailStr | None = None
-    display_name: str | None = None
-    preferred_lang: str = "he"
-    preferred_currency: str = "ILS"
-    has_saved_card: bool = False
-    saved_card_last4: str | None = None
-    saved_card_brand: str | None = None
+    display_name: str | None = Field(None, alias="displayName")
+    preferred_lang: str = Field(default="he", alias="preferredLang")
+    preferred_currency: str = Field(default="ILS", alias="preferredCurrency")
+    has_saved_card: bool = Field(default=False, alias="hasSavedCard")
+    saved_card_last4: str | None = Field(None, alias="savedCardLast4")
+    saved_card_brand: str | None = Field(None, alias="savedCardBrand")
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 class UserUpdate(BaseModel):

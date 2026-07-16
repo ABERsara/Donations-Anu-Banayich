@@ -21,7 +21,7 @@ class Settings:
 
     # ─── Firebase ────────────────────────────────────────────
     # נתיב ל-service-account.json או תוכן ה-JSON עצמו
-    FIREBASE_CREDENTIALS: str = os.getenv("FIREBASE_CREDENTIALS", "")
+    FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "")
 
     @property
     def cors_origins(self) -> list[str]:

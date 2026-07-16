@@ -16,12 +16,10 @@ from app.models.models import Donation, Prayer, User
 from app.services import stripe_service
 
 
-async def create_pending_donation(db: Session, data, user_uid: str | None = None):
+async def create_pending_donation(db: Session, data, current_user: User | None = None):
     user_id = None
-    if user_uid:
-        user = db.query(User).filter(User.firebase_uid == user_uid).first()
-        if user:
-            user_id = user.id
+    if current_user:
+        user_id = current_user.id
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
     except ValueError as e:
