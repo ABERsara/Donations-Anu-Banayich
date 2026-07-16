@@ -26,11 +26,11 @@ export function useDonation() {
     setError(null);
     try {
       const data = await apiInitiateDonation({
-        prayerId,
+        prayer_id: prayerId,
         amount,
         currency,
-        donorName,
-        prayerName: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+        donor_name: donorName,
+        prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
       });
 
       const succeeded = await openPaymentSheet(data.clientSecret);

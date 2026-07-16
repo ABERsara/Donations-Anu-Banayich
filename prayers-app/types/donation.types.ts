@@ -47,14 +47,14 @@ export interface RecurringDonation {
 
 /** Payload לשרת לפתיחת תשלום */
 export interface InitiateDonationPayload {
-  prayerId: string;
+  prayer_id: string;
   amount: number;
   currency: Currency;
-  donorName: string;
-  donorNote?: string;
-  prayerName?: string;
-  saveCard?: boolean;
-  quickButtonSlug?: string;
+  donor_name: string;
+  prayer_name?: string;
+  donor_note?: string;
+  save_card?: boolean;
+  quick_button_slug?: string;
 }
 
 /** תשובה מהשרת */
