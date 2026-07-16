@@ -35,6 +35,7 @@ async def optional_firebase_token(
         return None
 
     try:
-        return await verify_firebase_token(authorization=authorization, db=db)
+        uid, email = await verify_firebase_token(authorization=authorization)
+        return user_service.get_or_create_user(db, uid, email)
     except HTTPException:
         return None

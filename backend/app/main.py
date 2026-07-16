@@ -11,9 +11,9 @@ from firebase_admin import credentials
 
 load_dotenv()
 
-from app.core.config import settings
-from app.middleware.rate_limit import init_rate_limit
-from app.routers import donations, prayers, users, webhooks
+from app.core.config import settings  # noqa: E402
+from app.middleware.rate_limit import init_rate_limit  # noqa: E402
+from app.routers import donations, prayers, users, webhooks  # noqa: E402
 
 app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 
