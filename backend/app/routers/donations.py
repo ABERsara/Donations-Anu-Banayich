@@ -13,7 +13,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.middleware.auth import optional_firebase_token, verify_firebase_token
+from app.middleware.auth import get_current_user, optional_firebase_token
 from app.schemas.schemas import (
     DonationConfirm,
     DonationCreate,
@@ -38,7 +38,7 @@ async def initiate_donation(
 @router.post("/confirm")
 async def confirm_donation(
     body: DonationConfirm,
-    uid=Depends(optional_firebase_token),
+    current_user=Depends(optional_firebase_token),
     db: Session = Depends(get_db),
 ):
     return await donation_service.confirm_donation(db, body.payment_intent_id)
@@ -47,34 +47,34 @@ async def confirm_donation(
 @router.post("/quick")
 async def quick_donate(
     body: DonationCreate,
-    uid=Depends(verify_firebase_token),  # חובה — צריך כרטיס שמור
+    current_user=Depends(get_current_user),  # חובה — צריך כרטיס שמור
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.quick_donation(db, body, uid)
+    # TODO: donation_service.quick_donation(db, body, current_user)
     raise NotImplementedError
 
 
 @router.post("/recurring", response_model=RecurringDonationResponse)
 async def create_recurring_donation(
     body: RecurringDonationCreate,
-    uid=Depends(verify_firebase_token),
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.create_recurring(db, body, uid)
+    # TODO: donation_service.create_recurring(db, body, current_user)
     raise NotImplementedError
 
 
 @router.get("/history")
-def donation_history(uid=Depends(verify_firebase_token), db: Session = Depends(get_db)):
-    # TODO: donation_service.list_history(db, uid)
+def donation_history(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    # TODO: donation_service.list_history(db, current_user)
     return []
 
 
 @router.delete("/recurring/{recurring_id}")
 def cancel_recurring_donation(
     recurring_id: str,
-    uid=Depends(verify_firebase_token),
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.cancel_recurring(db, recurring_id, uid)
+    # TODO: donation_service.cancel_recurring(db, recurring_id, current_user)
     raise NotImplementedError

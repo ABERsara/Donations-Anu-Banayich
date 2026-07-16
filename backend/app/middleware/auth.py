@@ -23,7 +23,10 @@ async def verify_firebase_token(authorization: str = Header(default="")):
     return decoded_token["uid"], decoded_token.get("email")
 
 
-async def get_current_user(uid: str, email: str | None, db: Session = Depends(get_db)):
+async def get_current_user(
+    credentials: tuple = Depends(verify_firebase_token), db: Session = Depends(get_db)
+):
+    uid, email = credentials
     user = user_service.get_or_create_user(db, uid, email)
     return user
 
