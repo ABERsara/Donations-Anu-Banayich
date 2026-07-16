@@ -17,7 +17,9 @@ export async function initializeStripe() {
  * פותח את Stripe Payment Sheet
  * @param clientSecret — מתקבל מ-backend /api/donations/initiate
  */
-export async function openPaymentSheet(clientSecret: string): Promise<boolean> {
+export type PaymentSheetResult = 'success' | 'canceled' | 'failed';
+
+export async function openPaymentSheet(clientSecret: string): Promise<PaymentSheetResult> {
   // TODO: להגדיר setupIntent / customFlow לפי הצורך
   const { error: initError } = await initPaymentSheet({
     paymentIntentClientSecret: clientSecret,
@@ -25,14 +27,17 @@ export async function openPaymentSheet(clientSecret: string): Promise<boolean> {
   });
   if (initError) {
     console.warn('Stripe init error:', initError.message);
-    return false;
+    return 'failed';
   }
   const { error: presentError } = await presentPaymentSheet();
   if (presentError) {
-    console.warn('Stripe error:', presentError.message);
-    return false;
+    if (presentError.code === 'Canceled') {
+      return 'canceled';
+    }
+    console.warn('Stripe present error:', presentError.message);
+    return 'failed';
   }
-  return true;
+  return 'success';
 }
 
 // TODO: Apple Pay / Google Pay — להוסיף כשה-merchant account מאושר

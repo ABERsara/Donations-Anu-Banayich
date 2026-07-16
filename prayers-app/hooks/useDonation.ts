@@ -2,6 +2,8 @@
  * quick donate (כרטיס שמור):
  * POST /api/donations/quick (צריך auth token)
  */
+import { useTranslation } from 'react-i18next';
+
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
 import { openPaymentSheet } from '@/services/stripe';
 import { initiateDonation as apiInitiateDonation, confirmDonation } from '@/services/api';
@@ -20,6 +22,7 @@ export function useDonation() {
     setError,
   } = useDonationStore();
   const amount = useDonationStore(selectFinalAmount);
+  const { t } = useTranslation();
 
   const initiateDonation = async (prayerId: string) => {
     setProcessing(true);
@@ -33,9 +36,14 @@ export function useDonation() {
         prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
       });
 
-      const succeeded = await openPaymentSheet(data.client_secret);
-      if (!succeeded) {
-        setError('התשלום בוטל או נכשל');
+      const result = await openPaymentSheet(data.client_secret);
+      if (result === 'canceled') {
+        setProcessing(false);
+        return;
+      }
+
+      if (result === 'failed') {
+        setError(t('common.error'));
         setProcessing(false);
         return;
       }
@@ -47,7 +55,7 @@ export function useDonation() {
       setSuccess(true);
       setProcessing(false);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'אירעה שגיאה, נסה שוב';
+      const message = err instanceof Error ? err.message : t('common.error');
       setError(message);
       setProcessing(false);
     }
