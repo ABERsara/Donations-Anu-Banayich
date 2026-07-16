@@ -1,6 +1,5 @@
 """
 Firebase Token Verification Middleware
-TODO: לאתחל firebase-admin ב-main.py לפני שימוש
 """
 
 from fastapi import Depends, Header, HTTPException, status
@@ -11,9 +10,7 @@ from app.database import get_db
 from app.services import user_service
 
 
-async def verify_firebase_token(
-    authorization: str = Header(default=""), db: Session = Depends(get_db)
-):
+async def verify_firebase_token(authorization: str = Header(default="")):
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     token = authorization.split("Bearer ")[1]
@@ -23,8 +20,10 @@ async def verify_firebase_token(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
         ) from e
-    uid = decoded_token["uid"]
-    email = decoded_token.get("email")
+    return decoded_token["uid"], decoded_token.get("email")
+
+
+async def get_current_user(uid: str, email: str | None, db: Session = Depends(get_db)):
     user = user_service.get_or_create_user(db, uid, email)
     return user
 
