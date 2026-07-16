@@ -9,6 +9,7 @@ interface DonationStore {
 
   // שלב 2 — פרטי תורם
   donorName: string;
+  prayerName: string;
   saveCard: boolean;
 
   // סטטוס
@@ -21,6 +22,7 @@ interface DonationStore {
   setCustomAmount: (amount: number) => void;
   setCurrency: (currency: Currency) => void;
   setDonorName: (name: string) => void;
+  setPrayerName: (name: string) => void;
   setSaveCard: (v: boolean) => void;
   setProcessing: (v: boolean) => void;
   setSuccess: (v: boolean) => void;
@@ -33,6 +35,7 @@ const INITIAL: Partial<DonationStore> = {
   customAmount: null,
   currency: 'ILS',
   donorName: '',
+  prayerName: '',
   saveCard: false,
   isProcessing: false,
   isSuccess: false,
@@ -45,6 +48,7 @@ export const useDonationStore = create<DonationStore>((set) => ({
   setCustomAmount: (amount) => set({ customAmount: amount, selectedTier: null }),
   setCurrency: (currency) => set({ currency, selectedTier: null }),
   setDonorName: (name) => set({ donorName: name }),
+  setPrayerName: (name) => set({ prayerName: name }),
   setSaveCard: (v) => set({ saveCard: v }),
   setProcessing: (v) => set({ isProcessing: v }),
   setSuccess: (v) => set({ isSuccess: v }),
