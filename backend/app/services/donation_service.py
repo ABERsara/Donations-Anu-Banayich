@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
 from app.models.models import Donation, Prayer, User
+from app.schemas.schemas import QuickDonationResponse
 from app.services import stripe_service
 
 
@@ -78,9 +79,40 @@ async def fail_donation(db: Session, payment_intent_id: str):
     return {"status": "failed"}
 
 
-async def quick_donation(db: Session, data, user_uid: str):
-    """TODO: charge_saved_card למשתמש עם כרטיס שמור (2 קליקים)."""
-    raise NotImplementedError
+async def quick_donation(db: Session, data, current_user: User):
+    if not current_user.has_saved_card:
+        raise HTTPException(status_code=400, detail="No saved card")
+
+    try:
+        prayer_uuid = uuid.UUID(data.prayer_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid prayer_id format") from e
+    prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
+    if prayer is None:
+        raise HTTPException(status_code=404, detail="Prayer not found")
+
+    try:
+        stripe_result = await stripe_service.charge_saved_card(
+            customer_id=current_user.stripe_customer_id,
+            amount=data.amount,
+            currency=data.currency.value,
+        )
+    except stripe_sdk.error.StripeError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+
+    donation = Donation(
+        user_id=current_user.id,
+        prayer_id=prayer_uuid,
+        amount=data.amount,
+        currency=data.currency.value,
+        donor_name=data.donor_name,
+        status=DONATION_STATUS_SUCCESS,
+        stripe_payment_intent_id=stripe_result["payment_intent_id"],
+    )
+    db.add(donation)
+    db.commit()
+
+    return QuickDonationResponse(status="success", amount=data.amount)
 
 
 async def list_history(db: Session, user_uid: str):

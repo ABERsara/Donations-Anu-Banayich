@@ -32,8 +32,21 @@ async def create_payment_intent(amount: int, currency: str, customer_id: str | N
 
 
 async def charge_saved_card(customer_id: str, amount: int, currency: str):
-    """TODO: חיוב מיידי על payment_method שמור (Quick donation)."""
-    raise NotImplementedError
+    """חיוב מיידי על payment_method שמור (Quick donation) — off-session charge."""
+    # לא נבדק כאן — בהסתמך על default_payment_method מוגדר מראש ב-Stripe customer
+    intent = await asyncio.to_thread(
+        stripe.PaymentIntent.create,
+        amount=amount,
+        currency=currency.lower(),
+        customer=customer_id,
+        off_session=True,
+        confirm=True,
+    )
+
+    return {
+        "payment_intent_id": intent.id,
+        "status": intent.status,
+    }
 
 
 async def create_subscription(customer_id: str, amount: int, currency: str, day_of_month: int):
