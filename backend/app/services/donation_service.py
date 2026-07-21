@@ -28,13 +28,13 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
     try:
-        stripe_result = await stripe_service.create_payment_intent(
+        stripe_result = await stripe_service.create_donation_payment_intent(
             amount=data.amount,
             currency=data.currency.value,
             customer_id=None,
         )
     except stripe_sdk.error.StripeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail=str(e)) from e
 
     donation = Donation(
         user_id=user_id,
@@ -56,13 +56,35 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     }
 
 
-async def confirm_donation(db: Session, payment_intent_id: str):
+async def confirm_donation(
+    db: Session, payment_intent_id: str, save_card: bool = False, user_uid: str | None = None
+):
     donation = (
         db.query(Donation).filter(Donation.stripe_payment_intent_id == payment_intent_id).first()
     )
     if donation is None:
         raise HTTPException(status_code=404, detail="Donation not found")
+
     donation.status = DONATION_STATUS_SUCCESS
+
+    if save_card and user_uid:
+        user = db.query(User).filter(User.firebase_uid == user_uid).first()
+        try:
+            pm_result = await stripe_service.get_payment_method_from_intent(payment_intent_id)
+            customer_result = await stripe_service.create_or_get_customer(
+                user.stripe_customer_id, user.email
+            )
+            attach_result = await stripe_service.attach_payment_method(
+                pm_result["payment_method_id"], customer_result["customer_id"]
+            )
+        except stripe_sdk.error.StripeError as e:
+            raise HTTPException(status_code=502, detail=f"Failed to save card: {e}") from e
+
+        user.stripe_customer_id = customer_result["customer_id"]
+        user.saved_card_last4 = attach_result["last4"]
+        user.saved_card_brand = attach_result["brand"]
+        user.has_saved_card = True
+
     db.commit()
     return {"status": "success"}
 
