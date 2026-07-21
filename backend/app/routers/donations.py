@@ -18,6 +18,8 @@ from app.schemas.schemas import (
     DonationConfirm,
     DonationCreate,
     DonationResponse,
+    QuickDonationCreate,
+    QuickDonationResponse,
     RecurringDonationCreate,
     RecurringDonationResponse,
 )
@@ -44,14 +46,13 @@ async def confirm_donation(
     return await donation_service.confirm_donation(db, body.payment_intent_id)
 
 
-@router.post("/quick")
+@router.post("/quick", response_model=QuickDonationResponse)
 async def quick_donate(
-    body: DonationCreate,
+    body: QuickDonationCreate,
     current_user=Depends(get_current_user),  # חובה — צריך כרטיס שמור
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.quick_donation(db, body, current_user)
-    raise NotImplementedError
+    return await donation_service.quick_donation(db, body, current_user)
 
 
 @router.post("/recurring", response_model=RecurringDonationResponse)
