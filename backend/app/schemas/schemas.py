@@ -83,6 +83,7 @@ class UserResponse(BaseModel):
     display_name: str | None = Field(None, alias="displayName")
     preferred_lang: str = Field(default="he", alias="preferredLang")
     preferred_currency: str = Field(default="ILS", alias="preferredCurrency")
+    stripe_customer_id: str | None = Field(None, alias="stripeCustomerId")
     has_saved_card: bool = Field(default=False, alias="hasSavedCard")
     saved_card_last4: str | None = Field(None, alias="savedCardLast4")
     saved_card_brand: str | None = Field(None, alias="savedCardBrand")

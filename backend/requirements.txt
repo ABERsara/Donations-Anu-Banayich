@@ -8,3 +8,4 @@ python-dotenv==1.2.2
 stripe==15.2.1
 firebase-admin==7.4.0
 slowapi==0.1.10
+truststore==0.10.4

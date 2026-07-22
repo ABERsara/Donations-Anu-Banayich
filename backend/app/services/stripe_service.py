@@ -8,6 +8,7 @@ TODO (צוות הפרקטיקום): לממש מול ה-SDK (stripe==15.x) ו-set
 import asyncio
 
 import stripe
+from fastapi import HTTPException
 
 from app.core.config import settings
 
@@ -51,7 +52,7 @@ async def create_donation_payment_intent(
     }
 
 
-async def create_or_get_customer(existing_customer_id: str | None, email: str):
+async def create_or_get_customer(existing_customer_id: str | None, email: str | None):
     if existing_customer_id:
         customer = await asyncio.to_thread(stripe.Customer.retrieve, existing_customer_id)
     else:
@@ -62,6 +63,8 @@ async def create_or_get_customer(existing_customer_id: str | None, email: str):
 
 async def get_payment_method_from_intent(payment_intent_id: str):
     intent = await asyncio.to_thread(stripe.PaymentIntent.retrieve, payment_intent_id)
+    if not intent.payment_method:
+        raise HTTPException(status_code=422, detail="PaymentIntent has no attached payment method")
     return {"payment_method_id": intent.payment_method}
 
 

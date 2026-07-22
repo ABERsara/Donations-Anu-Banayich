@@ -37,6 +37,7 @@ def update_preferences(
         user.preferred_currency = currency
 
     db.commit()
+    db.refresh(user)
     return user
 
 
@@ -60,4 +61,5 @@ async def remove_saved_card(db: Session, firebase_uid: str):
     user.saved_card_brand = None
 
     db.commit()
+    db.refresh(user)
     return user
