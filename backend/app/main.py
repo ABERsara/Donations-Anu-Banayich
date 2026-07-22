@@ -3,6 +3,10 @@
 מבנה השכבות: router → schema → service → model (ראה CONTRIBUTING.md).
 """
 
+import truststore
+
+truststore.inject_into_ssl()
+
 import firebase_admin
 from dotenv import load_dotenv
 from fastapi import FastAPI

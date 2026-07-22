@@ -41,7 +41,10 @@ async def confirm_donation(
     current_user=Depends(optional_firebase_token),
     db: Session = Depends(get_db),
 ):
-    return await donation_service.confirm_donation(db, body.payment_intent_id)
+    user_uid = current_user.firebase_uid if current_user else None
+    return await donation_service.confirm_donation(
+        db, body.payment_intent_id, save_card=body.save_card, user_uid=user_uid
+    )
 
 
 @router.post("/quick")

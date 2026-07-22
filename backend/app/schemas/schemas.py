@@ -4,6 +4,7 @@ Pydantic Schemas — validation של request/response.
 """
 
 from enum import Enum
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -36,6 +37,7 @@ class DonationResponse(BaseModel):
 
 class DonationConfirm(BaseModel):
     payment_intent_id: str
+    save_card: bool = False
 
 
 # ─── Recurring Donation ──────────────────────────────────────
@@ -75,12 +77,13 @@ class PrayerResponse(BaseModel):
 
 # ─── User ────────────────────────────────────────────────────
 class UserResponse(BaseModel):
-    id: str
+    id: UUID
     firebase_uid: str = Field(alias="firebaseUid")
     email: EmailStr | None = None
     display_name: str | None = Field(None, alias="displayName")
     preferred_lang: str = Field(default="he", alias="preferredLang")
     preferred_currency: str = Field(default="ILS", alias="preferredCurrency")
+    stripe_customer_id: str | None = Field(None, alias="stripeCustomerId")
     has_saved_card: bool = Field(default=False, alias="hasSavedCard")
     saved_card_last4: str | None = Field(None, alias="savedCardLast4")
     saved_card_brand: str | None = Field(None, alias="savedCardBrand")
