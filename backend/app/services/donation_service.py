@@ -69,6 +69,8 @@ async def confirm_donation(
 
     if save_card and user_uid:
         user = db.query(User).filter(User.firebase_uid == user_uid).first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
         try:
             pm_result = await stripe_service.get_payment_method_from_intent(payment_intent_id)
             customer_result = await stripe_service.create_or_get_customer(
