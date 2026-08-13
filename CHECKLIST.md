@@ -20,6 +20,8 @@
 ## 1. קוד נקי וצורת קוד
 - [ ] ⭐ עברת על [CONTRIBUTING.md](CONTRIBUTING.md)? (Naming: `camelCase` / `PascalCase` / `UPPER_SNAKE_CASE` / `snake_case` ב-Python)
 - [ ] SRP נשמר: `app → hooks/services → store` בצד frontend; `router → schema → service → model` בצד backend?
+- [ ] ⭐ **SRP ברמת פונקציה:** כל פונקציה עושה דבר אחד בלבד, ושמה מתאר בדיוק את כל מה שהיא עושה כולל side effects? (דוגמה להפרה: `verify_firebase_token` שגם מאמתת וגם יוצרת user ב-DB — שם מטעה; שמות ב-Python: `verify_and_get_or_create_user`)
+- [ ] ⭐ **TODO שהושלם הוסר?** TODO שנשאר בקוד אחרי שהמשימה הושלמה ב-PR הזה מבלבל קוראות עתידיות — הסירו אותו.
 - [ ] DRY: קוד חוזר הוצא ל-`utils/` / `services/`?
 - [ ] אין "מספרי קסם" — קבועים בעלי שם?
 - [ ] הערות מסבירות **למה**, לא **מה**?
@@ -49,6 +51,7 @@
 - [ ] קלט עובר validation דרך **Pydantic schema**?
 - [ ] route שמצריך אימות מוגן (תלוי-dependency של auth)?
 - [ ] ⭐ שמות שדות ב-response תואמים למה שה-frontend מצפה לו (`api.ts` / types)?
+- [ ] ⭐ **אין side effects בזמן import במודולי קונפיג** (`config.py`, `settings.py`)? קריאות כמו `load_dotenv()`, חיבור ל-DB, או קריאות רשת שייכות ל-entry point (`main.py`) או ל-lifespan startup function — לא בגוף המודול.
 
 ---
 
@@ -57,6 +60,7 @@
 - [ ] ⭐ **לא הרצת `ALTER TABLE` ידנית** — רק דרך Alembic, אחרת ה-DB יסטה מהקוד.
 - [ ] הוספת שדה חדש? יש ערך ברירת מחדל / nullable למשתמשים קיימים?
 - [ ] שדה שצריך להיות `unique` הוגדר ככזה?
+- [ ] ⭐ הוספת `db.commit()`? בדקי שיש `db.refresh(obj)` לפני החזרת האובייקט — בלי `refresh` שדות עם `server_default` (כמו `created_at`) יחזרו ריקים.
 - [ ] ⭐ שינוי שובר (מחיקת/שינוי שם עמודה)? פוצל ל-migrate-first / שני PRs (ראו [CONTRIBUTING.md §4](CONTRIBUTING.md))?
 
 ---
