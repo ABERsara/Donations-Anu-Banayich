@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ספרינט 6 — Backoffice · Search · SEO · Deep Links</title>
+<style>
+:root {
+  --primary:#1B2A4A; --primary-light:#2B3F6B; --primary-dark:#0D1A2E;
+  --gold:#C9A84C; --gold-light:#DBBE78; --gold-dark:#9E7B2E;
+  --flame:#E07B2C; --flame-light:#F0A65A;
+  --teal:#2E8B84; --teal-light:#4FB3AB;
+  --surface:#FAF6EF; --card:#FFFFFF; --muted:#F0EBE0;
+  --ink:#1B2A4A; --ink-muted:#666666; --ink-subtle:#888888;
+  --border:#E0D8C8; --bg:#F0EBE0; --sec-bg:#FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#0D1117; --sec-bg:#161B27; --surface:#1C2235; --card:#222B3E;
+    --muted:#1A2030; --border:#2A3449; --ink:#E8E0D0;
+    --ink-muted:#9A9080; --ink-subtle:#7A7060;
+  }
+}
+:root[data-theme="dark"]  { --bg:#0D1117; --sec-bg:#161B27; --surface:#1C2235; --card:#222B3E; --muted:#1A2030; --border:#2A3449; --ink:#E8E0D0; --ink-muted:#9A9080; --ink-subtle:#7A7060; }
+:root[data-theme="light"] { --bg:#F0EBE0; --sec-bg:#FFFFFF; --surface:#FAF6EF; --card:#FFFFFF; --muted:#F0EBE0; --border:#E0D8C8; --ink:#1B2A4A; --ink-muted:#666666; --ink-subtle:#888888; }
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',-apple-system,sans-serif;background:var(--bg);color:var(--ink);direction:rtl;font-size:15px;line-height:1.7;}
+
+.cover{background:linear-gradient(140deg,#0D1A2E 0%,#1B2A4A 60%,#2B3F6B 100%);color:#fff;padding:70px 40px;text-align:center;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;width:420px;height:420px;border-radius:50%;border:60px solid rgba(201,168,76,0.07);top:-80px;left:-80px;}
+.cover::after{content:'';position:absolute;width:260px;height:260px;border-radius:50%;border:40px solid rgba(201,168,76,0.06);bottom:-60px;right:-50px;}
+.cover h1{font-size:48px;font-weight:900;letter-spacing:-2px;margin-bottom:6px;}
+.cover-sub{font-size:18px;color:var(--gold-light);display:inline-block;border-bottom:2px solid var(--gold);padding-bottom:4px;margin-bottom:28px;}
+.cover-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.pill{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;color:var(--gold-light);}
+
+.goal-banner{background:linear-gradient(90deg,#1B2A4A,#2B3F6B);color:#fff;padding:22px 40px;text-align:center;font-size:16px;line-height:1.65;border-top:3px solid var(--gold);}
+.goal-banner strong{font-size:19px;display:block;margin-bottom:5px;color:var(--gold-light);}
+.content-banner{background:#0D2010;color:#B8E6C1;padding:14px 40px;display:flex;align-items:center;gap:14px;font-size:14px;border-bottom:2px solid #3D8B5A;}
+.content-banner strong{font-size:15px;display:block;margin-bottom:2px;color:#A0D4A8;}
+
+.wrap{max-width:1080px;margin:0 auto;padding:44px 22px;}
+.sec{background:var(--sec-bg);border-radius:18px;padding:32px 36px;box-shadow:0 2px 16px rgba(27,42,74,0.08);margin-bottom:26px;border:1px solid var(--border);}
+.sec-title{font-size:20px;font-weight:800;color:var(--primary);margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--muted);display:flex;align-items:center;gap:12px;}
+.sec-dot{width:5px;min-height:28px;border-radius:3px;background:var(--primary);flex-shrink:0;display:block;}
+.sec-dot.gold{background:var(--gold);}
+.sec-dot.teal{background:var(--teal);}
+.sec-dot.flame{background:var(--flame);}
+
+.dep{display:flex;flex-direction:column;align-items:center;gap:0;padding:24px 16px;background:var(--surface);border-radius:14px;border:1px solid var(--border);}
+.dep-row{display:flex;justify-content:center;gap:18px;width:100%;}
+.dn{padding:12px 18px;border-radius:11px;font-weight:700;font-size:13px;text-align:center;min-width:210px;border:2px solid;}
+.dn small{display:block;font-size:11px;font-weight:400;opacity:.7;margin-top:3px;}
+.dn.blocker{background:#FFF5EC;border-color:var(--flame);color:var(--flame);}
+.dn.back{background:#F0F3F9;border-color:var(--primary);color:var(--primary);}
+.dn.fi{background:#EFF8F7;border-color:var(--teal);color:var(--teal);}
+.dn.gold{background:#FAF5E8;border-color:var(--gold);color:var(--gold-dark);}
+.dep-arrow{display:flex;justify-content:center;align-items:center;height:24px;color:var(--border);font-size:18px;width:100%;}
+.dep-arrow-pair{display:flex;justify-content:center;gap:18px;width:100%;}
+.dep-arrow-pair .dep-arrow{width:210px;}
+
+.tl{position:relative;padding:6px 0;}
+.tl::before{content:'';position:absolute;top:20px;bottom:20px;right:17px;width:3px;background:linear-gradient(to bottom,var(--flame),var(--primary),var(--teal),var(--gold));border-radius:2px;}
+.tl-item{display:flex;gap:18px;margin-bottom:18px;align-items:flex-start;}
+.tl-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;z-index:1;box-shadow:0 0 0 4px var(--sec-bg);}
+.tl-body{flex:1;padding-top:4px;}
+.tl-body h4{font-size:14px;font-weight:800;margin-bottom:3px;color:var(--primary);}
+.tl-body p{font-size:13px;color:var(--ink-muted);}
+
+.fp-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.fp{border-radius:12px;padding:16px;}
+.fp.be{background:#F0F3F9;border:1.5px solid #C5CFE0;}
+.fp.fi{background:#EFF8F7;border:1.5px solid #A5D4D0;}
+.fp.go{background:#FAF5E8;border:1.5px solid #E0C87C;}
+.fp-title{font-size:12px;font-weight:800;margin-bottom:9px;}
+.fp-title.be{color:var(--primary);}
+.fp-title.fi{color:var(--teal);}
+.fp-title.go{color:var(--gold-dark);}
+.fp li{font-size:12px;padding:3px 0 3px 14px;position:relative;list-style:none;color:var(--ink);}
+.fp li::before{content:'›';position:absolute;left:0;font-size:13px;color:var(--ink-subtle);}
+
+.jflow{background:var(--surface);border-radius:12px;padding:15px 18px;margin-bottom:12px;border:1px solid var(--border);}
+.jflow-title{font-size:13px;font-weight:800;margin-bottom:10px;color:var(--primary);}
+.jflow-nodes{display:flex;align-items:center;flex-wrap:wrap;gap:5px;direction:rtl;}
+.jn{background:var(--card);border:1.5px solid var(--border);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--ink);}
+.jn.ok{background:#EFF8F7;border-color:var(--teal);color:var(--teal);}
+.jn.act{background:#FAF5E8;border-color:var(--gold);color:var(--gold-dark);}
+.jn.cta{background:#FFF5EC;border-color:var(--flame);color:var(--flame);}
+.ja{color:var(--ink-subtle);font-size:12px;font-weight:700;padding:0 2px;}
+
+/* Phone mockups */
+.phone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;justify-items:center;margin:24px 0;}
+.pw{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.ph-lbl{font-size:12px;font-weight:800;color:var(--primary);text-align:center;max-width:200px;line-height:1.4;}
+.phone{width:210px;height:520px;border-radius:36px;border:7px solid #0D1A2E;background:#0D1A2E;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 48px rgba(13,26,46,0.28),0 0 0 1px rgba(201,168,76,0.12);}
+.ph-bar{background:#0D1A2E;color:rgba(255,255,255,.55);padding:6px 14px;font-size:9px;display:flex;justify-content:space-between;align-items:center;}
+.ph-screen{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.ph-nav{background:var(--primary);color:#fff;padding:10px 13px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:space-between;}
+.ph-pc{background:var(--card);border-radius:11px;margin-bottom:7px;display:flex;flex-direction:row-reverse;overflow:hidden;box-shadow:0 1px 4px rgba(27,42,74,0.07);border:1px solid var(--border);}
+.ph-pc-bar{width:4px;background:var(--gold);flex-shrink:0;}
+.ph-pc-body{flex:1;padding:9px 10px;}
+.ph-pc-title{font-size:11px;font-weight:800;color:var(--primary);margin-bottom:2px;}
+.ph-pc-text{font-size:9px;color:var(--ink-muted);line-height:1.4;}
+.ph-pc-arrow{align-self:center;padding:0 9px;font-size:14px;color:var(--gold);}
+/* web mockup */
+.ph-web{background:#F8F9FA;flex:1;overflow:hidden;direction:ltr;}
+.ph-web-bar{background:#E8E8E8;padding:6px 10px;display:flex;align-items:center;gap:6px;}
+.ph-web-dot{width:8px;height:8px;border-radius:50%;}
+.ph-web-url{flex:1;background:#fff;border-radius:4px;padding:3px 8px;font-size:8px;color:#555;font-family:monospace;}
+
+/* Task cards */
+.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.tc{border-radius:14px;background:var(--card);box-shadow:0 1px 8px rgba(27,42,74,0.06);border:1px solid var(--border);}
+.tc.flame{border-top:4px solid var(--flame);}
+.tc.navy{border-top:4px solid var(--primary);}
+.tc.teal{border-top:4px solid var(--teal);}
+.tc.gold{border-top:4px solid var(--gold);}
+.tc-head{padding:14px 17px;border-bottom:1px solid var(--border);background:var(--surface);}
+.tc-tag{font-size:10px;font-weight:800;letter-spacing:.5px;background:var(--muted);color:var(--ink-muted);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:5px;}
+.tc-name{font-size:15px;font-weight:800;color:var(--primary);}
+.tc-effort{font-size:11px;color:var(--ink-subtle);margin-top:2px;}
+.tc-body{padding:15px 17px;}
+.tc-what{font-size:13px;color:var(--ink-muted);margin-bottom:12px;line-height:1.6;}
+.file-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.file-chip{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 11px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
+.file-chip .fn{font-family:monospace;font-weight:700;color:var(--primary);font-size:11px;}
+.file-chip .fa{font-size:10px;color:var(--ink-subtle);}
+.ac-lbl{font-size:10px;font-weight:800;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.ac-items{list-style:none;padding:0;}
+.ac-items li{font-size:12px;padding:4px 0 4px 18px;border-bottom:1px solid var(--muted);position:relative;color:var(--ink);}
+.ac-items li:last-child{border-bottom:none;}
+.ac-items li::before{content:'›';position:absolute;left:0;color:var(--teal);font-weight:800;font-size:14px;}
+
+.sync-box{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--gold);border-radius:10px;padding:14px 17px;margin-bottom:10px;}
+.sync-box strong{color:var(--primary);display:block;margin-bottom:3px;font-size:14px;}
+.sync-box p{font-size:13px;color:var(--ink-muted);}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+th{background:var(--primary);color:#fff;padding:9px 13px;text-align:right;font-weight:700;}
+td{padding:8px 13px;border-bottom:1px solid var(--muted);vertical-align:top;}
+tr:nth-child(even) td{background:var(--surface);}
+
+.note{border-radius:9px;padding:12px 16px;margin:12px 0;border-right:4px solid;font-size:13px;}
+.note-flame{background:#FFF5EC;border-color:var(--flame);color:#7A3A10;}
+.note-teal{background:#EFF8F7;border-color:var(--teal);color:#1A4A48;}
+.note-gold{background:#FAF5E8;border-color:var(--gold);color:#5A4010;}
+
+.chk-list{list-style:none;padding:0;}
+.chk-item{padding:7px 0 7px 24px;border-bottom:1px solid var(--muted);font-size:14px;position:relative;}
+.chk-item:last-child{border-bottom:none;}
+.chk-item::before{content:'☐';position:absolute;left:0;color:var(--primary);font-size:14px;}
+
+.badge{display:inline-block;padding:3px 9px;border-radius:14px;font-size:11px;font-weight:700;margin:2px;}
+.b-grey{background:var(--muted);color:var(--ink-muted);}
+.b-gold{background:#FAF5E8;color:var(--gold-dark);}
+.b-teal{background:#EFF8F7;color:var(--teal);}
+
+@media(max-width:700px){.phone-grid{grid-template-columns:1fr 1fr;}.task-grid{grid-template-columns:1fr;}.fp-pair{grid-template-columns:1fr;}.dep-row{flex-direction:column;align-items:center;}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>ספרינט 6</h1>
+  <div class="cover-sub">Backoffice · Search · SEO · Deep Links</div>
+  <div class="cover-pills">
+    <div class="pill">שבועות 11–12</div>
+    <div class="pill">2 ג'וניוריות</div>
+    <div class="pill">4 משימות</div>
+    <div class="pill">מטרה: Content Team עצמאית</div>
+  </div>
+</div>
+
+<!-- GOAL -->
+<div class="goal-banner">
+  <strong>מטרת הספרינט</strong>
+  צוות התוכן מנהל תפילות ללא מפתחת (Backoffice). משתמשים מוצאים תפילות בחיפוש. עמודי תפילה מאונדקסים נכון בגוגל. באנר מוביל גולשי web לאפליקציה הנייטיב.
+</div>
+
+<!-- CONTENT TEAM BANNER -->
+<div class="content-banner">
+  <div style="background:rgba(100,200,120,0.15);border-radius:8px;padding:6px 12px;font-size:20px;flex-shrink:0;">🗂</div>
+  <div>
+    <strong>Backoffice — צוות התוכן לא יחכה למפתחת</strong>
+    F1 Backoffice הוא ה-BLOCKER של הספרינט: כל עדכון תפילה כעת דורש מפתחת. אחרי F1 — צוות התוכן עצמאי.
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ DEP GRAPH ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot flame"></div>גרף תלויות — סדר עבודה</div>
+
+  <div class="dep">
+    <!-- Sprint 5 prereq -->
+    <div class="dep-row">
+      <div class="dn" style="background:var(--surface);border-color:var(--teal);color:var(--teal);min-width:460px;font-size:12px;">
+        ✓ Sprint 4 + Sprint 5 — Auth · Deploy · i18n · App Store · Recurring · History · French
+        <small>תנאי בסיס: production live · Apple Store URL ידוע (לF4)</small>
+      </div>
+    </div>
+    <div class="dep-arrow">↓</div>
+    <!-- F1 BLOCKER + F2 parallel -->
+    <div class="dep-row">
+      <div class="dn blocker">F1 🚨 — Backoffice: Admin API + Web UI<small>Full-Stack · L · BLOCKER — unblocks content team</small></div>
+      <div class="dn fi">F2 — Prayer Search + view_count<small>Full-Stack · S · עצמאית מF1</small></div>
+    </div>
+    <div class="dep-arrow-pair">
+      <div class="dep-arrow" style="width:210px;">↓</div>
+      <div class="dep-arrow" style="width:210px;">↓</div>
+    </div>
+    <!-- F3 + F4 -->
+    <div class="dep-row">
+      <div class="dn back">F3 — SEO: JSON-LD + hreflang + OG<small>Frontend SSR · M · עצמאית</small></div>
+      <div class="dn gold">F4 — App Download Banner + Deep Links<small>Frontend · M · תלויה S5-F1 URL</small></div>
+    </div>
+  </div>
+
+  <div class="note note-teal" style="margin-top:16px;">
+    <strong>חלוקה מומלצת:</strong> מפתחת 1 — F1 (BLOCKER, הכי גדולה) → F3 (SEO, לא תלויה בF1). מפתחת 2 — F2 (quick win) → F4 (Banner + Deep Links אחרי שApp Store URL ידוע). F3 ו-F2 יכולות להתחיל ביום 1.
+  </div>
+</div>
+
+<!-- ══ TIMELINE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot"></div>ציר זמן — 2 שבועות</div>
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--flame);">0</div>
+      <div class="tl-body">
+        <h4>יום 0 — Contract Sync + Check</h4>
+        <p>לוודא: is_admin column קיים בUsers table (אחרת migration בF1 יום 1). Apple Store URL ידוע? (F4 תלויה בו — placeholder אם עדיין pending Apple review). F1 Backend מגדירה AdminPrayerCreate schema לפני שF1 Frontend בונה forms.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--flame);">1–5</div>
+      <div class="tl-body">
+        <h4>ימים 1–5 — F1 BLOCKER + F2 + F3 במקביל</h4>
+        <p><strong>מפתחת 1:</strong> verify_admin_token dependency. routers/admin.py חדש (8 endpoints: CRUD prayers + categories). 4 schemas חדשים. Expo Router /admin route group (web-only). prayers.tsx + categories.tsx admin UI.<br>
+        <strong>מפתחת 2:</strong> F2 (יום 1-2): מוודאת GET /api/prayers/search?lang= עובד נכון. search.tsx ממושם (TextInput + FlatList + debounce 300ms). F3 (יום 3-5): generateMetadata בprayer/[slug].tsx — title, description, canonical, hreflang, JSON-LD.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--teal);">6–10</div>
+      <div class="tl-body">
+        <h4>ימים 6–10 — F4 + Integration</h4>
+        <p><strong>מפתחת 1:</strong> כשF1 merged — בודקת /admin עם is_admin=true. ממשת F4: AppDownloadBanner (iOS/Android/Desktop/Dismiss). AASA file ב-public/.well-known. scheme: 'anuvenych' ב-app.json. Share button בprayer page.<br>
+        <strong>מפתחת 2:</strong> Google Rich Results Test על /prayer/health. F4 AASA testing על מכשיר פיזי.<br>
+        <strong>Sprint Review:</strong> Backoffice demo לצוות התוכן. Deep link test: anuvenych://prayer/health.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEATURE JOURNEYS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>פיצ'רים מקצה לקצה</div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:0 0 10px;padding-right:10px;border-right:3px solid var(--flame);">Backoffice — F1</h3>
+  <div class="fp-pair">
+    <div class="fp be">
+      <div class="fp-title be">F1 — Admin API (Backend)</div>
+      <ul class="fp">
+        <li>verify_admin_token dependency (חדש)</li>
+        <li>GET/POST/PATCH/DELETE /api/admin/prayers</li>
+        <li>GET/POST/PATCH/DELETE /api/admin/categories</li>
+        <li>is_admin=false → 403, לא 401</li>
+        <li>UserResponse += isAdmin field</li>
+      </ul>
+    </div>
+    <div class="fp fi">
+      <div class="fp-title fi">F1 — Admin Web UI (Frontend)</div>
+      <ul class="fp">
+        <li>/admin route — web-only, לא native</li>
+        <li>redirect לאורחים ול-isAdmin=false</li>
+        <li>/admin/prayers: רשימה + edit form inline</li>
+        <li>/admin/categories: רשימה + add/edit/delete</li>
+        <li>api.ts += adminGetPrayers, adminCreate...</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--flame);">Flow: Admin — הוספת תפילה חדשה</div>
+    <div class="jflow-nodes">
+      <div class="jn">/admin/prayers</div><div class="ja">→</div>
+      <div class="jn cta">הוסף תפילה</div><div class="ja">→</div>
+      <div class="jn act">POST /api/admin/prayers</div><div class="ja">→</div>
+      <div class="jn ok">תפילה חדשה ב-GET /api/prayers</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:20px 0 10px;padding-right:10px;border-right:3px solid var(--teal);">Search + SEO — F2 + F3</h3>
+  <div class="fp-pair">
+    <div class="fp fi">
+      <div class="fp-title fi">F2 — Search</div>
+      <ul class="fp">
+        <li>search.tsx: TextInput + debounce 300ms</li>
+        <li>GET /api/prayers/search?q=&lang= ← קיים, לוודא</li>
+        <li>FlatList PrayerCards כתוצאות</li>
+        <li>view_count++ ב-GET /api/prayers/:slug</li>
+        <li>empty state + loading indicator</li>
+      </ul>
+    </div>
+    <div class="fp be">
+      <div class="fp-title be">F3 — SEO</div>
+      <ul class="fp">
+        <li>generateMetadata: title, description, canonical</li>
+        <li>hreflang: he, en, fr</li>
+        <li>JSON-LD: @type Article + publisher</li>
+        <li>Open Graph: og:title, og:description</li>
+        <li>PrayerResponse += seo_description_{lang}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--teal);">Flow: Google → תפילה (SEO)</div>
+    <div class="jflow-nodes">
+      <div class="jn">Google search "תפילה לבחינה"</div><div class="ja">→</div>
+      <div class="jn act">/prayer/exam (Vercel SSR)</div><div class="ja">→</div>
+      <div class="jn act">JSON-LD + hreflang בHTML</div><div class="ja">→</div>
+      <div class="jn ok">Rich Result בגוגל</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:20px 0 10px;padding-right:10px;border-right:3px solid var(--gold);">App Download Banner + Deep Links — F4</h3>
+  <div class="fp-pair">
+    <div class="fp go">
+      <div class="fp-title go">F4 — AppDownloadBanner</div>
+      <ul class="fp">
+        <li>iOS web → App Store badge + link</li>
+        <li>Desktop web → QR code + badge</li>
+        <li>Dismiss → AsyncStorage → לא חוזר</li>
+        <li>Platform.OS==='web' guard (לא native)</li>
+        <li>APP_CONFIG.APPLE_STORE_URL ← real URL</li>
+      </ul>
+    </div>
+    <div class="fp fi">
+      <div class="fp-title fi">F4 — Deep Links + Share</div>
+      <ul class="fp">
+        <li>app.json scheme: 'anuvenych'</li>
+        <li>anuvenych://prayer/health → פותח אפליקציה</li>
+        <li>AASA: /.well-known/apple-app-site-association</li>
+        <li>Share button: Share.share({url, message})</li>
+        <li>שיתוף URL web → redirect לapp</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--gold-dark);">Flow: Web → App (iOS)</div>
+    <div class="jflow-nodes">
+      <div class="jn">גולש מגיע ל-prayer/health (Vercel)</div><div class="ja">→</div>
+      <div class="jn">Banner: "הורד האפליקציה"</div><div class="ja">→</div>
+      <div class="jn cta">App Store link</div><div class="ja">→</div>
+      <div class="jn ok">App Store → Download</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHONE SCREENS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot gold"></div>המסכים בסיום הספרינט</div>
+
+  <div class="phone-grid">
+
+    <!-- Phone 1: Search -->
+    <div class="pw">
+      <div class="ph-lbl">מסך חיפוש<br>keyword search · כל השפות</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+          <div class="ph-nav"><span>חיפוש</span></div>
+          <div style="background:var(--surface);flex:1;overflow:hidden;padding:10px;">
+            <!-- Search input -->
+            <div style="background:var(--card);border:1.5px solid var(--primary);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px;direction:rtl;">
+              <span style="font-size:14px;color:var(--ink-subtle);">🔍</span>
+              <span style="font-size:10px;color:var(--primary);font-weight:700;">רפואה</span>
+              <span style="font-size:10px;color:var(--ink-subtle);margin-right:auto;">|</span>
+            </div>
+            <!-- Results -->
+            <div style="font-size:9px;color:var(--ink-subtle);margin-bottom:6px;">נמצאו 2 תוצאות</div>
+            <div class="ph-pc">
+              <div class="ph-pc-bar" style="background:var(--teal);"></div>
+              <div class="ph-pc-body">
+                <div class="ph-pc-title">תפילה לרפואה שלמה</div>
+                <div class="ph-pc-text">רבונו של עולם, אתה <strong style="color:var(--primary);">רפואה</strong> כל בשר...</div>
+              </div>
+              <div class="ph-pc-arrow">&lt;</div>
+            </div>
+            <div class="ph-pc">
+              <div class="ph-pc-bar" style="background:var(--gold);"></div>
+              <div class="ph-pc-body">
+                <div class="ph-pc-title">תפילה לפני ניתוח</div>
+                <div class="ph-pc-text">אנא ה', שלח <strong style="color:var(--primary);">רפואה</strong> שלמה...</div>
+              </div>
+              <div class="ph-pc-arrow">&lt;</div>
+            </div>
+            <div style="background:var(--muted);border-radius:10px;padding:9px 11px;text-align:center;font-size:9px;color:var(--ink-subtle);margin-top:6px;">
+              כתבי "healing" לתוצאות באנגלית
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: App Download Banner (mobile web) -->
+    <div class="pw">
+      <div class="ph-lbl">App Download Banner<br>iOS web → App Store</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen" style="direction:ltr;">
+          <div class="ph-web">
+            <div class="ph-web-bar">
+              <div class="ph-web-dot" style="background:#FF5F57;"></div>
+              <div class="ph-web-dot" style="background:#FFBD2E;"></div>
+              <div class="ph-web-dot" style="background:#28C840;"></div>
+              <div class="ph-web-url">anuvenych.vercel.app/prayer/exam</div>
+            </div>
+            <!-- App Download Banner -->
+            <div style="background:linear-gradient(90deg,var(--primary-dark),var(--primary));color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;direction:rtl;">
+              <div style="width:28px;height:28px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--primary);flex-shrink:0;">ת</div>
+              <div style="flex:1;text-align:right;">
+                <div style="font-size:9px;font-weight:800;">אנו בניך</div>
+                <div style="font-size:7px;color:rgba(255,255,255,.7);">עדיפה באפליקציה</div>
+              </div>
+              <div style="background:var(--gold);color:var(--primary-dark);border-radius:5px;padding:4px 9px;font-size:8px;font-weight:800;flex-shrink:0;">הורד</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.4);flex-shrink:0;">✕</div>
+            </div>
+            <!-- Prayer page content -->
+            <div style="padding:10px 12px;direction:rtl;">
+              <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px;">תפילה לפני מבחן</div>
+              <div style="font-size:8px;color:var(--ink-muted);line-height:1.6;">אנא ה', פתח לבי בתורתך ותן בלבי בינה להבין ולהשכיל...</div>
+              <div style="margin-top:10px;background:var(--flame);color:#fff;border-radius:8px;padding:7px;text-align:center;font-size:9px;font-weight:800;">תרום</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 3: Share button on prayer page -->
+    <div class="pw">
+      <div class="ph-lbl">Share Button<br>Native Share Sheet</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+          <div class="ph-nav">
+            <span class="back" style="font-size:14px;color:var(--gold-light);">&lt;</span>
+            <span style="font-size:10px;">תפילה לרפואה שלמה</span>
+            <span style="font-size:18px;cursor:pointer;">⬆</span>
+          </div>
+          <div style="background:var(--surface);padding:11px 13px;font-size:9.5px;color:var(--ink-muted);line-height:1.65;flex:1;overflow:hidden;">
+            <h3 style="font-size:11px;font-weight:900;color:var(--primary);margin-bottom:5px;">תפילה לרפואה שלמה</h3>
+            רבונו של עולם, אתה רופא כל בשר ומפליא לעשות. הננו מתפללים לפניך לרפואה שלמה...
+          </div>
+          <!-- Native share sheet overlay -->
+          <div style="position:absolute;bottom:0;left:0;right:0;background:var(--card);border-radius:18px 18px 0 0;padding:16px;box-shadow:0 -4px 24px rgba(27,42,74,0.2);z-index:2;direction:ltr;">
+            <div style="font-size:10px;font-weight:700;color:var(--ink-muted);text-align:center;margin-bottom:12px;">שתף</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;">
+              <div><div style="width:36px;height:36px;border-radius:10px;background:#25D366;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:16px;">💬</div><div style="font-size:7px;color:var(--ink-muted);">WhatsApp</div></div>
+              <div><div style="width:36px;height:36px;border-radius:10px;background:#0077B5;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:16px;">✉</div><div style="font-size:7px;color:var(--ink-muted);">Email</div></div>
+              <div><div style="width:36px;height:36px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;">🔗</div><div style="font-size:7px;color:var(--ink-muted);">Copy Link</div></div>
+              <div><div style="width:36px;height:36px;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;">⋯</div><div style="font-size:7px;color:var(--ink-muted);">More</div></div>
+            </div>
+          </div>
+          <div style="position:absolute;inset:0;background:rgba(13,26,46,0.4);z-index:1;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 4: Backoffice web UI (desktop mockup in phone) -->
+    <div class="pw">
+      <div class="ph-lbl">Admin Backoffice<br>Web-only · /admin/prayers</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen" style="direction:ltr;">
+          <div class="ph-web">
+            <div class="ph-web-bar">
+              <div class="ph-web-dot" style="background:#FF5F57;"></div>
+              <div class="ph-web-dot" style="background:#FFBD2E;"></div>
+              <div class="ph-web-dot" style="background:#28C840;"></div>
+              <div class="ph-web-url">anuvenych.vercel.app/admin/prayers</div>
+            </div>
+            <div style="background:#fff;padding:10px;direction:rtl;overflow:hidden;height:100%;">
+              <div style="background:var(--primary);color:#fff;border-radius:8px;padding:7px 10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:9px;font-weight:800;">ניהול תפילות</span>
+                <div style="background:var(--gold);color:var(--primary-dark);border-radius:5px;padding:3px 8px;font-size:8px;font-weight:800;">+ הוסף תפילה</div>
+              </div>
+              <!-- Admin rows -->
+              <div style="background:var(--surface);border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:7px 9px;border-bottom:1px solid var(--border);background:var(--muted);">
+                  <div style="font-size:8px;font-weight:800;color:var(--primary);">שם תפילה</div>
+                  <div style="font-size:8px;font-weight:800;color:var(--primary);">סטטוס</div>
+                  <div style="font-size:8px;font-weight:800;color:var(--primary);">פעולות</div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:6px 9px;border-bottom:1px solid var(--muted);align-items:center;">
+                  <div style="font-size:8px;color:var(--ink);">תפילה לרפואה שלמה</div>
+                  <div style="background:#EFF8F7;color:var(--teal);border-radius:4px;padding:1px 5px;font-size:7px;font-weight:700;">פעיל</div>
+                  <div style="display:flex;gap:3px;"><div style="background:var(--muted);border-radius:3px;padding:2px 5px;font-size:7px;color:var(--ink);">ערוך</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:6px 9px;border-bottom:1px solid var(--muted);align-items:center;">
+                  <div style="font-size:8px;color:var(--ink);">תפילה לפני מבחן</div>
+                  <div style="background:#EFF8F7;color:var(--teal);border-radius:4px;padding:1px 5px;font-size:7px;font-weight:700;">פעיל</div>
+                  <div style="display:flex;gap:3px;"><div style="background:var(--muted);border-radius:3px;padding:2px 5px;font-size:7px;color:var(--ink);">ערוך</div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:6px 9px;align-items:center;">
+                  <div style="font-size:8px;color:var(--ink);">תפילת הדרך</div>
+                  <div style="background:var(--muted);color:var(--ink-subtle);border-radius:4px;padding:1px 5px;font-size:7px;font-weight:700;">לא פעיל</div>
+                  <div style="display:flex;gap:3px;"><div style="background:var(--muted);border-radius:3px;padding:2px 5px;font-size:7px;color:var(--ink);">ערוך</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 5: Prayer page with SEO -->
+    <div class="pw">
+      <div class="ph-lbl">עמוד תפילה — SEO<br>JSON-LD · hreflang · canonical</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen" style="direction:ltr;">
+          <div class="ph-web">
+            <div class="ph-web-bar">
+              <div class="ph-web-dot" style="background:#FF5F57;"></div>
+              <div class="ph-web-dot" style="background:#FFBD2E;"></div>
+              <div class="ph-web-dot" style="background:#28C840;"></div>
+              <div class="ph-web-url">anuvenych.vercel.app/prayer/health</div>
+            </div>
+            <div style="background:#fff;padding:10px;direction:rtl;font-size:8px;">
+              <!-- Browser tab title -->
+              <div style="background:#F0EBE0;border-radius:6px;padding:5px 8px;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                <div style="width:10px;height:10px;background:var(--primary);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><span style="color:var(--gold);font-size:6px;font-weight:900;">ת</span></div>
+                <div style="font-size:7px;color:var(--primary);font-weight:700;">תפילה לרפואה שלמה | אנו בניך</div>
+              </div>
+              <!-- SEO meta tags -->
+              <div style="background:var(--surface);border-radius:8px;padding:8px;border:1px solid var(--border);font-family:monospace;font-size:7px;color:var(--ink-muted);line-height:1.8;">
+                <div style="color:var(--teal);font-weight:700;">&lt;title&gt;</div>
+                <div style="padding-right:12px;">תפילה לרפואה שלמה | אנו בניך</div>
+                <div style="color:var(--teal);font-weight:700;">&lt;meta name="description"&gt;</div>
+                <div style="padding-right:12px;font-size:6.5px;">תפילה לרפואה שלמה — תפילה לבריאות...</div>
+                <div style="color:var(--gold-dark);font-weight:700;">&lt;link rel="canonical"&gt;</div>
+                <div style="color:var(--primary);font-weight:700;">&lt;link rel="alternate" hreflang="he"&gt;</div>
+                <div style="color:var(--primary);font-weight:700;">&lt;link rel="alternate" hreflang="en"&gt;</div>
+                <div style="color:var(--primary);font-weight:700;">&lt;link rel="alternate" hreflang="fr"&gt;</div>
+                <div style="color:var(--flame);font-weight:700;">&lt;script type="application/ld+json"&gt;</div>
+                <div style="padding-right:12px;font-size:6.5px;">{"@type":"Article","headline":"..."}</div>
+              </div>
+              <div style="background:#EFF8F7;border-radius:6px;padding:5px 8px;margin-top:6px;font-size:7px;color:var(--teal);text-align:center;">✓ Google Rich Results Test — עובר</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 6: Deep link success -->
+    <div class="pw">
+      <div class="ph-lbl">Deep Link<br>anuvenych://prayer/health → App</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+          <div class="ph-nav"><span class="back" style="font-size:14px;color:var(--gold-light);">&lt;</span><span>תפילה לרפואה שלמה</span><span style="font-size:18px;">⬆</span></div>
+          <div style="background:var(--surface);padding:11px 13px;font-size:9.5px;color:var(--ink-muted);line-height:1.65;flex:1;overflow:hidden;">
+            <h3 style="font-size:11px;font-weight:900;color:var(--primary);margin-bottom:5px;">תפילה לרפואה שלמה</h3>
+            רבונו של עולם, אתה רופא כל בשר ומפליא לעשות...
+          </div>
+          <!-- Deep link indicator -->
+          <div style="background:var(--primary);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;font-size:8px;">
+            <span style="font-size:14px;">🔗</span>
+            <div>
+              <div style="font-weight:800;margin-bottom:1px;">נפתח מ-Deep Link</div>
+              <div style="opacity:.7;">anuvenych://prayer/health</div>
+            </div>
+            <div style="margin-right:auto;background:rgba(201,168,76,0.2);border:1px solid var(--gold);border-radius:5px;padding:3px 8px;font-size:8px;font-weight:700;color:var(--gold-light);">✓</div>
+          </div>
+          <div style="background:var(--card);border-top:2px solid var(--muted);padding:10px 12px;">
+            <div style="display:flex;gap:4px;margin-bottom:8px;">
+              <div style="flex:1;text-align:center;padding:6px 2px;border-radius:8px;font-size:9px;font-weight:800;background:var(--surface);color:var(--primary);border:1.5px solid var(--border);">₪18</div>
+              <div style="flex:1;text-align:center;padding:6px 2px;border-radius:8px;font-size:9px;font-weight:800;background:var(--gold);color:#fff;border:1.5px solid var(--gold-dark);">₪72</div>
+              <div style="flex:1;text-align:center;padding:6px 2px;border-radius:8px;font-size:9px;font-weight:800;background:var(--surface);color:var(--primary);border:1.5px solid var(--border);">₪180</div>
+            </div>
+            <div style="background:var(--flame);color:#fff;border-radius:10px;padding:8px;text-align:center;font-size:10px;font-weight:800;">תרום</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-grid -->
+
+  <!-- NAV FLOWS -->
+  <h3 style="font-size:14px;color:var(--primary);margin:28px 0 14px;padding-right:10px;border-right:3px solid var(--primary);">פלואוים מלאים בסיום הספרינט</h3>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--flame);">A — Admin: עדכון תפילה קיימת</div>
+    <div class="jflow-nodes">
+      <div class="jn">/admin/prayers</div><div class="ja">→</div>
+      <div class="jn cta">ערוך</div><div class="ja">→</div>
+      <div class="jn act">PATCH /api/admin/prayers/:id</div><div class="ja">→</div>
+      <div class="jn ok">GET /api/prayers מחזיר גרסה מעודכנת</div>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--teal);">B — Search: חיפוש בכל שפה</div>
+    <div class="jflow-nodes">
+      <div class="jn">search.tsx</div><div class="ja">→</div>
+      <div class="jn cta">כתיבת "healing" + lang=en</div><div class="ja">→</div>
+      <div class="jn act">GET /prayers/search?q=healing&lang=en</div><div class="ja">→</div>
+      <div class="jn ok">Prayer for Complete Recovery</div>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--gold-dark);">C — Deep Link: שיתוף → פתיחת App</div>
+    <div class="jflow-nodes">
+      <div class="jn">Share button</div><div class="ja">→</div>
+      <div class="jn act">anuvenych://prayer/health</div><div class="ja">→</div>
+      <div class="jn ok">App נפתח ישר לתפילה</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TASK CARDS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot"></div>המשימות</div>
+  <div class="task-grid">
+
+    <div class="tc flame">
+      <div class="tc-head"><div class="tc-tag">F1 · BLOCKER</div><div class="tc-name">Backoffice: Admin API + Web UI</div><div class="tc-effort">Full-Stack · L · ABD-77 · unblocks content team</div></div>
+      <div class="tc-body">
+        <div class="tc-what">verify_admin_token dependency חדש. routers/admin.py חדש: 8 endpoints לCRUD על prayers + categories. 4 schemas חדשים: AdminPrayerCreate/Update, AdminCategoryCreate/Update. Expo Router /admin: _layout.tsx (web-only, is_admin check), prayers.tsx, categories.tsx. UserResponse += isAdmin.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">routers/admin.py</span><span class="fa">חדש — 8 endpoints</span></div>
+          <div class="file-chip"><span class="fn">middleware/auth.py</span><span class="fa">verify_admin_token — חדש</span></div>
+          <div class="file-chip"><span class="fn">app/(admin)/_layout.tsx</span><span class="fa">חדש — web-only guard</span></div>
+          <div class="file-chip"><span class="fn">app/(admin)/prayers.tsx</span><span class="fa">חדש — CRUD UI</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>non-admin token → 403</li>
+          <li>Admin יוצרת תפילה → מופיעה ב-GET /api/prayers</li>
+          <li>is_active=False → נעלמת מendpoint הציבורי</li>
+          <li>/admin על native → לא מרונדר</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc navy">
+      <div class="tc-head"><div class="tc-tag">F2 · Quick Win</div><div class="tc-name">Prayer Search + view_count</div><div class="tc-effort">Full-Stack · S · ABD-78 · עצמאית</div></div>
+      <div class="tc-body">
+        <div class="tc-what">מוודאת GET /api/prayers/search?q=&lang= מחפש בעמודה הנכונה לפי lang (לא רק title_he). search.tsx: TextInput + debounce 300ms + FlatList PrayerCards + loading + empty state. useSearch(query, lang) hook. view_count++ ב-GET /prayer/:slug — לוודא שלא נדרס.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">app/(tabs)/search.tsx</span><span class="fa">stub → ממומש</span></div>
+          <div class="file-chip"><span class="fn">hooks/usePrayer.ts</span><span class="fa">useSearch(query, lang)</span></div>
+          <div class="file-chip"><span class="fn">routers/prayers.py</span><span class="fa">search + view_count verify</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>"רפואה" → health prayer בעברית</li>
+          <li>"healing" (lang=en) → health prayer באנגלית</li>
+          <li>empty state: "לא נמצאו תפילות"</li>
+          <li>view_count++ בכל GET /prayer/:slug</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc teal">
+      <div class="tc-head"><div class="tc-tag">F3</div><div class="tc-name">SEO: JSON-LD + hreflang + Open Graph</div><div class="tc-effort">Frontend SSR · M · ABD-79 · עצמאית</div></div>
+      <div class="tc-body">
+        <div class="tc-what">generateMetadata ב-prayer/[slug].tsx: title, description, canonical, alternates.languages (he/en/fr), openGraph. JSON-LD: @type Article, headline, inLanguage, publisher. PrayerResponse += seo_description_he/en/fr אם חסר. לוודא שSSR מחזיר HTML עם meta tags (לא client-side render).</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">app/prayer/[slug].tsx</span><span class="fa">generateMetadata + JSON-LD</span></div>
+          <div class="file-chip"><span class="fn">app/[lang]/prayer/[slug].tsx</span><span class="fa">הrelocalized variant</span></div>
+          <div class="file-chip"><span class="fn">schemas/schemas.py</span><span class="fa">PrayerResponse += seo fields</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>/prayer/health HTML: &lt;title&gt;תפילה לרפואה | אנו בניך&lt;/title&gt;</li>
+          <li>hreflang: he, en, fr</li>
+          <li>&lt;script type="application/ld+json"&gt; עם @type Article</li>
+          <li>Google Rich Results Test — ללא שגיאות</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc gold">
+      <div class="tc-head"><div class="tc-tag">F4</div><div class="tc-name">App Download Banner + Deep Links + Share</div><div class="tc-effort">Frontend · M · ABD-80 · תלויה S5-F1 URL</div></div>
+      <div class="tc-body">
+        <div class="tc-what">AppDownloadBanner: iOS web → App Store badge, Desktop web → QR code, Dismiss → AsyncStorage, Platform.OS==='web' guard. app.json scheme: 'anuvenych'. AASA file: public/.well-known/apple-app-site-association. Share button ב-prayer page: Share.share({url, message}). APP_CONFIG.APPLE_STORE_URL ← URL אמיתי.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">AppDownloadBanner.tsx</span><span class="fa">stub → iOS/Desktop/Dismiss</span></div>
+          <div class="file-chip"><span class="fn">public/.well-known/aasa</span><span class="fa">חדש — apple-app-site-association</span></div>
+          <div class="file-chip"><span class="fn">app.json</span><span class="fa">scheme: 'anuvenych'</span></div>
+          <div class="file-chip"><span class="fn">constants/app.ts</span><span class="fa">APPLE_STORE_URL ← real URL</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>iOS mobile web → Banner עם App Store link</li>
+          <li>Dismiss → לא חוזר (AsyncStorage)</li>
+          <li>anuvenych://prayer/health → App נפתח לתפילה</li>
+          <li>Share button → Native Share Sheet</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /task-grid -->
+
+  <div class="note note-flame" style="margin-top:18px;">
+    סיכונים: AASA חייב Content-Type: application/json ללא redirect — Vercel config חייב להגדיר זאת במפורש. is_admin column — לוודא שקיים בproduction DB לפני F1 PR. Apple Store URL — אם Apple review עדיין pending, F4 משתמשת ב-TestFlight link כplaceholder.
+  </div>
+</div>
+
+<!-- ══ SYNC + DONE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>נקודות סנכרון</div>
+  <div class="sync-box"><strong>יום 0 — is_admin Column Check + AdminPrayerCreate Contract</strong><p>לוודא: is_admin קיים ב-Users table בproduction. F1 Backend מגדירה AdminPrayerCreate fields המדויקים. F1 Frontend בונה forms לפי אותו contract בלבד.</p></div>
+  <div class="sync-box"><strong>UserResponse += isAdmin</strong><p>F1 Backend מוסיפה isAdmin לUserResponse → F1 Frontend מעדכן AppUser type ו-authStore. authStore חייב לחשוף selectIsAdmin. /admin/_layout.tsx תלוי בזה.</p></div>
+  <div class="sync-box"><strong>Apple Store URL — F4</strong><p>אם Sprint 5 App Store עדיין pending review כשF4 מתחילה — F4 משתמשת ב-TestFlight external link. כשURL אמיתי מגיע: עדכן APP_CONFIG.APPLE_STORE_URL + AASA ב-PR נפרד.</p></div>
+  <div class="sync-box"><strong>כל PR — שער Review</strong><p>המפתחת השנייה עושה review → שרה מאשרת → מיזוג ל-main.</p></div>
+</div>
+
+<!-- ══ DEFINITION OF DONE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>הגדרת "סיום"</div>
+  <div class="note note-teal">ספרינט 6 הושלם כש-4 ה-flows עוברים:</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px;">
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">F1 — Backoffice Demo לצוות תוכן</h4>
+      <ul class="chk-list">
+        <li>Admin נכנסת ל-/admin/prayers</li>
+        <li>יוצרת תפילה חדשה עם כל fields</li>
+        <li>תפילה מופיעה ב-GET /api/prayers</li>
+        <li>is_active=False → נעלמת מendpoint ציבורי</li>
+        <li>non-admin → 403 (לא 401, לא 404)</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">F2 — Search בכל שפה</h4>
+      <ul class="chk-list">
+        <li>"רפואה" → Prayer for Complete Recovery</li>
+        <li>"healing" (lang=en) → אותה תפילה</li>
+        <li>"guérison" (lang=fr) → אותה תפילה</li>
+        <li>view_count בDB גדל אחרי כל view</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">F3 — SEO</h4>
+      <ul class="chk-list">
+        <li>/prayer/health: &lt;title&gt; + description מ-DB</li>
+        <li>hreflang links: he/en/fr</li>
+        <li>JSON-LD @type Article</li>
+        <li>Google Rich Results Test ← ללא שגיאות</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">F4 — Banner + Deep Links</h4>
+      <ul class="chk-list">
+        <li>iOS Safari: Banner → App Store link</li>
+        <li>Dismiss → לא מופיע שוב</li>
+        <li>anuvenych://prayer/health → App</li>
+        <li>Share → Native Share Sheet עם URL</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4 style="font-size:13px;color:var(--primary);margin:20px 0 9px;font-weight:800;">MVP הושלם — מה נשאר לבאקלוג</h4>
+  <table>
+    <tr><th>פיצ'ר</th><th>מצב</th></tr>
+    <tr><td>Google Play submission</td><td><span class="badge b-grey">Q2-03 לא הוחלט — APK sideload</span></td></tr>
+    <tr><td>Russian / Spanish i18n</td><td><span class="badge b-grey">i18n infra קיימת — צריך תרגומים</span></td></tr>
+    <tr><td>Firebase Analytics events</td><td><span class="badge b-grey">analytics.ts קיים — לא מחובר</span></td></tr>
+    <tr><td>Recurring webhook (invoice.paid)</td><td><span class="badge b-grey">נדחה מS5 — status manual בלבד</span></td></tr>
+    <tr><td>sitemap.xml, robots.txt</td><td><span class="badge b-gold">SEO nice-to-have</span></td></tr>
+    <tr><td>Backoffice: image upload, audit log</td><td><span class="badge b-grey">מחוץ לסקופ MVP</span></td></tr>
+  </table>
+</div>
+
+</div><!-- /wrap -->
+<div style="text-align:center;padding:24px 0;color:var(--ink-subtle);font-size:12px;border-top:1px solid var(--border);">
+  Anu Banecha Donations · ספרינט 6 · 2026
+</div>
+</body>
+</html>

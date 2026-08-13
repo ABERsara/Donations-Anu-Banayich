@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ספרינט 4 — Stabilize · Deploy · i18n</title>
+<style>
+/* ── PROJECT PALETTE (theme/colors.json) ── */
+:root {
+  --primary:       #1B2A4A;
+  --primary-light: #2B3F6B;
+  --primary-dark:  #0D1A2E;
+  --gold:          #C9A84C;
+  --gold-light:    #DBBE78;
+  --gold-dark:     #9E7B2E;
+  --flame:         #E07B2C;
+  --flame-light:   #F0A65A;
+  --teal:          #2E8B84;
+  --teal-light:    #4FB3AB;
+  --surface:       #FAF6EF;
+  --card:          #FFFFFF;
+  --muted:         #F0EBE0;
+  --ink:           #1B2A4A;
+  --ink-muted:     #666666;
+  --ink-subtle:    #888888;
+  --border:        #E0D8C8;
+  --bg: #F0EBE0;
+  --sec-bg: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0D1117;
+    --sec-bg: #161B27;
+    --surface: #1C2235;
+    --card: #222B3E;
+    --muted: #1A2030;
+    --border: #2A3449;
+    --ink: #E8E0D0;
+    --ink-muted: #9A9080;
+    --ink-subtle: #7A7060;
+  }
+}
+:root[data-theme="dark"]  { --bg:#0D1117; --sec-bg:#161B27; --surface:#1C2235; --card:#222B3E; --muted:#1A2030; --border:#2A3449; --ink:#E8E0D0; --ink-muted:#9A9080; --ink-subtle:#7A7060; }
+:root[data-theme="light"] { --bg:#F0EBE0; --sec-bg:#FFFFFF; --surface:#FAF6EF; --card:#FFFFFF; --muted:#F0EBE0; --border:#E0D8C8; --ink:#1B2A4A; --ink-muted:#666666; --ink-subtle:#888888; }
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',-apple-system,sans-serif;background:var(--bg);color:var(--ink);direction:rtl;font-size:15px;line-height:1.7;}
+
+/* ── COVER ── */
+.cover{
+  background:linear-gradient(140deg,#0D1A2E 0%,#1B2A4A 60%,#2B3F6B 100%);
+  color:#fff;padding:70px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.cover::before{content:'';position:absolute;width:420px;height:420px;border-radius:50%;
+  border:60px solid rgba(201,168,76,0.07);top:-80px;left:-80px;}
+.cover::after{content:'';position:absolute;width:260px;height:260px;border-radius:50%;
+  border:40px solid rgba(201,168,76,0.06);bottom:-60px;right:-50px;}
+.cover h1{font-size:48px;font-weight:900;letter-spacing:-2px;margin-bottom:6px;}
+.cover-sub{
+  font-size:18px;color:var(--gold-light);display:inline-block;
+  border-bottom:2px solid var(--gold);padding-bottom:4px;margin-bottom:28px;
+}
+.cover-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.pill{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);
+  border-radius:20px;padding:7px 16px;font-size:13px;font-weight:600;color:var(--gold-light);}
+
+/* ── BANNERS ── */
+.goal-banner{background:linear-gradient(90deg,#1B2A4A,#2B3F6B);color:#fff;
+  padding:22px 40px;text-align:center;font-size:16px;line-height:1.65;
+  border-top:3px solid var(--gold);}
+.goal-banner strong{font-size:19px;display:block;margin-bottom:5px;color:var(--gold-light);}
+.warn-banner{background:#2C0E00;color:#FFD5B0;padding:14px 40px;
+  display:flex;align-items:center;gap:14px;font-size:14px;border-bottom:3px solid var(--flame);}
+.warn-banner strong{font-size:15px;display:block;margin-bottom:2px;color:#FFC880;}
+.deploy-banner{background:#09201E;color:#98e0d8;padding:14px 40px;
+  display:flex;align-items:center;gap:14px;font-size:14px;border-bottom:2px solid var(--teal);}
+.deploy-banner strong{font-size:15px;display:block;margin-bottom:2px;color:var(--teal-light);}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1080px;margin:0 auto;padding:44px 22px;}
+
+/* ── SECTION ── */
+.sec{background:var(--sec-bg);border-radius:18px;padding:32px 36px;
+  box-shadow:0 2px 16px rgba(27,42,74,0.08);margin-bottom:26px;
+  border:1px solid var(--border);}
+.sec-title{font-size:20px;font-weight:800;color:var(--primary);margin-bottom:20px;
+  padding-bottom:14px;border-bottom:2px solid var(--muted);
+  display:flex;align-items:center;gap:12px;}
+.sec-dot{width:5px;min-height:28px;border-radius:3px;background:var(--primary);flex-shrink:0;display:block;}
+.sec-dot.gold{background:var(--gold);}
+.sec-dot.teal{background:var(--teal);}
+.sec-dot.flame{background:var(--flame);}
+
+/* ── DEP GRAPH ── */
+.dep{display:flex;flex-direction:column;align-items:center;gap:0;
+  padding:24px 16px;background:var(--surface);border-radius:14px;border:1px solid var(--border);}
+.dep-row{display:flex;justify-content:center;gap:18px;width:100%;}
+.dn{padding:12px 18px;border-radius:11px;font-weight:700;font-size:13px;
+  text-align:center;min-width:210px;border:2px solid;}
+.dn small{display:block;font-size:11px;font-weight:400;opacity:.7;margin-top:3px;}
+.dn.blocker{background:#FFF5EC;border-color:var(--flame);color:var(--flame);}
+.dn.back   {background:#F0F3F9;border-color:var(--primary);color:var(--primary);}
+.dn.fi     {background:#EFF8F7;border-color:var(--teal);color:var(--teal);}
+.dn.gold   {background:#FAF5E8;border-color:var(--gold);color:var(--gold-dark);}
+.dn.merge  {background:#FFF5EC;border-color:var(--flame);color:#7A3A10;min-width:460px;font-size:12px;}
+.dep-arrow{display:flex;justify-content:center;align-items:center;height:24px;color:var(--border);font-size:18px;width:100%;}
+.dep-arrow-pair{display:flex;justify-content:center;gap:18px;width:100%;}
+.dep-arrow-pair .dep-arrow{width:210px;}
+
+/* ── TIMELINE ── */
+.tl{position:relative;padding:6px 0;}
+.tl::before{content:'';position:absolute;top:20px;bottom:20px;right:17px;
+  width:3px;background:linear-gradient(to bottom,var(--flame),var(--primary),var(--teal),var(--gold));border-radius:2px;}
+.tl-item{display:flex;gap:18px;margin-bottom:18px;align-items:flex-start;}
+.tl-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;
+  align-items:center;justify-content:center;font-size:12px;font-weight:800;
+  color:#fff;z-index:1;box-shadow:0 0 0 4px var(--sec-bg);}
+.tl-body{flex:1;padding-top:4px;}
+.tl-body h4{font-size:14px;font-weight:800;margin-bottom:3px;color:var(--primary);}
+.tl-body p{font-size:13px;color:var(--ink-muted);}
+
+/* ── FEATURE PAIRS ── */
+.fp-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.fp{border-radius:12px;padding:16px;}
+.fp.be{background:#F0F3F9;border:1.5px solid #C5CFE0;}
+.fp.fe{background:#EFF8F7;border:1.5px solid #A5D4D0;}
+.fp.fi{background:#EFF8F7;border:1.5px solid #A5D4D0;}
+.fp.go{background:#FAF5E8;border:1.5px solid #E0C87C;}
+.fp-title{font-size:12px;font-weight:800;margin-bottom:9px;}
+.fp-title.be{color:var(--primary);}
+.fp-title.fe,.fp-title.fi{color:var(--teal);}
+.fp-title.go{color:var(--gold-dark);}
+.fp li{font-size:12px;padding:3px 0 3px 14px;position:relative;list-style:none;color:var(--ink);}
+.fp li::before{content:'›';position:absolute;left:0;font-size:13px;color:var(--ink-subtle);}
+
+/* ── JOURNEY FLOW ── */
+.jflow{background:var(--surface);border-radius:12px;padding:15px 18px;margin-bottom:12px;
+  border:1px solid var(--border);}
+.jflow-title{font-size:13px;font-weight:800;margin-bottom:10px;color:var(--primary);}
+.jflow-nodes{display:flex;align-items:center;flex-wrap:wrap;gap:5px;direction:rtl;}
+.jn{background:var(--card);border:1.5px solid var(--border);border-radius:7px;
+  padding:5px 10px;font-size:12px;font-weight:600;color:var(--ink);}
+.jn.ok{background:#EFF8F7;border-color:var(--teal);color:var(--teal);}
+.jn.act{background:#FAF5E8;border-color:var(--gold);color:var(--gold-dark);}
+.jn.cta{background:#FFF5EC;border-color:var(--flame);color:var(--flame);}
+.ja{color:var(--ink-subtle);font-size:12px;font-weight:700;padding:0 2px;}
+
+/* ── PHONE MOCKUPS ── */
+.phone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;justify-items:center;margin:24px 0;}
+.pw{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.ph-lbl{font-size:12px;font-weight:800;color:var(--primary);text-align:center;max-width:200px;line-height:1.4;}
+.phone{
+  width:210px;height:520px;border-radius:36px;border:7px solid #0D1A2E;background:#0D1A2E;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 20px 48px rgba(13,26,46,0.28),0 0 0 1px rgba(201,168,76,0.12);
+}
+.ph-bar{background:#0D1A2E;color:rgba(255,255,255,.55);padding:6px 14px;
+  font-size:9px;display:flex;justify-content:space-between;align-items:center;}
+.ph-home{background:var(--surface);flex:1;overflow:hidden;}
+.ph-nav{background:var(--primary);color:#fff;padding:10px 13px;font-size:11px;
+  font-weight:800;display:flex;align-items:center;justify-content:space-between;}
+.ph-nav .back{font-size:14px;color:var(--gold-light);}
+.ph-banner{background:var(--muted);border-bottom:1px solid var(--border);
+  padding:7px 13px;font-size:9px;color:var(--ink-muted);text-align:center;}
+.ph-qrow{display:flex;gap:6px;padding:10px 11px;background:var(--card);
+  border-bottom:2px solid var(--muted);overflow:hidden;}
+.qbtn{flex-shrink:0;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:10px;padding:6px 7px;text-align:center;font-size:8px;
+  color:var(--primary);font-weight:700;min-width:36px;}
+.qbtn .qi{font-size:14px;display:block;line-height:1.3;margin-bottom:1px;}
+.qbtn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+.ph-plist{padding:8px 10px;background:var(--surface);}
+.ph-pc{background:var(--card);border-radius:11px;margin-bottom:7px;
+  display:flex;flex-direction:row-reverse;overflow:hidden;
+  box-shadow:0 1px 4px rgba(27,42,74,0.07);border:1px solid var(--border);}
+.ph-pc-bar{width:4px;background:var(--gold);flex-shrink:0;}
+.ph-pc-body{flex:1;padding:9px 10px;}
+.ph-pc-title{font-size:11px;font-weight:800;color:var(--primary);margin-bottom:2px;}
+.ph-pc-text{font-size:9px;color:var(--ink-muted);line-height:1.4;}
+.ph-pc-arrow{align-self:center;padding:0 9px;font-size:14px;color:var(--gold);}
+.ph-login-body{background:var(--surface);flex:1;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;padding:20px 14px;gap:10px;}
+.ph-logo-mark{width:44px;height:44px;background:var(--primary);border-radius:12px;
+  margin:0 auto 6px;display:flex;align-items:center;justify-content:center;}
+.ph-logo-mark span{color:var(--gold);font-size:20px;font-weight:900;}
+.ph-app-name{font-size:14px;font-weight:900;color:var(--primary);display:block;text-align:center;}
+.ph-app-tag{font-size:9px;color:var(--ink-subtle);display:block;text-align:center;margin-bottom:8px;}
+.ph-g-btn{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:9px;
+  padding:8px 11px;font-size:10px;font-weight:700;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.g-ring{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-weight:900;color:var(--primary);}
+.ph-pri-btn{width:100%;background:var(--primary);border-radius:9px;
+  padding:9px 11px;font-size:10px;font-weight:800;color:#fff;text-align:center;}
+.ph-ghost-btn{width:100%;background:transparent;border:1.5px solid var(--primary);
+  border-radius:9px;padding:7px 11px;font-size:10px;font-weight:700;
+  color:var(--primary);text-align:center;}
+.ph-prayer-body{background:var(--surface);padding:11px 13px;
+  font-size:9.5px;color:var(--ink-muted);line-height:1.65;flex:1;overflow:hidden;}
+.ph-prayer-body h3{font-size:11px;font-weight:900;color:var(--primary);margin-bottom:5px;}
+.ph-fade{height:20px;background:linear-gradient(to bottom,transparent,var(--surface));}
+.ph-donation-bar{background:var(--card);border-top:2px solid var(--muted);padding:10px 12px;}
+.ph-tiers{display:flex;gap:4px;margin-bottom:8px;}
+.ph-tier{flex:1;text-align:center;padding:6px 2px;border-radius:8px;font-size:9px;
+  font-weight:800;background:var(--surface);color:var(--primary);border:1.5px solid var(--border);}
+.ph-tier.sel{background:var(--gold);color:#fff;border-color:var(--gold-dark);}
+.ph-donate-btn{background:var(--flame);color:#fff;border-radius:10px;
+  padding:8px;text-align:center;font-size:10px;font-weight:800;}
+.ph-screen{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.ph-behind{display:flex;flex-direction:column;flex:1;opacity:0.38;pointer-events:none;}
+.ph-overlay{position:absolute;inset:0;background:rgba(13,26,46,0.52);z-index:1;pointer-events:none;}
+.ph-sheet{background:var(--card);border-radius:18px 18px 0 0;padding:10px;
+  box-shadow:0 -4px 20px rgba(27,42,74,0.2);
+  position:absolute;bottom:0;left:0;right:0;z-index:2;}
+.ph-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:2px auto 12px;}
+.ph-sb{padding:0 10px 6px;}
+.ph-lbl-sm{font-size:9px;font-weight:800;color:var(--primary);margin-bottom:3px;}
+.ph-inp{width:100%;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:7px;padding:6px 9px;font-size:9px;color:var(--ink);margin-bottom:8px;}
+.ph-chk-row{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--ink);margin-bottom:10px;}
+.ph-chk{width:13px;height:13px;border-radius:3px;background:var(--teal);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:7px;}
+.ph-confirm-btn{background:var(--primary);color:#fff;border-radius:9px;
+  padding:9px;text-align:center;font-size:10px;font-weight:800;}
+.ph-sub-note{font-size:8px;color:var(--ink-subtle);text-align:center;margin-top:5px;}
+.ph-card-chip{
+  background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+  color:#fff;border-radius:12px;padding:13px;margin-bottom:12px;
+  position:relative;overflow:hidden;}
+.ph-card-chip::after{content:'';position:absolute;width:90px;height:90px;
+  border-radius:50%;background:rgba(201,168,76,0.12);top:-20px;left:-20px;}
+.ph-card-chip .cband{font-size:8px;opacity:.65;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px;}
+.ph-card-chip .cnum{font-size:15px;font-weight:900;letter-spacing:3px;}
+.ph-card-chip .camt{font-size:9px;opacity:.8;margin-top:4px;}
+.ph-gold-accent{width:100%;height:3px;background:var(--gold);border-radius:2px;margin-bottom:10px;}
+.ph-confirm-gold{background:var(--teal);color:#fff;border-radius:9px;
+  padding:11px;text-align:center;font-size:11px;font-weight:800;}
+.ph-success{
+  background:linear-gradient(175deg,var(--primary) 0%,var(--teal) 100%);
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px 18px;text-align:center;}
+.ph-suc-ring{width:54px;height:54px;border-radius:50%;background:rgba(201,168,76,0.25);
+  border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:22px;}
+.ph-suc-t{font-size:14px;font-weight:900;color:#fff;margin-bottom:6px;}
+.ph-suc-d{font-size:9px;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:16px;}
+.ph-suc-btn{background:var(--gold);color:var(--primary-dark);border-radius:9px;
+  padding:7px 24px;font-size:10px;font-weight:800;}
+/* lang toggle */
+.lang-toggle{display:flex;gap:3px;background:rgba(255,255,255,0.12);border-radius:8px;padding:2px;}
+.lt-opt{padding:2px 7px;border-radius:6px;font-size:9px;font-weight:800;color:rgba(255,255,255,0.6);cursor:pointer;}
+.lt-opt.active{background:var(--gold);color:var(--primary-dark);}
+/* web phone */
+.ph-web{background:#F8F9FA;flex:1;overflow:hidden;direction:ltr;}
+.ph-web-bar{background:#E8E8E8;padding:6px 10px;display:flex;align-items:center;gap:6px;}
+.ph-web-dot{width:8px;height:8px;border-radius:50%;}
+.ph-web-url{flex:1;background:#fff;border-radius:4px;padding:3px 8px;font-size:8px;
+  color:#555;font-family:monospace;}
+
+/* ── TASK CARDS ── */
+.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.tc{border-radius:14px;background:var(--card);
+  box-shadow:0 1px 8px rgba(27,42,74,0.06);border:1px solid var(--border);}
+.tc.flame{border-top:4px solid var(--flame);}
+.tc.navy {border-top:4px solid var(--primary);}
+.tc.teal  {border-top:4px solid var(--teal);}
+.tc.teal2 {border-top:4px solid var(--teal-light);}
+.tc.gold  {border-top:4px solid var(--gold);}
+.tc.infra {border-top:4px solid var(--flame-light);}
+.tc-head{padding:14px 17px;border-bottom:1px solid var(--border);background:var(--surface);}
+.tc-tag{font-size:10px;font-weight:800;letter-spacing:.5px;
+  background:var(--muted);color:var(--ink-muted);
+  padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:5px;}
+.tc-name{font-size:15px;font-weight:800;color:var(--primary);}
+.tc-effort{font-size:11px;color:var(--ink-subtle);margin-top:2px;}
+.tc-body{padding:15px 17px;}
+.tc-what{font-size:13px;color:var(--ink-muted);margin-bottom:12px;line-height:1.6;}
+.file-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.file-chip{background:var(--surface);border:1px solid var(--border);border-radius:7px;
+  padding:6px 11px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
+.file-chip .fn{font-family:monospace;font-weight:700;color:var(--primary);font-size:11px;}
+.file-chip .fa{font-size:10px;color:var(--ink-subtle);}
+.ac-lbl{font-size:10px;font-weight:800;color:var(--ink-subtle);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.ac-items{list-style:none;padding:0;}
+.ac-items li{font-size:12px;padding:4px 0 4px 18px;border-bottom:1px solid var(--muted);
+  position:relative;color:var(--ink);}
+.ac-items li:last-child{border-bottom:none;}
+.ac-items li::before{content:'›';position:absolute;left:0;color:var(--teal);font-weight:800;font-size:14px;}
+
+/* ── SYNC BOXES ── */
+.sync-box{background:var(--surface);border:1px solid var(--border);
+  border-right:4px solid var(--gold);border-radius:10px;padding:14px 17px;margin-bottom:10px;}
+.sync-box strong{color:var(--primary);display:block;margin-bottom:3px;font-size:14px;}
+.sync-box p{font-size:13px;color:var(--ink-muted);}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+th{background:var(--primary);color:#fff;padding:9px 13px;text-align:right;font-weight:700;}
+td{padding:8px 13px;border-bottom:1px solid var(--muted);vertical-align:top;}
+tr:nth-child(even) td{background:var(--surface);}
+
+/* ── NOTES ── */
+.note{border-radius:9px;padding:12px 16px;margin:12px 0;border-right:4px solid;font-size:13px;}
+.note-flame{background:#FFF5EC;border-color:var(--flame);color:#7A3A10;}
+.note-gold{background:#FAF5E8;border-color:var(--gold);color:#5A4010;}
+.note-teal{background:#EFF8F7;border-color:var(--teal);color:#1A4A48;}
+
+/* ── CHECKLIST ── */
+.chk-list{list-style:none;padding:0;}
+.chk-item{padding:7px 0 7px 24px;border-bottom:1px solid var(--muted);font-size:14px;position:relative;}
+.chk-item:last-child{border-bottom:none;}
+.chk-item::before{content:'☐';position:absolute;left:0;color:var(--primary);font-size:14px;}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:3px 9px;border-radius:14px;font-size:11px;font-weight:700;margin:2px;}
+.b-flame{background:#FFF5EC;color:var(--flame);}
+.b-grey{background:var(--muted);color:var(--ink-muted);}
+.b-gold{background:#FAF5E8;color:var(--gold-dark);}
+.b-teal{background:#EFF8F7;color:var(--teal);}
+
+@media(max-width:700px){
+  .phone-grid{grid-template-columns:1fr 1fr;}
+  .task-grid{grid-template-columns:1fr;}
+  .fp-pair{grid-template-columns:1fr;}
+  .dep-row{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>ספרינט 4</h1>
+  <div class="cover-sub">Stabilize · Deploy · i18n</div>
+  <div class="cover-pills">
+    <div class="pill">שבועות 7–8</div>
+    <div class="pill">2 ג'וניוריות</div>
+    <div class="pill">6 משימות</div>
+    <div class="pill">מטרה: E2E בproduction</div>
+  </div>
+</div>
+
+<!-- GOAL -->
+<div class="goal-banner">
+  <strong>מטרת הספרינט</strong>
+  כל באגי FINDINGS נסגרים. פלואו התרומה עובד E2E ללא workarounds.
+  Backend ב-Render · Frontend ב-Vercel · האפליקציה תומכת באנגלית לצד עברית.
+</div>
+
+<!-- WARNING: Sprint 3 carry-over -->
+<div class="warn-banner">
+  <div style="background:rgba(255,180,80,0.15);border-radius:8px;padding:6px 12px;font-size:20px;flex-shrink:0;">⚠️</div>
+  <div>
+    <strong>קרייאוובר ספרינט 3 — פעולות חובה לפני Day 1</strong>
+    מיזוג ABD-8 (Prayer Detail) · ABD-14 (Payment Sheet) · ABD-61 (charge_saved_card) חייב להתבצע לפני פתיחת כל PR. auth.py ו-UserResponse אבדו במיזוג פגום של ABD-59 — F1 מממשת מאפס.
+  </div>
+</div>
+
+<!-- DEPLOY LIVE BANNER -->
+<div class="deploy-banner">
+  <div style="background:rgba(46,139,132,0.2);border-radius:8px;padding:6px 10px;font-size:20px;flex-shrink:0;">🚀</div>
+  <div>
+    <strong>Cloud Deploy עולה לאוויר ספרינט זה</strong>
+    Render (FastAPI + PostgreSQL) · Vercel (Expo SSR) · Stripe Webhooks בproduction · F5 יוצאת מה-Backlog.
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ DEP GRAPH ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot flame"></div>גרף תלויות — סדר עבודה</div>
+
+  <div class="dep">
+    <!-- Row 0: merges -->
+    <div class="dep-row">
+      <div class="dn merge">
+        ⬤ Day 0 לפני כל PR — מיזוג ABD-8 (Prayer Detail) + ABD-14 (Payment Sheet) + ABD-61 (charge_saved_card)
+        <small>פעולת מיזוג בלבד — לא PR חדש — שרה או מפתחת עם merge rights</small>
+      </div>
+    </div>
+    <div class="dep-arrow">↓</div>
+    <!-- Row 1: F1 BLOCKER + F2 parallel -->
+    <div class="dep-row">
+      <div class="dn blocker">F1 🚨 — Backend Schema Repair + Auth<small>Backend · M · BLOCKER — מתחילה ראשונה</small></div>
+      <div class="dn fi">F2 — i18n: English + Language Picker<small>Frontend + Backend · M–L · עצמאית לגמרי</small></div>
+    </div>
+    <div class="dep-arrow-pair">
+      <div class="dep-arrow" style="width:210px;">↓</div>
+      <div class="dep-arrow" style="width:210px;">↓</div>
+    </div>
+    <!-- Row 2: F3 + F5 -->
+    <div class="dep-row">
+      <div class="dn back">F3 — Frontend Auth + Saved Card<small>Frontend · M–L · תלויה F1</small></div>
+      <div class="dn fi">F5 — Cloud Deploy: Render + Vercel<small>Infrastructure · M · תלויה F1</small></div>
+    </div>
+    <div class="dep-arrow-pair">
+      <div class="dep-arrow" style="width:210px;">↓</div>
+      <div class="dep-arrow" style="width:210px;">↓</div>
+    </div>
+    <!-- Row 3: F4 + F6 -->
+    <div class="dep-row">
+      <div class="dn gold">F4 — Quick Buttons E2E<small>Frontend · S · תלויה F3</small></div>
+      <div class="dn fi">F6 — Stripe Webhooks<small>Backend · S · תלויה F5</small></div>
+    </div>
+  </div>
+
+  <div class="note note-teal" style="margin-top:16px;">
+    <strong>חלוקה מומלצת:</strong> מפתחת 1 — מיזוגים → F1 → F5 → F6 (backend + infra). מפתחת 2 — F2 (עצמאית, ביום 1) → F3 → F4 (frontend chain). F3 יכולה להתחיל כנגד mock ולעבור ל-API אמיתי ברגע שF1 נמזג.
+  </div>
+</div>
+
+<!-- ══ TIMELINE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot"></div>ציר זמן — 2 שבועות</div>
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--flame);">0</div>
+      <div class="tl-body">
+        <h4>יום 0 — מיזוגים + Contract Sync</h4>
+        <p>שרה ממזגת ABD-8 / ABD-14 / ABD-61 ל-main. 10 דקות ביחד: מפתחת F1 משתפת את UserResponse JSON המדויק → מפתחת F3 מאשרת mapping לcamelCase (firebase_uid→firebaseUid, has_saved_card→hasSavedCard). ללא סנכרון זה — יום debugging אבוד בהמשך.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--flame);">1–4</div>
+      <div class="tl-body">
+        <h4>ימים 1–4 — F1 BLOCKER + F2 במקביל</h4>
+        <p><strong>מפתחת 1:</strong> מממשת auth.py מאפס (verify_firebase_token, optional). מתקנת 4 mismatches בschemas.py (DonationCreate, UserResponse, UserUpdate, DonationResponse). מתקנת donation_service (customer_id hardcoded, quick_button_id always NULL, donation_history sync→async).<br><strong>מפתחת 2:</strong> מפעילה i18next בroot layout. יוצרת en.json מאפס. ממשת Language Picker + RTL/LTR switching בלי restart. מתרגמת 5 תפילות ידנית מ-Chabad.org / Siddur.org.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--primary);">5–7</div>
+      <div class="tl-body">
+        <h4>ימים 5–7 — F3 + F5 אחרי מיזוג F1</h4>
+        <p><strong>מפתחת 1:</strong> פורסת backend ל-Render — env vars, FIREBASE_CREDENTIALS_JSON, DATABASE_URL. מריצה alembic upgrade head בproduction. מחכה ל-Render URL → F6 ממתינה לה.<br><strong>מפתחת 2:</strong> ממשת useAuth (onAuthStateChanged → getMe → AppUser mapping). בונה login.tsx (Google + Apple). ממשת DonationBottomSheet — 2 ענפים (כרטיס שמור / Payment Sheet). תיקון formatAmount ARS.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--teal);">8–10</div>
+      <div class="tl-body">
+        <h4>ימים 8–10 — F4 + F6 + Integration Day</h4>
+        <p><strong>מפתחת 1:</strong> רושמת Stripe Webhook על הURL של Render בDashboard. ממשת signature verification + event handler (payment_intent.succeeded → status=success).<br><strong>מפתחת 2:</strong> ממשת QuickButtons.tsx — 5 כפתורים מהירים חיים. מעבירה quickButtonSlug ל-DonationBottomSheet.<br><strong>Integration Day:</strong> Smoke test מלא על Render/Vercel URLs. flow E2E מקצה לקצה בproduction.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEATURE JOURNEYS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>פיצ'רים מקצה לקצה</div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:0 0 10px;padding-right:10px;border-right:3px solid var(--flame);">תיקון Backend — F1 → F3</h3>
+  <div class="fp-pair">
+    <div class="fp be">
+      <div class="fp-title be">F1 — Backend מתקן</div>
+      <ul class="fp">
+        <li>verify_firebase_token → 200 (היה 501)</li>
+        <li>DonationCreate aliases → POST /initiate לא 422</li>
+        <li>UserResponse camelCase → isAnonymous, hasSavedCard</li>
+        <li>customer_id ← מ-Stripe, לא hardcoded None</li>
+        <li>quick_button_id נשמר בDB</li>
+      </ul>
+    </div>
+    <div class="fp fi">
+      <div class="fp-title fi">F3 — Frontend מחבר</div>
+      <ul class="fp">
+        <li>useAuth: onAuthStateChanged → getMe → AppUser</li>
+        <li>DonationBottomSheet — 2 ענפים חיים</li>
+        <li>ARS zero-decimal bug תוקן</li>
+        <li>detectCurrency() נקרא בhook mount</li>
+        <li>ABD-8/14/61 ממוזגים לפני PR</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--flame);">Flow: תיקון auth (היה 501)</div>
+    <div class="jflow-nodes">
+      <div class="jn cta">Bearer token</div><div class="ja">→</div>
+      <div class="jn act">verify_id_token</div><div class="ja">→</div>
+      <div class="jn act">get_or_create_user</div><div class="ja">→</div>
+      <div class="jn ok">User ORM → 200</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:20px 0 10px;padding-right:10px;border-right:3px solid var(--teal);">i18n — F2 עצמאית</h3>
+  <div class="fp-pair">
+    <div class="fp be">
+      <div class="fp-title be">F2 — Backend מוסיף</div>
+      <ul class="fp">
+        <li>PrayerResponse += title_en, body_en</li>
+        <li>lang=en fallback לעברית אם שדה ריק</li>
+        <li>5 תפילות עם title_en + body_en בDB</li>
+        <li>תרגום ידני — Chabad.org / Siddur.org</li>
+      </ul>
+    </div>
+    <div class="fp fi">
+      <div class="fp-title fi">F2 — Frontend מוסיף</div>
+      <ul class="fp">
+        <li>i18next init בroot layout</li>
+        <li>en.json — כל המפתחות מ-he.json</li>
+        <li>Language Picker: עב | EN</li>
+        <li>RTL → LTR ללא restart</li>
+        <li>שמירה ב-AsyncStorage</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--teal);">Flow: החלפת שפה</div>
+    <div class="jflow-nodes">
+      <div class="jn cta">לחיצה EN</div><div class="ja">→</div>
+      <div class="jn act">setLanguage('en')</div><div class="ja">→</div>
+      <div class="jn act">languageStore + AsyncStorage</div><div class="ja">→</div>
+      <div class="jn ok">UI באנגלית · LTR · ללא restart</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:20px 0 10px;padding-right:10px;border-right:3px solid var(--gold);">Cloud Deploy — F5 → F6</h3>
+  <div class="fp-pair">
+    <div class="fp go">
+      <div class="fp-title go">F5 — Deploy מגיע</div>
+      <ul class="fp">
+        <li>Render: FastAPI + PostgreSQL בproduction</li>
+        <li>FIREBASE_CREDENTIALS_JSON ← env var (לא קובץ)</li>
+        <li>Vercel: Expo SSR deployed</li>
+        <li>EXPO_PUBLIC_API_URL → Render URL</li>
+        <li>.env.example מלא עם כל הsecrets</li>
+      </ul>
+    </div>
+    <div class="fp fi">
+      <div class="fp-title fi">F6 — Webhooks חיים</div>
+      <ul class="fp">
+        <li>POST /api/webhooks/stripe — לא stub</li>
+        <li>Signature verification (STRIPE_WEBHOOK_SECRET)</li>
+        <li>payment_intent.succeeded → status=success בDB</li>
+        <li>payment_intent.payment_failed → status=failed</li>
+        <li>Stripe Dashboard: webhook רשום + green ✓</li>
+      </ul>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--gold-dark);">Flow: תרומה בproduction מקצה לקצה</div>
+    <div class="jflow-nodes">
+      <div class="jn">Vercel frontend</div><div class="ja">→</div>
+      <div class="jn act">POST /initiate (Render)</div><div class="ja">→</div>
+      <div class="jn act">Stripe Payment Sheet</div><div class="ja">→</div>
+      <div class="jn act">Webhook event</div><div class="ja">→</div>
+      <div class="jn ok">status=success בDB</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHONE SCREENS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot gold"></div>המסכים בסיום הספרינט</div>
+
+  <div class="phone-grid">
+
+    <!-- Phone 1: Home + Language Picker -->
+    <div class="pw">
+      <div class="ph-lbl">מסך הבית<br>Language Picker + Quick Buttons חיים</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+        <div class="ph-home">
+          <div class="ph-nav">
+            <span>תפילות</span>
+            <div class="lang-toggle">
+              <div class="lt-opt active">עב</div>
+              <div class="lt-opt">EN</div>
+            </div>
+          </div>
+          <div class="ph-qrow">
+            <div class="qbtn"><span class="qi">📚</span>בחינה</div>
+            <div class="qbtn"><span class="qi">✈️</span>טיסה</div>
+            <div class="qbtn active"><span class="qi">🏥</span>ניתוח</div>
+            <div class="qbtn"><span class="qi">👶</span>לידה</div>
+            <div class="qbtn"><span class="qi">💼</span>ראיון</div>
+          </div>
+          <div class="ph-plist">
+            <div class="ph-pc"><div class="ph-pc-bar"></div><div class="ph-pc-body"><div class="ph-pc-title">תפילה לרפואה שלמה</div><div class="ph-pc-text">רבונו של עולם, אתה רופא כל בשר...</div></div><div class="ph-pc-arrow">&lt;</div></div>
+            <div class="ph-pc"><div class="ph-pc-bar"></div><div class="ph-pc-body"><div class="ph-pc-title">תפילה להצלחה</div><div class="ph-pc-text">ריבונו של עולם, בידך הצלחה...</div></div><div class="ph-pc-arrow">&lt;</div></div>
+            <div class="ph-pc"><div class="ph-pc-bar"></div><div class="ph-pc-body"><div class="ph-pc-title">תפילה לפני מבחן</div><div class="ph-pc-text">אנא ה', פתח לבי בתורתך...</div></div><div class="ph-pc-arrow">&lt;</div></div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: English mode -->
+    <div class="pw">
+      <div class="ph-lbl">מסך תפילה — English mode<br>LTR · כל המפתחות באנגלית</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen" style="direction:ltr;">
+          <div class="ph-nav" style="direction:ltr;">
+            <span style="font-size:14px;color:var(--gold-light);">&lt;</span>
+            <span style="font-size:10px;">Prayer for an Exam</span>
+            <div class="lang-toggle"><div class="lt-opt">עב</div><div class="lt-opt active">EN</div></div>
+          </div>
+          <div class="ph-prayer-body" style="direction:ltr;text-align:left;">
+            <h3 style="text-align:left;">Prayer for an Exam</h3>
+            O Lord, open my heart to Your Torah, grant me understanding to comprehend and learn, to guard and fulfil all the words of Your holy Torah with love. May You grant me success in this examination...
+          </div>
+          <div class="ph-fade"></div>
+          <div class="ph-donation-bar" style="direction:ltr;">
+            <div class="ph-tiers">
+              <div class="ph-tier">$18</div>
+              <div class="ph-tier">$36</div>
+              <div class="ph-tier sel">$72</div>
+              <div class="ph-tier">$180</div>
+            </div>
+            <div class="ph-donate-btn">Donate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 3: Bottom Sheet new user (FIXED) -->
+    <div class="pw">
+      <div class="ph-lbl">Bottom Sheet — משתמש חדש<br>Payment Sheet עובד (תוקן ABD-14)</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+          <div class="ph-behind">
+            <div class="ph-nav"><span class="back">&lt;</span><span>תפילה לפני מבחן</span><span></span></div>
+            <div class="ph-prayer-body">אנא ה', פתח לבי בתורתך ותן בלבי בינה להבין ולהשכיל, לשמוע ללמוד ולעשות...</div>
+            <div class="ph-donation-bar">
+              <div class="ph-tiers"><div class="ph-tier">₪18</div><div class="ph-tier">₪36</div><div class="ph-tier sel">₪72</div><div class="ph-tier">₪180</div><div class="ph-tier">₪360</div></div>
+              <div class="ph-donate-btn">תרום</div>
+            </div>
+          </div>
+          <div class="ph-overlay"></div>
+          <div class="ph-sheet">
+            <div class="ph-handle"></div>
+            <div class="ph-sb">
+              <div style="font-size:9px;font-weight:800;color:var(--primary);text-align:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--muted);">תפילה לפני מבחן · ₪72</div>
+              <div class="ph-lbl-sm">שם המוסר</div>
+              <div class="ph-inp">ישראל כהן</div>
+              <div class="ph-lbl-sm">שם לתפילה (₪72+)</div>
+              <div class="ph-inp">שמואל בן שרה</div>
+              <div class="ph-chk-row"><div class="ph-chk">✓</div><span>שמור כרטיס לתרומות מהירות</span></div>
+              <div class="ph-confirm-btn">אשר תרומה (₪72)</div>
+              <div class="ph-sub-note">Payment Sheet נפתח · לא קורס</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 4: Bottom Sheet saved card (FIXED) -->
+    <div class="pw">
+      <div class="ph-lbl">Bottom Sheet — כרטיס שמור<br>charge_saved_card עובד (תוקן ABD-61)</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+          <div class="ph-behind">
+            <div class="ph-nav"><span>תפילות</span><span style="font-size:9px;color:var(--gold-light);background:rgba(201,168,76,0.15);padding:2px 8px;border-radius:10px;">ישראל</span></div>
+            <div class="ph-qrow">
+              <div class="qbtn active"><span class="qi">📚</span>בחינה</div>
+              <div class="qbtn"><span class="qi">✈️</span>טיסה</div>
+              <div class="qbtn"><span class="qi">🏥</span>ניתוח</div>
+              <div class="qbtn"><span class="qi">👶</span>לידה</div>
+              <div class="qbtn"><span class="qi">💼</span>ראיון</div>
+            </div>
+            <div class="ph-plist"><div class="ph-pc"><div class="ph-pc-bar"></div><div class="ph-pc-body"><div class="ph-pc-title">תפילה לפני מבחן</div><div class="ph-pc-text">אנא ה', פתח לבי...</div></div><div class="ph-pc-arrow">&lt;</div></div></div>
+          </div>
+          <div class="ph-overlay"></div>
+          <div class="ph-sheet">
+            <div class="ph-handle"></div>
+            <div class="ph-sb">
+              <div class="ph-card-chip">
+                <div class="cband">VISA</div>
+                <div class="cnum">**** 4242</div>
+                <div class="camt">תרומה: ₪72 · תפילה לפני מבחן</div>
+              </div>
+              <div class="ph-gold-accent"></div>
+              <div class="ph-confirm-gold">אשר תרומה (₪72)</div>
+              <div class="ph-sub-note">charge ישיר · ≤3 שניות · ללא Stripe UI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 5: Quick Buttons functional -->
+    <div class="pw">
+      <div class="ph-lbl">Quick Buttons — 5 כפתורים חיים<br>F4 — stub → ממושם</div>
+      <div class="phone">
+        <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+        <div class="ph-home">
+          <div class="ph-nav"><span>תפילות</span><div class="lang-toggle"><div class="lt-opt active">עב</div><div class="lt-opt">EN</div></div></div>
+          <div style="padding:12px 11px 8px;background:var(--card);border-bottom:2px solid var(--muted);">
+            <div style="font-size:9px;font-weight:800;color:var(--primary);margin-bottom:8px;letter-spacing:.3px;">תרומות מהירות</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+              <div style="background:var(--primary);border-radius:11px;padding:9px 10px;text-align:center;color:#fff;">
+                <div style="font-size:18px;margin-bottom:3px;">📚</div>
+                <div style="font-size:9px;font-weight:800;">יש לי מבחן</div>
+                <div style="font-size:8px;opacity:.7;margin-top:2px;">₪72 · תפילה לפני מבחן</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:9px 10px;text-align:center;color:var(--primary);">
+                <div style="font-size:18px;margin-bottom:3px;">✈️</div>
+                <div style="font-size:9px;font-weight:800;">אני יוצא לטוס</div>
+                <div style="font-size:8px;color:var(--ink-subtle);margin-top:2px;">₪72 · תפילת הדרך</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:9px 10px;text-align:center;color:var(--primary);">
+                <div style="font-size:18px;margin-bottom:3px;">🏥</div>
+                <div style="font-size:9px;font-weight:800;">לפני ניתוח</div>
+                <div style="font-size:8px;color:var(--ink-subtle);margin-top:2px;">₪180 · רפואה שלמה</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:9px 10px;text-align:center;color:var(--primary);">
+                <div style="font-size:18px;margin-bottom:3px;">💼</div>
+                <div style="font-size:9px;font-weight:800;">ראיון עבודה</div>
+                <div style="font-size:8px;color:var(--ink-subtle);margin-top:2px;">₪36 · תפילה להצלחה</div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-plist">
+            <div class="ph-pc"><div class="ph-pc-bar"></div><div class="ph-pc-body"><div class="ph-pc-title">תפילה לרפואה שלמה</div><div class="ph-pc-text">רבונו של עולם...</div></div><div class="ph-pc-arrow">&lt;</div></div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 6: Production / Success -->
+    <div class="pw">
+      <div class="ph-lbl">Production Smoke Test<br>Render + Vercel · E2E עובד</div>
+      <div class="phone">
+        <div class="ph-bar" style="background:var(--primary-dark);"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="ph-screen">
+        <div class="ph-web">
+          <div class="ph-web-bar">
+            <div class="ph-web-dot" style="background:#FF5F57;"></div>
+            <div class="ph-web-dot" style="background:#FFBD2E;"></div>
+            <div class="ph-web-dot" style="background:#28C840;"></div>
+            <div class="ph-web-url">anuvenych.vercel.app</div>
+          </div>
+          <div style="padding:10px 12px;background:#F8F9FA;">
+            <div style="background:#fff;border-radius:8px;border:1px solid #E0E0E0;overflow:hidden;margin-bottom:8px;">
+              <div style="background:#1B2A4A;color:#fff;padding:8px 12px;font-size:10px;font-weight:800;direction:rtl;display:flex;justify-content:space-between;align-items:center;">
+                <span>תפילות</span>
+                <span style="font-size:8px;background:rgba(201,168,76,0.2);padding:2px 7px;border-radius:8px;color:var(--gold-light);">EN | עב</span>
+              </div>
+              <div style="padding:8px 10px;direction:rtl;">
+                <div style="background:#fff;border-radius:8px;border:1px solid #E8E0D0;margin-bottom:5px;display:flex;flex-direction:row-reverse;overflow:hidden;">
+                  <div style="width:3px;background:#C9A84C;flex-shrink:0;"></div>
+                  <div style="padding:7px 9px;flex:1;"><div style="font-size:9px;font-weight:800;color:#1B2A4A;">תפילה לרפואה שלמה</div><div style="font-size:7px;color:#888;margin-top:1px;">רבונו של עולם...</div></div>
+                </div>
+                <div style="background:#fff;border-radius:8px;border:1px solid #E8E0D0;display:flex;flex-direction:row-reverse;overflow:hidden;">
+                  <div style="width:3px;background:#C9A84C;flex-shrink:0;"></div>
+                  <div style="padding:7px 9px;flex:1;"><div style="font-size:9px;font-weight:800;color:#1B2A4A;">תפילה לפני מבחן</div><div style="font-size:7px;color:#888;margin-top:1px;">אנא ה', פתח לבי...</div></div>
+                </div>
+              </div>
+            </div>
+            <div style="background:#EFF8F7;border:1px solid var(--teal);border-radius:8px;padding:9px 11px;direction:rtl;">
+              <div style="font-size:9px;font-weight:800;color:var(--teal);margin-bottom:4px;">✓ Smoke Test עבר</div>
+              <div style="font-size:8px;color:var(--ink-muted);line-height:1.6;">GET /api/prayers → 200<br>POST /api/donations/initiate → 200<br>GET /health → {"status":"ok"}</div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-grid -->
+
+  <!-- NAV FLOWS -->
+  <h3 style="font-size:14px;color:var(--primary);margin:28px 0 14px;padding-right:10px;border-right:3px solid var(--primary);">פלואוים מלאים בסיום הספרינט</h3>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--flame);">A — משתמשת חדשה: Payment Sheet (תוקן)</div>
+    <div class="jflow-nodes">
+      <div class="jn">בית</div><div class="ja">→</div>
+      <div class="jn">תפילה · ₪72</div><div class="ja">→</div>
+      <div class="jn">Bottom Sheet · שם + שמור</div><div class="ja">→ Stripe →</div>
+      <div class="jn ok">הצלחה + כרטיס שמור</div>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--teal);">B — חוזרת: Quick Button + כרטיס שמור</div>
+    <div class="jflow-nodes">
+      <div class="jn cta">לחיצה 1: "יש לי מבחן"</div><div class="ja">→</div>
+      <div class="jn">VISA ****4242 · ₪72</div><div class="ja">→</div>
+      <div class="jn cta">לחיצה 2: אשר</div><div class="ja">→</div>
+      <div class="jn ok">הצלחה ≤3 שניות</div>
+    </div>
+  </div>
+  <div class="jflow">
+    <div class="jflow-title" style="color:var(--gold-dark);">C — Production webhook</div>
+    <div class="jflow-nodes">
+      <div class="jn">Stripe charges</div><div class="ja">→</div>
+      <div class="jn act">POST /webhooks/stripe</div><div class="ja">→</div>
+      <div class="jn act">signature verify</div><div class="ja">→</div>
+      <div class="jn ok">Donation.status = success בDB</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TASK CARDS ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot"></div>המשימות</div>
+  <div class="task-grid">
+
+    <div class="tc flame">
+      <div class="tc-head"><div class="tc-tag">F1 · BLOCKER</div><div class="tc-name">Backend Schema Repair + Auth Regression Fix</div><div class="tc-effort">Backend · M · ABD-69 · שער — gates F3 + F5</div></div>
+      <div class="tc-body">
+        <div class="tc-what">מממשת auth.py מאפס (verify_firebase_token, optional). מתקנת 4 schema mismatches (DonationCreate 422, UserResponse camelCase, UserUpdate, DonationResponse aliases). donation_service: customer_id hardcoded None, quick_button_id always NULL, donation_history sync→async.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">middleware/auth.py</span><span class="fa">verify + optional ממושמות</span></div>
+          <div class="file-chip"><span class="fn">schemas/schemas.py</span><span class="fa">4 schema mismatches תוקנו</span></div>
+          <div class="file-chip"><span class="fn">services/donation_service.py</span><span class="fa">customer_id + quick_button_id</span></div>
+          <div class="file-chip"><span class="fn">routers/donations.py</span><span class="fa">donation_history → async def</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>GET /api/users/me עם Bearer → 200, camelCase incl. isAnonymous</li>
+          <li>POST /api/donations/initiate → 200 (לא 422)</li>
+          <li>save_card=true → PaymentIntent עם Stripe customer</li>
+          <li>quick_button_id non-null בDB</li>
+          <li>ruff check . עובר</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc teal">
+      <div class="tc-head"><div class="tc-tag">F2 · עצמאית</div><div class="tc-name">i18n: English UI + Language Picker + Prayer Seed</div><div class="tc-effort">Full-Stack · M–L · ABD-72 · מקבילה ל-F1</div></div>
+      <div class="tc-body">
+        <div class="tc-what">i18next init בroot layout. יוצרת en.json מאפס (כל מפתחות he.json). ממשת Language Picker (עב/EN), useLanguage hook, RTL/LTR runtime switching, languageStore, detectLanguage. מוסיפה title_en/body_en לPrayerResponse. מתרגמת 5 תפילות ידנית (Chabad.org).</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">i18n/en.json</span><span class="fa">חדש — כל המפתחות</span></div>
+          <div class="file-chip"><span class="fn">components/LanguagePicker</span><span class="fa">חדש — עב | EN</span></div>
+          <div class="file-chip"><span class="fn">hooks/useLanguage.ts</span><span class="fa">setLanguage + direction</span></div>
+          <div class="file-chip"><span class="fn">schemas/schemas.py</span><span class="fa">PrayerResponse += en fields</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>device locale=en → app נפתח באנגלית</li>
+          <li>לחיצה EN → UI באנגלית · LTR ללא restart</li>
+          <li>preference שמור ב-AsyncStorage</li>
+          <li>5 תפילות עם title_en + body_en בDB</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc navy">
+      <div class="tc-head"><div class="tc-tag">F3</div><div class="tc-name">Frontend Auth + Saved Card + Prayer Detail Merge</div><div class="tc-effort">Frontend · M–L · ABD-70 · תלויה F1</div></div>
+      <div class="tc-body">
+        <div class="tc-what">ממזגת ABD-8/14/61 לפני PR. ממשת useAuth (onAuthStateChanged → getMe → AppUser mapping), login.tsx (Google + Apple), DonationBottomSheet (2 ענפים: כרטיס שמור / Payment Sheet), useDonation (initiateDonation + quickDonate). תיקון formatAmount ARS, detectCurrency().</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">hooks/useAuth.ts</span><span class="fa">stub → ממומש</span></div>
+          <div class="file-chip"><span class="fn">app/auth/login.tsx</span><span class="fa">Google + Apple (iOS)</span></div>
+          <div class="file-chip"><span class="fn">DonationBottomSheet.tsx</span><span class="fa">2 ענפים ממומשים</span></div>
+          <div class="file-chip"><span class="fn">hooks/useDonation.ts</span><span class="fa">initiate + quickDonate</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>ABD-8: Prayer Detail נגיש ב-/prayer/[slug]</li>
+          <li>ABD-14: Payment Sheet נפתח ללא crash</li>
+          <li>ABD-61: charge_saved_card ללא NotImplementedError</li>
+          <li>ARS 50000 pesos → $50,000 (לא $500)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc gold">
+      <div class="tc-head"><div class="tc-tag">F4</div><div class="tc-name">Quick Buttons: Full End-to-End</div><div class="tc-effort">Frontend · S · ABD-71 · תלויה F3</div></div>
+      <div class="tc-body">
+        <div class="tc-what">ממשת QuickButtons.tsx — map על QUICK_BUTTONS (קיים, לא נוגעת). 5 כפתורים: בחינה / טיסה / ניתוח / לידה / ראיון. tap → selectTier + DonationBottomSheet עם prayer_slug + quickButtonSlug. label משתנה עם Language Picker.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">QuickButtons/QuickButtons.tsx</span><span class="fa">stub → ממומש</span></div>
+          <div class="file-chip"><span class="fn">constants/quickButtons.ts</span><span class="fa">לא נוגעת — קיים ומלא</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>5 כפתורים עם emoji + תווית בשפה הנוכחית</li>
+          <li>tap "יש לי מבחן" → sheet + ₪72 + exam prayer</li>
+          <li>quick_button_id non-null בDB</li>
+          <li>labels מחליפות שפה עם Language Picker</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc infra">
+      <div class="tc-head"><div class="tc-tag">F5</div><div class="tc-name">Cloud Deploy: Render + Vercel</div><div class="tc-effort">Infrastructure · M · ABD-65 · תלויה F1</div></div>
+      <div class="tc-body">
+        <div class="tc-what">Backend ל-Render: start command, Python version, env vars (DATABASE_URL, STRIPE_SECRET_KEY, FIREBASE_CREDENTIALS_JSON). אלמביק migration בproduction DB. Frontend ל-Vercel: vercel.json, EXPO_PUBLIC_API_URL → Render URL. .env.example מלא. Smoke test מלא.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">backend/core/config.py</span><span class="fa">FIREBASE_CREDENTIALS_JSON (env var)</span></div>
+          <div class="file-chip"><span class="fn">prayers-app/app.json</span><span class="fa">EXPO_PUBLIC_API_URL → Render</span></div>
+          <div class="file-chip"><span class="fn">.env.example</span><span class="fa">כל הsecrets עם הסברים</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>GET https://render-url/health → {"status":"ok"}</li>
+          <li>GET https://vercel-url → prayer list נטען</li>
+          <li>EXPO_PUBLIC_API_URL מצביע ל-Render (לא localhost)</li>
+          <li>Firebase credentials ← env var, לא committed file</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tc teal2">
+      <div class="tc-head"><div class="tc-tag">F6</div><div class="tc-name">Stripe Webhooks: Signature + Status Update</div><div class="tc-effort">Backend · S · ABD-66 · תלויה F5</div></div>
+      <div class="tc-body">
+        <div class="tc-what">ממשת webhooks.py — לא stub. stripe.Webhook.construct_event עם raw body (await request.body()). event handler: payment_intent.succeeded → status=success, payment_intent.payment_failed → status=failed. פונקציה חדשה update_donation_status בdonation_service. רישום בStripe Dashboard אחרי F5.</div>
+        <div class="file-list">
+          <div class="file-chip"><span class="fn">routers/webhooks.py</span><span class="fa">stub → signature + events</span></div>
+          <div class="file-chip"><span class="fn">services/donation_service.py</span><span class="fa">update_donation_status — חדש</span></div>
+        </div>
+        <div class="ac-lbl">קריטריוני קבלה</div>
+        <ul class="ac-items">
+          <li>signature לא תקינה → 400 (לא 200)</li>
+          <li>payment_intent.succeeded → status=success בDB</li>
+          <li>stripe trigger payment_intent.succeeded → DB עודכן</li>
+          <li>Stripe Dashboard: webhook green ✓</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /task-grid -->
+
+  <div class="note note-flame" style="margin-top:18px;">
+    סיכונים מרכזיים: auth.py ו-UserResponse אבדו פעם אחת — F1 מממשת מאפס, לא cherry-pick. FIREBASE_CREDENTIALS_JSON חייב להיות env var string בRender (לא קובץ). תרגום ידני = הpole הארוך של F2 — להתחיל מוקדם.
+  </div>
+</div>
+
+<!-- ══ SYNC + DONE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>נקודות סנכרון</div>
+  <div class="sync-box"><strong>יום 0 — מיזוגים + UserResponse Contract</strong><p>שרה ממזגת ABD-8/14/61. מפתחת F1 משתפת JSON מדויק של UserResponse. מפתחת F3 מאשרת: firebase_uid→firebaseUid, has_saved_card→hasSavedCard, is_anonymous→isAnonymous. isAnonymous + createdAt מגיעים מ-Firebase User, לא מ-API.</p></div>
+  <div class="sync-box"><strong>כשF1 נמזג — F3 ו-F5 יכולות להתחיל</strong><p>F3 עוברת ממock ל-API אמיתי. F5 יכולה לפרוס backend יציב. לא לפתוח PR של F3 לפני שF1 ב-main.</p></div>
+  <div class="sync-box"><strong>כשF5 deployed — Production URL משותף</strong><p>מפתחת F5 משתפת את URL של Render. F6 רושמת webhook בDashboard. Frontend מעדכן EXPO_PUBLIC_API_URL בVercel.</p></div>
+  <div class="sync-box"><strong>כל PR — שער Review</strong><p>המפתחת השנייה עושה review → שרה מאשרת → מיזוג ל-main. ללא יוצא מן הכלל.</p></div>
+
+  <h3 style="font-size:14px;color:var(--primary);margin:22px 0 12px;">קבצים שלא נוגעות</h3>
+  <table>
+    <tr><th>קובץ</th><th>מי משתמשת</th></tr>
+    <tr><td>services/firebase.ts</td><td>F3 — Firebase providers</td></tr>
+    <tr><td>store/authStore.ts</td><td>F3 (setUser/setToken) · F4 (hasSavedCard)</td></tr>
+    <tr><td>constants/quickButtons.ts</td><td>F4 — QUICK_BUTTONS</td></tr>
+    <tr><td>constants/donations.ts</td><td>F3 — PRAYER_NAME_MIN_AMOUNT</td></tr>
+    <tr><td>utils/detectLanguage.ts</td><td>F2 — קיים ומלא</td></tr>
+    <tr><td>store/languageStore.ts</td><td>F2 — lang + direction</td></tr>
+  </table>
+</div>
+
+<!-- ══ DEFINITION OF DONE ══ -->
+<div class="sec">
+  <div class="sec-title"><div class="sec-dot teal"></div>הגדרת "סיום"</div>
+  <div class="note note-teal">ספרינט 4 הושלם כשמישהי מהצוות מבצעת את שלושת הflows ב-production URLs:</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:18px;">
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">Flow 1 — Payment Sheet (תוקן)</h4>
+      <ul class="chk-list">
+        <li>פותחת Vercel URL בדפדפן</li>
+        <li>בוחרת תפילה · ₪72</li>
+        <li>Bottom Sheet: שם + שמור כרטיס</li>
+        <li>Stripe 4242 → הצלחה</li>
+        <li>GET /api/users/me → has_saved_card: true</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">Flow 2 — Quick Button E2E</h4>
+      <ul class="chk-list">
+        <li>כרטיס שמור מFlow 1</li>
+        <li>לחיצה 1: "יש לי מבחן"</li>
+        <li>VISA ****4242 · ₪72</li>
+        <li>לחיצה 2: אשר — ≤3 שניות</li>
+        <li>Donation.status=success בDB</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="font-size:13px;color:var(--primary);margin-bottom:9px;font-weight:800;">Flow 3 — English Mode</h4>
+      <ul class="chk-list">
+        <li>Language Picker → EN</li>
+        <li>UI באנגלית · LTR</li>
+        <li>תפילה בעברית + אנגלית</li>
+        <li>החלפה חזרה לעברית · RTL</li>
+        <li>preference שמור אחרי restart</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4 style="font-size:13px;color:var(--primary);margin:20px 0 9px;font-weight:800;">שערי איכות</h4>
+  <ul class="chk-list">
+    <li>npm run type-check — ללא שגיאות</li>
+    <li>npm run lint — ללא שגיאות</li>
+    <li>ruff check . — ללא שגיאות על כל קבצי backend</li>
+    <li>כל 6 PRs — review מהמפתחת השנייה + אישור שרה לפני מיזוג</li>
+  </ul>
+
+  <h4 style="font-size:13px;color:var(--primary);margin:20px 0 9px;font-weight:800;">מה לא בספרינט זה — ובכוונה</h4>
+  <table>
+    <tr><th>פיצ'ר</th><th>מצב</th><th>ספרינט</th></tr>
+    <tr><td>Apple Sign-In + EAS Build + TestFlight</td><td><span class="badge b-grey">Sprint 5 · DEADLINE 14-19/09</span></td><td>5</td></tr>
+    <tr><td>Recurring Donations</td><td><span class="badge b-grey">Sprint 5</span></td><td>5</td></tr>
+    <tr><td>Donation History + Receipt</td><td><span class="badge b-grey">Sprint 5</span></td><td>5</td></tr>
+    <tr><td>French i18n</td><td><span class="badge b-grey">Sprint 5</span></td><td>5</td></tr>
+    <tr><td>Backoffice CRUD + SEO</td><td><span class="badge b-grey">Sprint 6</span></td><td>6</td></tr>
+  </table>
+</div>
+
+</div><!-- /wrap -->
+<div style="text-align:center;padding:24px 0;color:var(--ink-subtle);font-size:12px;border-top:1px solid var(--border);">
+  Anu Banecha Donations · ספרינט 4 · 2026
+</div>
+</body>
+</html>
