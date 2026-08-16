@@ -141,16 +141,16 @@ async def quick_donation(db: Session, data, current_user: User):
     return QuickDonationResponse(status="success", amount=data.amount)
 
 
-async def list_history(db: Session, user_uid: str):
+async def list_history(db: Session, current_user: User):
     """TODO: SELECT * FROM donations WHERE user_id = ... ORDER BY created_at DESC."""
     raise NotImplementedError
 
 
-async def create_recurring(db: Session, data, user_uid: str):
+async def create_recurring(db: Session, data, current_user: User):
     """TODO: create_subscription + שמירת RecurringDonation."""
     raise NotImplementedError
 
 
-async def cancel_recurring(db: Session, recurring_id: str, user_uid: str):
+async def cancel_recurring(db: Session, recurring_id: str, current_user: User):
     """TODO: cancel_subscription + UPDATE recurring_donations SET is_active=False."""
     raise NotImplementedError
