@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
 from app.models.models import Donation, Prayer, User
-from app.schemas.schemas import QuickDonationResponse
+from app.schemas.schemas import QuickDonationCreate, QuickDonationResponse
 from app.services import stripe_service
 
 
