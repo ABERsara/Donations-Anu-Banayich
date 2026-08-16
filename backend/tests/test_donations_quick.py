@@ -79,3 +79,29 @@ def test_quick_donation_no_token(client):
     )
 
     assert response.status_code == 401
+
+
+def test_quick_donation_saved_card_true_but_no_customer_id(client, db_session):
+    user = User(
+        firebase_uid="uid-no-customer",
+        email="test@example.com",
+        has_saved_card=True,
+        stripe_customer_id=None,
+    )
+    prayer = Prayer(slug="test-prayer-no-customer")
+    db_session.add_all([user, prayer])
+    db_session.commit()
+
+    app.dependency_overrides[get_current_user] = lambda: user
+
+    response = client.post(
+        "/api/donations/quick",
+        json={
+            "prayer_id": str(prayer.id),
+            "amount": 7200,
+            "currency": "ILS",
+            "donor_name": "מיכל",
+        },
+    )
+
+    assert response.status_code == 400
