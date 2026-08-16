@@ -103,7 +103,7 @@ async def fail_donation(db: Session, payment_intent_id: str):
     return {"status": "failed"}
 
 
-async def quick_donation(db: Session, data, current_user: User):
+async def quick_donation(db: Session, data: QuickDonationCreate, current_user: User):
     if not current_user.has_saved_card:
         raise HTTPException(status_code=400, detail="No saved card")
     if not current_user.stripe_customer_id:
