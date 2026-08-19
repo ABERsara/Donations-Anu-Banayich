@@ -11,7 +11,7 @@
  *           selectHasSavedCard (store/authStore)
  */
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
@@ -19,6 +19,7 @@ import { useLanguageStore } from '@/store/languageStore';
 import { useDonation } from '@/hooks/useDonation';
 import { AppBottomSheet, Button, Input } from '@/components/common';
 import { SuccessAnimation } from './SuccessAnimation';
+import WebPaymentForm from './WebPaymentForm';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants';
 import type { Currency } from '@/types';
 
@@ -43,25 +44,47 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
     useDonationStore();
   const { rtl } = useLanguageStore();
   const amount = useDonationStore(selectFinalAmount);
-  const { initiateDonation, isProcessing, error } = useDonation();
+  const { initiateDonation, initiateWebPayment, handleWebPaymentResult, isProcessing, error } =
+    useDonation();
 
   const showPrayerNameField = amount >= PRAYER_NAME_MIN_AMOUNT;
 
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!donorName.trim()) {
       setValidationError(t('donation.name_required'));
       return;
     }
     setValidationError(null);
-    initiateDonation(prayerId);
+
+    if (Platform.OS === 'web') {
+      const secret = await initiateWebPayment(prayerId);
+      if (secret) {
+        setClientSecret(secret);
+      }
+    } else {
+      initiateDonation(prayerId);
+    }
+  };
+
+  const handleWebResult = async (
+    result: 'success' | 'canceled' | 'failed',
+    paymentIntentId?: string
+  ) => {
+    await handleWebPaymentResult(result, paymentIntentId);
+    if (result !== 'failed') {
+      setClientSecret(null);
+    }
   };
 
   return (
     <AppBottomSheet isVisible={isVisible} onClose={onClose}>
       {isSuccess ? (
         <SuccessAnimation onClose={onClose} />
+      ) : clientSecret ? (
+        <WebPaymentForm clientSecret={clientSecret} onResult={handleWebResult} />
       ) : (
         <View>
           <Input
