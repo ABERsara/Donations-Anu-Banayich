@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
 import { stripePromise } from '../../services/stripe-web';
 
 type PaymentResult = 'success' | 'canceled' | 'failed';
@@ -25,6 +27,7 @@ function CheckoutForm({
 }) {
   const stripe = useStripe();
   const elements = useElements();
+  const { t } = useTranslation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -71,11 +74,13 @@ function CheckoutForm({
         onPress={handleSubmit}
         disabled={!stripe || isProcessing}
       >
-        <Text style={styles.payButtonText}>{isProcessing ? 'מעבד תשלום...' : 'שלם'}</Text>
+        <Text style={styles.payButtonText}>
+          {isProcessing ? t('donation.processing') : t('donation.pay')}
+        </Text>
       </Pressable>
 
       <Pressable style={styles.cancelButton} onPress={handleCancel} disabled={isProcessing}>
-        <Text style={styles.cancelButtonText}>ביטול</Text>
+        <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>{' '}
       </Pressable>
     </View>
   );
