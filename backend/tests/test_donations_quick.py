@@ -77,7 +77,9 @@ def test_quick_donation_no_token(client):
             "donor_name": "מיכל",
         },
     )
-
+    # No override for get_current_user here on purpose — this test goes through
+    # the real verify_firebase_token dependency to confirm a missing Authorization
+    # header is rejected with 401.
     assert response.status_code == 401
 
 
