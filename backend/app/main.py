@@ -3,24 +3,36 @@
 מבנה השכבות: router → schema → service → model (ראה CONTRIBUTING.md).
 """
 
-import truststore
-
-truststore.inject_into_ssl()
+from contextlib import asynccontextmanager
 
 import firebase_admin
+import truststore
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from firebase_admin import credentials
 
+truststore.inject_into_ssl()
 load_dotenv()
 
 from app.core.config import settings  # noqa: E402
 from app.middleware.rate_limit import init_rate_limit  # noqa: E402
 from app.routers import donations, prayers, users, webhooks  # noqa: E402
 
-app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if not settings.FIREBASE_CREDENTIALS_PATH:
+        raise RuntimeError(
+            "FIREBASE_CREDENTIALS_PATH is not set. "
+            "Add it to your .env file (see README for setup instructions)."
+        )
+    cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
+    firebase_admin.initialize_app(cred)
+    yield
+
+
+app = FastAPI(title=settings.APP_NAME, version=settings.APP_VERSION, lifespan=lifespan)
 # ─── CORS ────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
@@ -32,16 +44,6 @@ app.add_middleware(
 
 # ─── Rate limiting (slowapi) ─────────────────────────────────
 init_rate_limit(app)
-
-# ─── Firebase Admin ──────────────────────────────────────────
-if not settings.FIREBASE_CREDENTIALS_PATH:
-    raise RuntimeError(
-        "FIREBASE_CREDENTIALS_PATH is not set. "
-        "Add it to your .env file (see README for setup instructions)."
-    )
-
-cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
-firebase_admin.initialize_app(cred)
 
 
 # ─── Routers ─────────────────────────────────────────────────

@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
 from app.models.models import Donation, Prayer, User
+from app.schemas.schemas import QuickDonationCreate, QuickDonationResponse
 from app.services import stripe_service
 
 
@@ -102,21 +103,54 @@ async def fail_donation(db: Session, payment_intent_id: str):
     return {"status": "failed"}
 
 
-async def quick_donation(db: Session, data, user_uid: str):
-    """TODO: charge_saved_card למשתמש עם כרטיס שמור (2 קליקים)."""
-    raise NotImplementedError
+async def quick_donation(db: Session, data: QuickDonationCreate, current_user: User):
+    if not current_user.has_saved_card:
+        raise HTTPException(status_code=400, detail="No saved card")
+    if not current_user.stripe_customer_id:
+        raise HTTPException(status_code=400, detail="Stripe customer ID missing")
+
+    try:
+        prayer_uuid = uuid.UUID(data.prayer_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail="Invalid prayer_id format") from e
+    prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
+    if prayer is None:
+        raise HTTPException(status_code=404, detail="Prayer not found")
+
+    try:
+        stripe_result = await stripe_service.charge_saved_card(
+            customer_id=current_user.stripe_customer_id,
+            amount=data.amount,
+            currency=data.currency.value,
+        )
+    except stripe_sdk.error.StripeError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+
+    donation = Donation(
+        user_id=current_user.id,
+        prayer_id=prayer_uuid,
+        amount=data.amount,
+        currency=data.currency.value,
+        donor_name=data.donor_name,
+        status=DONATION_STATUS_SUCCESS,
+        stripe_payment_intent_id=stripe_result["payment_intent_id"],
+    )
+    db.add(donation)
+    db.commit()
+
+    return QuickDonationResponse(status="success", amount=data.amount)
 
 
-async def list_history(db: Session, user_uid: str):
+async def list_history(db: Session, current_user: User):
     """TODO: SELECT * FROM donations WHERE user_id = ... ORDER BY created_at DESC."""
     raise NotImplementedError
 
 
-async def create_recurring(db: Session, data, user_uid: str):
+async def create_recurring(db: Session, data, current_user: User):
     """TODO: create_subscription + שמירת RecurringDonation."""
     raise NotImplementedError
 
 
-async def cancel_recurring(db: Session, recurring_id: str, user_uid: str):
+async def cancel_recurring(db: Session, recurring_id: str, current_user: User):
     """TODO: cancel_subscription + UPDATE recurring_donations SET is_active=False."""
     raise NotImplementedError
