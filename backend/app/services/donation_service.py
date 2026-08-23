@@ -107,7 +107,7 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
     if not current_user.has_saved_card:
         raise HTTPException(status_code=400, detail="No saved card")
     if not current_user.stripe_customer_id:
-        raise HTTPException(status_code=400, detail="No saved card")
+        raise HTTPException(status_code=400, detail="Stripe customer ID missing")
 
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
