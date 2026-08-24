@@ -83,6 +83,7 @@ export function useDonation() {
         prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
       });
 
+      setProcessing(false);
       return data.client_secret;
     } catch (err) {
       handleFailure(err);
