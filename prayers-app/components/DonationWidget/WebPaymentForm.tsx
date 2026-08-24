@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 import { stripePromise } from '../../services/stripe-web';
+import { COLORS } from '../../constants/theme';
 
 type PaymentResult = 'success' | 'canceled' | 'failed';
 
@@ -91,12 +92,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   errorText: {
-    color: '#d32f2f',
+    color: COLORS.flame.DEFAULT, // צבע בולט לשגיאות מתוך הפלטה
     marginTop: 8,
     fontSize: 14,
   },
   payButton: {
-    backgroundColor: '#635bff',
+    backgroundColor: COLORS.primary.DEFAULT,
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: 'center',
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   payButtonText: {
-    color: '#fff',
+    color: COLORS.surface.card,
     fontWeight: '600',
     fontSize: 16,
   },
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   cancelButtonText: {
-    color: '#666',
+    color: COLORS.ink.muted,
     fontSize: 14,
   },
 });
