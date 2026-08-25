@@ -48,7 +48,7 @@ function CheckoutForm({
     setIsProcessing(false);
 
     if (error) {
-      setErrorMessage(error.message ?? 'אירעה שגיאה בתהליך התשלום');
+      setErrorMessage(error.message ?? t('common.error'));
       onResult('failed');
       return;
     }
@@ -81,7 +81,7 @@ function CheckoutForm({
       </Pressable>
 
       <Pressable style={styles.cancelButton} onPress={handleCancel} disabled={isProcessing}>
-        <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>{' '}
+        <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
       </Pressable>
     </View>
   );
