@@ -18,6 +18,7 @@
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/app",
       [
         "@stripe/stripe-react-native",
         {
@@ -36,7 +37,8 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "package": "com.yourorg.prayersapp",
+      "package": "com.abd.prayersapp",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0f3460"
