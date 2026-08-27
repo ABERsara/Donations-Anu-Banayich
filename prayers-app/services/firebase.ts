@@ -3,6 +3,7 @@ import {
   getAuth,
   signInAnonymously,
   signInWithCredential,
+  linkWithCredential,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
@@ -34,5 +35,5 @@ export const getIdToken = (forceRefresh = false): Promise<string> => {
 
 export const signOutUser = () => signOut(auth);
 
-export { onAuthStateChanged, GoogleAuthProvider, signInWithCredential };
+export { onAuthStateChanged, GoogleAuthProvider, signInWithCredential, linkWithCredential };
 export type { User };
