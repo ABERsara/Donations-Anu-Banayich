@@ -25,6 +25,7 @@ expo-env.d.ts
 .env.*
 !.env.example
 /google-services.json
+/GoogleService-Info.plist
 
 # Logs
 *.log
