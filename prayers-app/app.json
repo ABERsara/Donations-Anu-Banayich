@@ -33,7 +33,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourorg.prayersapp",
+      "bundleIdentifier": "com.abd.prayersapp",
       "usesAppleSignIn": true
     },
     "android": {
