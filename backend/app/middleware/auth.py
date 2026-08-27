@@ -32,9 +32,7 @@ async def get_current_user(
     return user
 
 
-async def optional_firebase_token(
-    authorization: str = Header(default=""), db: Session = Depends(get_db)
-):
+async def get_optional_user(authorization: str = Header(default=""), db: Session = Depends(get_db)):
     if not authorization:
         return None
 

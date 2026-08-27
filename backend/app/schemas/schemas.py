@@ -35,6 +35,18 @@ class DonationResponse(BaseModel):
     payment_intent_id: str
 
 
+class QuickDonationCreate(BaseModel):
+    prayer_id: str
+    amount: int = Field(gt=0)
+    currency: Currency
+    donor_name: str = Field(min_length=2)
+
+
+class QuickDonationResponse(BaseModel):
+    status: str
+    amount: int
+
+
 class DonationConfirm(BaseModel):
     payment_intent_id: str
     save_card: bool = False

@@ -13,11 +13,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.middleware.auth import get_current_user, optional_firebase_token
+from app.middleware.auth import get_current_user, get_optional_user
 from app.schemas.schemas import (
     DonationConfirm,
     DonationCreate,
     DonationResponse,
+    QuickDonationCreate,
+    QuickDonationResponse,
     RecurringDonationCreate,
     RecurringDonationResponse,
 )
@@ -29,7 +31,7 @@ router = APIRouter(prefix="/api/donations", tags=["donations"])
 @router.post("/initiate", response_model=DonationResponse)
 async def initiate_donation(
     body: DonationCreate,
-    current_user=Depends(optional_firebase_token),
+    current_user=Depends(get_optional_user),
     db: Session = Depends(get_db),
 ):
     return await donation_service.create_pending_donation(db, body, current_user)
@@ -38,7 +40,7 @@ async def initiate_donation(
 @router.post("/confirm")
 async def confirm_donation(
     body: DonationConfirm,
-    current_user=Depends(optional_firebase_token),
+    current_user=Depends(get_optional_user),
     db: Session = Depends(get_db),
 ):
     user_uid = current_user.firebase_uid if current_user else None
@@ -47,14 +49,13 @@ async def confirm_donation(
     )
 
 
-@router.post("/quick")
+@router.post("/quick", response_model=QuickDonationResponse)
 async def quick_donate(
-    body: DonationCreate,
+    body: QuickDonationCreate,
     current_user=Depends(get_current_user),  # חובה — צריך כרטיס שמור
     db: Session = Depends(get_db),
 ):
-    # TODO: donation_service.quick_donation(db, body, current_user)
-    raise NotImplementedError
+    return await donation_service.quick_donation(db, body, current_user)
 
 
 @router.post("/recurring", response_model=RecurringDonationResponse)

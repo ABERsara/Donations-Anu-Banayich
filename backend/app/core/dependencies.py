@@ -4,6 +4,6 @@
 """
 
 from app.database import get_db
-from app.middleware.auth import optional_firebase_token, verify_firebase_token
+from app.middleware.auth import get_optional_user, verify_firebase_token
 
-__all__ = ["get_db", "verify_firebase_token", "optional_firebase_token"]
+__all__ = ["get_db", "verify_firebase_token", "get_optional_user"]

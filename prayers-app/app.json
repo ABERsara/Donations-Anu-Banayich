@@ -18,10 +18,11 @@
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/app",
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "merchant.com.yourorg.prayersapp",
+          "merchantIdentifier": "merchant.com.abd.prayersapp",
           "enableGooglePay": false
         }
       ],
@@ -32,11 +33,13 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourorg.prayersapp",
+      "bundleIdentifier": "com.abd.prayersapp",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "usesAppleSignIn": true
     },
     "android": {
-      "package": "com.yourorg.prayersapp",
+      "package": "com.abd.prayersapp",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#0f3460"
