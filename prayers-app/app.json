@@ -22,7 +22,7 @@
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "merchant.com.yourorg.prayersapp",
+          "merchantIdentifier": "merchant.com.abd.prayersapp",
           "enableGooglePay": false
         }
       ],
