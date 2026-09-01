@@ -1,12 +1,11 @@
 """
-TODO: Stripe Webhook
+Stripe Webhook handler.
 POST /api/webhooks/stripe
 
-חשוב: לאמת חתימה עם STRIPE_WEBHOOK_SECRET לפני עיבוד!
-אירועים לטפל:
-  - payment_intent.succeeded  → UPDATE donations SET status='success'
-  - payment_intent.payment_failed → UPDATE status='failed'
-  - customer.subscription.deleted → UPDATE recurring_donations SET is_active=False
+מאמת את חתימת Stripe לפני כל עיבוד, ומטפל בשלושה סוגי אירועים:
+  - payment_intent.succeeded       → donations.status = 'success'
+  - payment_intent.payment_failed  → donations.status = 'failed'
+  - customer.subscription.deleted  → recurring_donations.is_active = False
 """
 
 import logging
