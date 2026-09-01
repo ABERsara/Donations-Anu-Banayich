@@ -4,6 +4,8 @@ import {
   ConfirmDonationResponse,
   InitiateDonationPayload,
   InitiateDonationResponse,
+  QuickDonationPayload,
+  QuickDonationResponse,
 } from '@/types';
 
 interface RequestOptions extends RequestInit {
@@ -52,8 +54,12 @@ export const confirmDonation = (payload: ConfirmDonationPayload, token?: string)
     token,
   });
 
-export const quickDonate = (payload: unknown, token: string) =>
-  apiFetch(API.DONATE_QUICK, { method: 'POST', body: JSON.stringify(payload), token });
+export const quickDonate = (payload: QuickDonationPayload, token: string) =>
+  apiFetch<QuickDonationResponse>(API.DONATE_QUICK, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    token,
+  });
 
 export const getDonationHistory = (token: string) => apiFetch(API.DONATE_HISTORY, { token });
 

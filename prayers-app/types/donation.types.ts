@@ -77,3 +77,16 @@ export interface ConfirmDonationPayload {
 export interface ConfirmDonationResponse {
   status: DonationStatus;
 }
+/** Payload לתרומה מהירה עם כרטיס שמור (one-tap, ללא Stripe Payment Sheet) */
+export interface QuickDonationPayload {
+  prayer_id: string;
+  amount: number;
+  currency: Currency;
+  donor_name: string;
+}
+
+/** תשובה מהשרת לתרומה מהירה */
+export interface QuickDonationResponse {
+  status: string;
+  amount: number;
+}

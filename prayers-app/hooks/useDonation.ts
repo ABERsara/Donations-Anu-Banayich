@@ -7,7 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
 import { useAuthStore } from '@/store/authStore';
 import { openPaymentSheet } from '@/services/stripe';
-import { initiateDonation as apiInitiateDonation, confirmDonation } from '@/services/api';
+import {
+  initiateDonation as apiInitiateDonation,
+  confirmDonation,
+  quickDonate as apiQuickDonate,
+} from '@/services/api';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants/donations';
 
 export function useDonation() {
@@ -24,6 +28,7 @@ export function useDonation() {
   } = useDonationStore();
   const amount = useDonationStore(selectFinalAmount);
   const token = useAuthStore((s) => s.firebaseToken);
+  const user = useAuthStore((s) => s.user);
   const { t } = useTranslation();
 
   const handleFailure = (err?: unknown) => {
@@ -128,8 +133,33 @@ export function useDonation() {
     await finalizeSuccess(paymentIntentId, saveCard);
   };
 
-  const quickDonate = async (_prayerId: string, _quickButtonSlug: string) => {};
+  const quickDonate = async (prayerId: string) => {
+    if (!token) {
+      handleFailure(new Error(t('common.error')));
+      return;
+    }
 
+    setProcessing(true);
+    setError(null);
+    try {
+      const quickDonorName = user?.displayName || t('donation.default_donor_name');
+
+      await apiQuickDonate(
+        {
+          prayer_id: prayerId,
+          amount,
+          currency,
+          donor_name: quickDonorName,
+        },
+        token
+      );
+
+      setSuccess(true);
+      setProcessing(false);
+    } catch (err) {
+      handleFailure(err);
+    }
+  };
   return {
     initiateDonation,
     initiateWebPayment,
