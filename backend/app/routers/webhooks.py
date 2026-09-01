@@ -1,12 +1,11 @@
 """
-TODO: Stripe Webhook
+Stripe Webhook handler.
 POST /api/webhooks/stripe
 
-חשוב: לאמת חתימה עם STRIPE_WEBHOOK_SECRET לפני עיבוד!
-אירועים לטפל:
-  - payment_intent.succeeded  → UPDATE donations SET status='success'
-  - payment_intent.payment_failed → UPDATE status='failed'
-  - customer.subscription.deleted → UPDATE recurring_donations SET is_active=False
+מאמת את חתימת Stripe לפני כל עיבוד, ומטפל בשלושה סוגי אירועים:
+  - payment_intent.succeeded       → donations.status = 'success'
+  - payment_intent.payment_failed  → donations.status = 'failed'
+  - customer.subscription.deleted  → recurring_donations.is_active = False
 """
 
 import logging
@@ -50,6 +49,17 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
         except HTTPException as e:
             if e.status_code == 404:
                 logger.warning("Donation not found for payment_intent_id=%s", payment_intent_id)
+            else:
+                raise
+    elif event["type"] == "customer.subscription.deleted":
+        subscription_id = event["data"]["object"]["id"]
+        try:
+            await donation_service.deactivate_recurring_donation(db, subscription_id)
+        except HTTPException as e:
+            if e.status_code == 404:
+                logger.warning(
+                    "Recurring donation not found for subscription_id=%s", subscription_id
+                )
             else:
                 raise
 

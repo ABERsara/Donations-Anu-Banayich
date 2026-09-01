@@ -12,7 +12,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
-from app.models.models import Donation, Prayer, User
+from app.models.models import Donation, Prayer, RecurringDonation, User
 from app.schemas.schemas import QuickDonationCreate, QuickDonationResponse
 from app.services import stripe_service
 
@@ -101,6 +101,19 @@ async def fail_donation(db: Session, payment_intent_id: str):
     donation.status = DONATION_STATUS_FAILED
     db.commit()
     return {"status": "failed"}
+
+
+async def deactivate_recurring_donation(db: Session, subscription_id: str):
+    recurring = (
+        db.query(RecurringDonation)
+        .filter(RecurringDonation.stripe_subscription_id == subscription_id)
+        .first()
+    )
+    if recurring is None:
+        raise HTTPException(status_code=404, detail="Recurring donation not found")
+    recurring.is_active = False
+    db.commit()
+    return {"status": "deactivated"}
 
 
 async def quick_donation(db: Session, data: QuickDonationCreate, current_user: User):
