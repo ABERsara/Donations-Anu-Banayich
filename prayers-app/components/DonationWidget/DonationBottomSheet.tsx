@@ -15,6 +15,7 @@ import { View, Text, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
+import { useAuthStore, selectHasSavedCard } from '@/store/authStore';
 import { useLanguageStore } from '@/store/languageStore';
 import { useDonation } from '@/hooks/useDonation';
 import { AppBottomSheet, Button, Input } from '@/components/common';
@@ -44,14 +45,27 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
     useDonationStore();
   const { rtl } = useLanguageStore();
   const amount = useDonationStore(selectFinalAmount);
-  const { initiateDonation, initiateWebPayment, handleWebPaymentResult, isProcessing, error } =
-    useDonation();
+  const hasSavedCard = useAuthStore(selectHasSavedCard);
+  const user = useAuthStore((s) => s.user);
+  const {
+    initiateDonation,
+    initiateWebPayment,
+    handleWebPaymentResult,
+    quickDonate,
+    isProcessing,
+    error,
+  } = useDonation();
 
   const showPrayerNameField = amount >= PRAYER_NAME_MIN_AMOUNT;
-
+  const confirmLabel = t('donation.confirm_donation', {
+    amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
+  });
   const [validationError, setValidationError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
+  const handleQuickDonate = async () => {
+    await quickDonate(prayerId);
+  };
   const handleConfirm = async () => {
     if (!donorName.trim()) {
       setValidationError(t('donation.name_required'));
@@ -83,6 +97,17 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
     <AppBottomSheet isVisible={isVisible} onClose={onClose}>
       {isSuccess ? (
         <SuccessAnimation onClose={onClose} />
+      ) : hasSavedCard ? (
+        <View>
+          <Text>
+            {t('donation.saved_card', {
+              brand: user?.savedCardBrand?.toUpperCase() ?? '',
+              last4: user?.savedCardLast4 ?? '',
+            })}
+          </Text>
+          {error && <Text style={{ color: 'red' }}>{error}</Text>}
+          <Button label={confirmLabel} onPress={handleQuickDonate} isLoading={isProcessing} />
+        </View>
       ) : clientSecret ? (
         <WebPaymentForm clientSecret={clientSecret} onResult={handleWebResult} />
       ) : (
@@ -103,13 +128,7 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
             />
           )}
           {error && <Text style={{ color: 'red' }}>{error}</Text>}
-          <Button
-            label={t('donation.confirm_donation', {
-              amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
-            })}
-            onPress={handleConfirm}
-            isLoading={isProcessing}
-          />
+          <Button label={confirmLabel} onPress={handleConfirm} isLoading={isProcessing} />
         </View>
       )}
     </AppBottomSheet>
