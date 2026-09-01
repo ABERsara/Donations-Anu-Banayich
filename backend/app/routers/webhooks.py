@@ -52,5 +52,16 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
                 logger.warning("Donation not found for payment_intent_id=%s", payment_intent_id)
             else:
                 raise
+    elif event["type"] == "customer.subscription.deleted":
+        subscription_id = event["data"]["object"]["id"]
+        try:
+            await donation_service.deactivate_recurring_donation(db, subscription_id)
+        except HTTPException as e:
+            if e.status_code == 404:
+                logger.warning(
+                    "Recurring donation not found for subscription_id=%s", subscription_id
+                )
+            else:
+                raise
 
     return {"received": True}
