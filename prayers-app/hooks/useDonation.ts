@@ -5,6 +5,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
+import { useAuthStore } from '@/store/authStore';
 import { openPaymentSheet } from '@/services/stripe';
 import { initiateDonation as apiInitiateDonation, confirmDonation } from '@/services/api';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants/donations';
@@ -22,6 +23,7 @@ export function useDonation() {
     setError,
   } = useDonationStore();
   const amount = useDonationStore(selectFinalAmount);
+  const token = useAuthStore((s) => s.firebaseToken);
   const { t } = useTranslation();
 
   const handleFailure = (err?: unknown) => {
@@ -30,11 +32,15 @@ export function useDonation() {
     setProcessing(false);
   };
 
-  const finalizeSuccess = async (paymentIntentId: string) => {
+  const finalizeSuccess = async (paymentIntentId: string, saveCard: boolean = false) => {
     try {
-      await confirmDonation({
-        payment_intent_id: paymentIntentId,
-      });
+      await confirmDonation(
+        {
+          payment_intent_id: paymentIntentId,
+          save_card: saveCard,
+        },
+        token ?? undefined
+      );
       setSuccess(true);
       setProcessing(false);
     } catch (err) {
@@ -46,13 +52,16 @@ export function useDonation() {
     setProcessing(true);
     setError(null);
     try {
-      const data = await apiInitiateDonation({
-        prayer_id: prayerId,
-        amount,
-        currency,
-        donor_name: donorName,
-        prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
-      });
+      const data = await apiInitiateDonation(
+        {
+          prayer_id: prayerId,
+          amount,
+          currency,
+          donor_name: donorName,
+          prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+        },
+        token ?? undefined
+      );
 
       const result = await openPaymentSheet(data.client_secret);
       if (result === 'canceled') {
@@ -64,8 +73,15 @@ export function useDonation() {
         handleFailure();
         return;
       }
+      const NATIVE_SAVE_CARD = false;
+      // TODO(native-save-card): כרגע save_card=false קבוע ב-native.
+      // ל-native Stripe Payment Sheet יש תמיכה מובנית ב"שמור כרטיס", אבל זה
+      // דורש אתחול עם customerId + customerEphemeralKeySecret (Stripe Customer).
+      // openPaymentSheet הנוכחי מקבל רק client_secret — צריך תוספת בבקאנד:
+      // (1) יצירת Stripe Customer למשתמש אם אין, (2) endpoint שמנפיק ephemeral key,
+      // (3) initiate response צריך להחזיר גם אותם. ראו PR description.
 
-      await finalizeSuccess(data.payment_intent_id);
+      await finalizeSuccess(data.payment_intent_id, NATIVE_SAVE_CARD);
     } catch (err) {
       handleFailure(err);
     }
@@ -75,13 +91,16 @@ export function useDonation() {
     setProcessing(true);
     setError(null);
     try {
-      const data = await apiInitiateDonation({
-        prayer_id: prayerId,
-        amount,
-        currency,
-        donor_name: donorName,
-        prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
-      });
+      const data = await apiInitiateDonation(
+        {
+          prayer_id: prayerId,
+          amount,
+          currency,
+          donor_name: donorName,
+          prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+        },
+        token ?? undefined
+      );
 
       setProcessing(false);
       return data.client_secret;
@@ -93,7 +112,8 @@ export function useDonation() {
 
   const handleWebPaymentResult = async (
     result: 'success' | 'canceled' | 'failed',
-    paymentIntentId?: string
+    paymentIntentId?: string,
+    saveCard: boolean = false
   ) => {
     if (result === 'canceled') {
       setProcessing(false);
@@ -105,7 +125,7 @@ export function useDonation() {
       return;
     }
 
-    await finalizeSuccess(paymentIntentId);
+    await finalizeSuccess(paymentIntentId, saveCard);
   };
 
   const quickDonate = async (_prayerId: string, _quickButtonSlug: string) => {};

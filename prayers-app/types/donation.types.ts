@@ -65,6 +65,12 @@ export interface InitiateDonationResponse {
 /** Payload לאישור תשלום */
 export interface ConfirmDonationPayload {
   payment_intent_id: string;
+  /**
+   * האם לשמור את הכרטיס ב-Stripe Customer לשימוש עתידי (quick donate).
+   * אופציונלי — תואם ל-backend DonationConfirm.save_card שמוגדר עם
+   * ברירת מחדל False בצד השרת (schemas.py).
+   */
+  save_card?: boolean;
 }
 
 /** תשובה מהשרת לאישור */
