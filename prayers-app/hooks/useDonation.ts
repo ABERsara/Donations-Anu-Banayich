@@ -11,6 +11,7 @@ import {
   initiateDonation as apiInitiateDonation,
   confirmDonation,
   quickDonate as apiQuickDonate,
+  getMe,
 } from '@/services/api';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants/donations';
 
@@ -29,6 +30,7 @@ export function useDonation() {
   const amount = useDonationStore(selectFinalAmount);
   const token = useAuthStore((s) => s.firebaseToken);
   const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
   const { t } = useTranslation();
 
   const handleFailure = (err?: unknown) => {
@@ -46,6 +48,15 @@ export function useDonation() {
         },
         token ?? undefined
       );
+      if (saveCard && token) {
+        try {
+          const refreshedUser = await getMe(token);
+          setUser(refreshedUser);
+        } catch (refreshErr) {
+          console.warn('Failed to refresh user profile after save_card:', refreshErr);
+        }
+      }
+
       setSuccess(true);
       setProcessing(false);
     } catch (err) {
@@ -79,12 +90,6 @@ export function useDonation() {
         return;
       }
       const NATIVE_SAVE_CARD = false;
-      // TODO(native-save-card): כרגע save_card=false קבוע ב-native.
-      // ל-native Stripe Payment Sheet יש תמיכה מובנית ב"שמור כרטיס", אבל זה
-      // דורש אתחול עם customerId + customerEphemeralKeySecret (Stripe Customer).
-      // openPaymentSheet הנוכחי מקבל רק client_secret — צריך תוספת בבקאנד:
-      // (1) יצירת Stripe Customer למשתמש אם אין, (2) endpoint שמנפיק ephemeral key,
-      // (3) initiate response צריך להחזיר גם אותם. ראו PR description.
 
       await finalizeSuccess(data.payment_intent_id, NATIVE_SAVE_CARD);
     } catch (err) {

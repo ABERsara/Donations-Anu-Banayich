@@ -6,6 +6,7 @@ import {
   InitiateDonationResponse,
   QuickDonationPayload,
   QuickDonationResponse,
+  AppUser,
 } from '@/types';
 
 interface RequestOptions extends RequestInit {
@@ -64,7 +65,7 @@ export const quickDonate = (payload: QuickDonationPayload, token: string) =>
 export const getDonationHistory = (token: string) => apiFetch(API.DONATE_HISTORY, { token });
 
 // ─── User ────────────────────────────────────────────────────
-export const getMe = (token: string) => apiFetch(API.ME, { token });
+export const getMe = (token: string) => apiFetch<AppUser>(API.ME, { token });
 export const updateMe = (payload: unknown, token: string) =>
   apiFetch(API.ME, { method: 'PATCH', body: JSON.stringify(payload), token });
 export const deleteCard = (token: string) => apiFetch(API.DELETE_CARD, { method: 'DELETE', token });
