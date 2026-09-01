@@ -85,9 +85,10 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
 
   const handleWebResult = async (
     result: 'success' | 'canceled' | 'failed',
-    paymentIntentId?: string
+    paymentIntentId?: string,
+    saveCard?: boolean
   ) => {
-    await handleWebPaymentResult(result, paymentIntentId);
+    await handleWebPaymentResult(result, paymentIntentId, saveCard);
     if (result !== 'failed') {
       setClientSecret(null);
     }
