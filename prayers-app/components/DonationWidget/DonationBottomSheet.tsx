@@ -1,15 +1,3 @@
-/**
- * TODO: Bottom Sheet לתהליך התרומה
- *
- * שדות: שם תורם (Input), סכום (מ-store), כרטיס שמור (אם יש)
- * כפתורים: "אשר תרומה" → useDonation().initiateDonation()
- *           "שמור כרטיס" → checkbox
- *
- * משתמש ב: AppBottomSheet (components/common)
- *           Button (components/common)
- *           useDonation (hooks)
- *           selectHasSavedCard (store/authStore)
- */
 import React, { useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +8,7 @@ import { useLanguageStore } from '@/store/languageStore';
 import { useDonation } from '@/hooks/useDonation';
 import { AppBottomSheet, Button, Input } from '@/components/common';
 import { SuccessAnimation } from './SuccessAnimation';
+import { SavedCardConfirm } from './SavedCardConfirm';
 import WebPaymentForm from './WebPaymentForm';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants';
 import type { Currency } from '@/types';
@@ -99,16 +88,14 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
       {isSuccess ? (
         <SuccessAnimation onClose={onClose} />
       ) : hasSavedCard ? (
-        <View>
-          <Text>
-            {t('donation.saved_card', {
-              brand: user?.savedCardBrand?.toUpperCase() ?? '',
-              last4: user?.savedCardLast4 ?? '',
-            })}
-          </Text>
-          {error && <Text style={{ color: 'red' }}>{error}</Text>}
-          <Button label={confirmLabel} onPress={handleQuickDonate} isLoading={isProcessing} />
-        </View>
+        <SavedCardConfirm
+          brand={user?.savedCardBrand?.toUpperCase() ?? ''}
+          last4={user?.savedCardLast4 ?? ''}
+          confirmLabel={confirmLabel}
+          onConfirm={handleQuickDonate}
+          isLoading={isProcessing}
+          error={error}
+        />
       ) : clientSecret ? (
         <WebPaymentForm clientSecret={clientSecret} onResult={handleWebResult} />
       ) : (
