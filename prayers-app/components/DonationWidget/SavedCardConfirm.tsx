@@ -8,6 +8,7 @@ import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/common';
+import { COLORS } from '@/constants/theme';
 
 interface SavedCardConfirmProps {
   brand: string;
@@ -31,7 +32,7 @@ export function SavedCardConfirm({
   return (
     <View>
       <Text>{t('donation.saved_card', { brand, last4 })}</Text>
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      {error && <Text style={{ color: COLORS.flame.DEFAULT }}>{error}</Text>}
       <Button label={confirmLabel} onPress={onConfirm} isLoading={isLoading} />
     </View>
   );

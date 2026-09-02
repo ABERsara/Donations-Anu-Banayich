@@ -52,9 +52,6 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
   const [validationError, setValidationError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-  const handleQuickDonate = async () => {
-    await quickDonate(prayerId);
-  };
   const handleConfirm = async () => {
     if (!donorName.trim()) {
       setValidationError(t('donation.name_required'));
@@ -92,7 +89,7 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
           brand={user?.savedCardBrand?.toUpperCase() ?? ''}
           last4={user?.savedCardLast4 ?? ''}
           confirmLabel={confirmLabel}
-          onConfirm={handleQuickDonate}
+          onConfirm={() => quickDonate(prayerId)}
           isLoading={isProcessing}
           error={error}
         />
