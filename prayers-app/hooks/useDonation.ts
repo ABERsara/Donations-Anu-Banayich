@@ -51,7 +51,7 @@ export function useDonation() {
       if (saveCard && token) {
         try {
           const refreshedUser = await getMe(token);
-          setUser(refreshedUser);
+          setUser({ ...user!, ...refreshedUser });
         } catch (refreshErr) {
           console.warn('Failed to refresh user profile after save_card:', refreshErr);
         }
