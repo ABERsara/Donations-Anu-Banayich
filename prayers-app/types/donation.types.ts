@@ -65,9 +65,28 @@ export interface InitiateDonationResponse {
 /** Payload לאישור תשלום */
 export interface ConfirmDonationPayload {
   payment_intent_id: string;
+  /**
+   * האם לשמור את הכרטיס ב-Stripe Customer לשימוש עתידי (quick donate).
+   * אופציונלי — תואם ל-backend DonationConfirm.save_card שמוגדר עם
+   * ברירת מחדל False בצד השרת (schemas.py).
+   */
+  save_card?: boolean;
 }
 
 /** תשובה מהשרת לאישור */
 export interface ConfirmDonationResponse {
   status: DonationStatus;
+}
+/** Payload לתרומה מהירה עם כרטיס שמור (one-tap, ללא Stripe Payment Sheet) */
+export interface QuickDonationPayload {
+  prayer_id: string;
+  amount: number;
+  currency: Currency;
+  donor_name: string;
+}
+
+/** תשובה מהשרת לתרומה מהירה */
+export interface QuickDonationResponse {
+  status: string;
+  amount: number;
 }
