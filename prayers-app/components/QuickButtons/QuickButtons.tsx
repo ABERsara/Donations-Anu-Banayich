@@ -73,6 +73,7 @@ export function QuickButtons() {
           prayerId={selectedPrayerId}
           isVisible={selectedButton !== null}
           onClose={handleClose}
+          quickButtonSlug={selectedButton?.slug}
         />
       )}
     </View>

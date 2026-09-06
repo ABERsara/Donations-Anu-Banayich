@@ -83,6 +83,7 @@ export interface QuickDonationPayload {
   amount: number;
   currency: Currency;
   donor_name: string;
+  quick_button_slug?: string;
 }
 
 /** תשובה מהשרת לתרומה מהירה */
