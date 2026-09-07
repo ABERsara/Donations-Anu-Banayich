@@ -96,7 +96,7 @@ export function usePrayers(): {
     //   .then((data) => setPrayers(data))
     //   .catch(() => setError('error.loading'))
     //   .finally(() => setIsLoading(false));
-    getPrayers()
+    getPrayers(lang)
       .then((data) => setPrayers(data as LocalizedPrayer[]))
       .catch((err: Error) => setError(err.message))
       .finally(() => setIsLoading(false));

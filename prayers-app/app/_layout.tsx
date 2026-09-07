@@ -15,13 +15,18 @@ import { initializeStripe } from '@/services/stripe';
 import { LoadingSpinner } from '@/components/common';
 import { signInAnon } from '@/services/firebase';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguageStore } from '@/store/languageStore';
+import { SupportedLang } from '@/types/i18n.types';
 
 export default function RootLayout() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     Promise.all([initI18n(), initializeStripe(), signInAnon()])
-      .then(() => setReady(true))
+      .then(() => {
+        useLanguageStore.getState().setLang(i18n.language as SupportedLang);
+        setReady(true);
+      })
       .catch((error) => {
         console.error('App initialization failed:', error);
         setReady(true);

@@ -1,17 +1,57 @@
 {
   "common": {
-    "donate": "TODO",
-    "cancel": "TODO",
-    "confirm": "TODO",
-    "loading": "TODO"
+    "app_name": "Prayers",
+    "back": "Back",
+    "donate": "Donate",
+    "send_prayer": "Send Prayer",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "An error occurred, please try again",
+    "download_app": "Download the App",
+    "tab_home": "Home",
+    "tab_search": "Search",
+    "tab_profile": "Profile"
+  },
+  "prayer": {
+    "not_found": "Prayer not found",
+    "read_prayer": "Read Prayer",
+    "related_prayers": "Related Prayers",
+    "share_prayer": "Share Prayer",
+    "prayer_sent": "Your prayer has been sent ✨"
   },
   "donation": {
-    "choose_amount": "TODO",
-    "confirm_donation": "TODO — {{amount}}",
-    "saved_card": "TODO — {{brand}} ****{{last4}}",
-    "donation_success": "TODO 🙏"
+    "choose_amount": "Choose donation amount",
+    "custom_amount": "Enter amount",
+    "donate": "Donate",
+    "pay": "Pay",
+    "your_name": "Your name",
+    "name_required": "Name is required",
+    "prayer_name": "Name for the prayer",
+    "other_amount": "Other amount",
+    "save_card": "Save card for next time",
+    "confirm_donation": "Confirm donation of {{amount}}",
+    "saved_card": "{{brand}} ****{{last4}}",
+    "donation_success": "Your donation has been received! 🙏",
+    "processing": "Processing payment..."
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_in_google": "Sign in with Google",
+    "sign_in_apple": "Sign in with Apple",
+    "sign_in_phone": "Sign in with phone number",
+    "sign_out": "Sign Out",
+    "profile": "My Profile"
   },
   "quick_buttons": {
-    "title": "TODO"
+    "title": "What's going on with you?",
+    "exam": "I have an exam",
+    "flight": "I'm flying abroad",
+    "surgery": "Before surgery",
+    "birth": "Before giving birth",
+    "job_interview": "Job interview"
+  },
+  "error": {
+    "loading": "Error loading, please try again"
   }
 }
