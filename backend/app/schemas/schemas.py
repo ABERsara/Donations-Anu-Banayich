@@ -57,6 +57,8 @@ class DonationConfirm(BaseModel):
     payment_intent_id: str
     save_card: bool = False
 
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
 
 # ─── Recurring Donation ──────────────────────────────────────
 class RecurringDonationCreate(BaseModel):

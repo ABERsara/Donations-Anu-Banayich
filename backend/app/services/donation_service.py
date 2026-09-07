@@ -168,6 +168,7 @@ async def list_history(db: Session, current_user: User):
         db.query(Donation)
         .filter(Donation.user_id == current_user.id)
         .order_by(Donation.created_at.desc())
+        .limit(50)
         .all()
     )
     return history
