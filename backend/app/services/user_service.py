@@ -24,7 +24,11 @@ def get_or_create_user(db: Session, firebase_uid: str, email: str | None = None)
 
 
 def update_preferences(
-    db: Session, firebase_uid: str, lang: str | None = None, currency: str | None = None
+    db: Session,
+    firebase_uid: str,
+    lang: str | None = None,
+    currency: str | None = None,
+    display_name: str | None = None,
 ):
     """UPDATE users SET preferred_lang/preferred_currency."""
     user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
@@ -35,6 +39,8 @@ def update_preferences(
         user.preferred_lang = lang
     if currency is not None:
         user.preferred_currency = currency
+    if display_name is not None:
+        user.display_name = display_name
 
     db.commit()
     db.refresh(user)
