@@ -8,20 +8,14 @@ import { useLanguageStore } from '@/store/languageStore';
 import { QUICK_BUTTONS, type QuickButton } from '@/constants/quickButtons';
 import { THEME } from '@/constants/theme';
 import { DonationBottomSheet } from '../DonationWidget/DonationBottomSheet';
+import { formatAmount } from '@/utils/formatAmount';
 import { Currency, DonationTier, LocalizedPrayer } from '@/types';
 
-const CURRENCY_SYMBOLS: Record<Currency, string> = {
-  ILS: '₪',
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  ARS: '$',
-};
 function buildTier(button: QuickButton, currency: Currency): DonationTier {
   const amount = button.defaultAmount[currency];
   return {
     amount,
-    display: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
+    display: formatAmount(amount, currency),
     label: button.slug,
   };
 }

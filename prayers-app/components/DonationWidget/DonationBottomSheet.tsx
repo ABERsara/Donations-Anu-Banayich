@@ -11,15 +11,7 @@ import { SuccessAnimation } from './SuccessAnimation';
 import { SavedCardConfirm } from './SavedCardConfirm';
 import WebPaymentForm from './WebPaymentForm';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants';
-import type { Currency } from '@/types';
-
-const CURRENCY_SYMBOLS: Record<Currency, string> = {
-  ILS: '₪',
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  ARS: '$',
-};
+import { formatAmount } from '@/utils/formatAmount';
 
 interface DonationBottomSheetProps {
   prayerId: string;
@@ -53,7 +45,7 @@ export function DonationBottomSheet({
 
   const showPrayerNameField = amount >= PRAYER_NAME_MIN_AMOUNT;
   const confirmLabel = t('donation.confirm_donation', {
-    amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
+    amount: formatAmount(amount, currency),
   });
   const [validationError, setValidationError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
