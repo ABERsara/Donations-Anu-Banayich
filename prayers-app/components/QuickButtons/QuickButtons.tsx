@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   error: {
-    color: 'red',
+    color: THEME.flame,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 8,
