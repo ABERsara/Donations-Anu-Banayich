@@ -16,7 +16,7 @@ import { LoadingSpinner } from '@/components/common';
 import { signInAnon } from '@/services/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguageStore } from '@/store/languageStore';
-import { SupportedLang } from '@/types/i18n.types';
+import type { SupportedLang } from '@/types/i18n.types';
 
 export default function RootLayout() {
   const [ready, setReady] = useState(false);
