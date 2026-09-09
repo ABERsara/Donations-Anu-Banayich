@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { COLORS } from '@/constants/theme';
 
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
 import { useAuthStore, selectHasSavedCard } from '@/store/authStore';
@@ -30,8 +31,16 @@ interface DonationBottomSheetProps {
 export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBottomSheetProps) {
   const { t } = useTranslation();
 
-  const { donorName, prayerName, setDonorName, setPrayerName, isSuccess, currency } =
-    useDonationStore();
+  const {
+    donorName,
+    prayerName,
+    saveCard,
+    setSaveCard,
+    setDonorName,
+    setPrayerName,
+    isSuccess,
+    currency,
+  } = useDonationStore();
   const { rtl } = useLanguageStore();
   const amount = useDonationStore(selectFinalAmount);
   const hasSavedCard = useAuthStore(selectHasSavedCard);
@@ -112,6 +121,32 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
               rtl={rtl}
             />
           )}
+          <Pressable
+            onPress={() => setSaveCard(!saveCard)}
+            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12, gap: 8 }}
+          >
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 4,
+                borderWidth: 2,
+                borderColor: saveCard ? COLORS.primary.DEFAULT : COLORS.ink.muted,
+                backgroundColor: saveCard ? COLORS.primary.DEFAULT : 'transparent',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {saveCard && (
+                <Text style={{ color: COLORS.surface.card, fontSize: 13, fontWeight: '700' }}>
+                  ✓
+                </Text>
+              )}
+            </View>
+            <Text style={{ color: COLORS.ink.DEFAULT, fontSize: 14 }}>
+              {t('donation.save_card')}
+            </Text>
+          </Pressable>
           {error && <Text style={{ color: 'red' }}>{error}</Text>}
           <Button label={confirmLabel} onPress={handleConfirm} isLoading={isProcessing} />
         </View>

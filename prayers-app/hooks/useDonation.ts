@@ -20,6 +20,7 @@ export function useDonation() {
     prayerName,
     currency,
     donorName,
+    saveCard,
     isProcessing,
     isSuccess,
     error,
@@ -79,7 +80,7 @@ export function useDonation() {
         token ?? undefined
       );
 
-      const result = await openPaymentSheet(data.client_secret);
+      const result = await openPaymentSheet(data.clientSecret);
       if (result === 'canceled') {
         setProcessing(false);
         return;
@@ -89,9 +90,8 @@ export function useDonation() {
         handleFailure();
         return;
       }
-      const NATIVE_SAVE_CARD = false;
 
-      await finalizeSuccess(data.payment_intent_id, NATIVE_SAVE_CARD);
+      await finalizeSuccess(data.paymentIntentId, saveCard);
     } catch (err) {
       handleFailure(err);
     }
@@ -113,7 +113,7 @@ export function useDonation() {
       );
 
       setProcessing(false);
-      return data.client_secret;
+      return data.clientSecret;
     } catch (err) {
       handleFailure(err);
       return null;

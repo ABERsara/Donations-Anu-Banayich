@@ -189,6 +189,9 @@ export default function LoginScreen() {
         {isGoogleLoading ? <ActivityIndicator /> : <Text>התחבר עם Google</Text>}
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
+      <TouchableOpacity disabled={true}>
+        <Text>התחבר עם Apple</Text>
+      </TouchableOpacity>
     </View>
   );
 }
