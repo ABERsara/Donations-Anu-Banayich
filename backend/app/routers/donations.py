@@ -17,6 +17,7 @@ from app.middleware.auth import get_current_user, get_optional_user
 from app.schemas.schemas import (
     DonationConfirm,
     DonationCreate,
+    DonationHistoryItem,
     DonationResponse,
     QuickDonationCreate,
     QuickDonationResponse,
@@ -68,10 +69,10 @@ async def create_recurring_donation(
     raise NotImplementedError
 
 
-@router.get("/history")
-def donation_history(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    # TODO: donation_service.list_history(db, current_user)
-    return []
+@router.get("/history", response_model=list[DonationHistoryItem])
+async def donation_history(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    history = await donation_service.list_history(db, current_user)
+    return history
 
 
 @router.delete("/recurring/{recurring_id}")

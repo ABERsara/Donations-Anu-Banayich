@@ -3,10 +3,12 @@ Pydantic Schemas — validation של request/response.
 ה-schemas הרב-לשוניים מוגדרים כ-stub; להשלים לפי ה-ERD ומיפוי לשפה.
 """
 
+from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic.alias_generators import to_camel
 
 
 class Currency(str, Enum):
@@ -29,10 +31,14 @@ class DonationCreate(BaseModel):
     quick_button_slug: str | None = None
     receipt_email: EmailStr | None = None
 
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
 
 class DonationResponse(BaseModel):
-    client_secret: str
-    payment_intent_id: str
+    client_secret: str = Field(alias="clientSecret")
+    payment_intent_id: str = Field(alias="paymentIntentId")
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 class QuickDonationCreate(BaseModel):
@@ -51,6 +57,8 @@ class DonationConfirm(BaseModel):
     payment_intent_id: str
     save_card: bool = False
 
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
 
 # ─── Recurring Donation ──────────────────────────────────────
 class RecurringDonationCreate(BaseModel):
@@ -63,11 +71,24 @@ class RecurringDonationCreate(BaseModel):
 
 class RecurringDonationResponse(BaseModel):
     id: str
-    stripe_subscription_id: str | None = None
-    is_active: bool
-    next_charge_at: str | None = None
+    stripe_subscription_id: str | None = Field(None, alias="stripeSubscriptionId")
+    is_active: bool = Field(alias="isActive")
+    next_charge_at: str | None = Field(None, alias="nextChargeAt")
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+
+
+class DonationHistoryItem(BaseModel):
+    id: UUID
+    amount: int
+    currency: str
+    status: str
+    prayer_name: str | None = Field(None, alias="prayerName")
+    donor_name: str = Field(alias="donorName")
+    created_at: datetime = Field(alias="createdAt")
+    donor_note: str | None = Field(None, alias="donorNote")
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
 
 
 # ─── Prayer ──────────────────────────────────────────────────
@@ -108,3 +129,6 @@ class UserUpdate(BaseModel):
 
     preferred_lang: str | None = None
     preferred_currency: str | None = None
+    display_name: str | None = None
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)

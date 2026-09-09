@@ -1,24 +1,15 @@
-/**
- * TODO: Bottom Sheet לתהליך התרומה
- *
- * שדות: שם תורם (Input), סכום (מ-store), כרטיס שמור (אם יש)
- * כפתורים: "אשר תרומה" → useDonation().initiateDonation()
- *           "שמור כרטיס" → checkbox
- *
- * משתמש ב: AppBottomSheet (components/common)
- *           Button (components/common)
- *           useDonation (hooks)
- *           selectHasSavedCard (store/authStore)
- */
 import React, { useState } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { COLORS } from '@/constants/theme';
 
 import { useDonationStore, selectFinalAmount } from '@/store/donationStore';
+import { useAuthStore, selectHasSavedCard } from '@/store/authStore';
 import { useLanguageStore } from '@/store/languageStore';
 import { useDonation } from '@/hooks/useDonation';
 import { AppBottomSheet, Button, Input } from '@/components/common';
 import { SuccessAnimation } from './SuccessAnimation';
+import { SavedCardConfirm } from './SavedCardConfirm';
 import WebPaymentForm from './WebPaymentForm';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants';
 import type { Currency } from '@/types';
@@ -40,15 +31,33 @@ interface DonationBottomSheetProps {
 export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBottomSheetProps) {
   const { t } = useTranslation();
 
-  const { donorName, prayerName, setDonorName, setPrayerName, isSuccess, currency } =
-    useDonationStore();
+  const {
+    donorName,
+    prayerName,
+    saveCard,
+    setSaveCard,
+    setDonorName,
+    setPrayerName,
+    isSuccess,
+    currency,
+  } = useDonationStore();
   const { rtl } = useLanguageStore();
   const amount = useDonationStore(selectFinalAmount);
-  const { initiateDonation, initiateWebPayment, handleWebPaymentResult, isProcessing, error } =
-    useDonation();
+  const hasSavedCard = useAuthStore(selectHasSavedCard);
+  const user = useAuthStore((s) => s.user);
+  const {
+    initiateDonation,
+    initiateWebPayment,
+    handleWebPaymentResult,
+    quickDonate,
+    isProcessing,
+    error,
+  } = useDonation();
 
   const showPrayerNameField = amount >= PRAYER_NAME_MIN_AMOUNT;
-
+  const confirmLabel = t('donation.confirm_donation', {
+    amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
+  });
   const [validationError, setValidationError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
@@ -71,9 +80,10 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
 
   const handleWebResult = async (
     result: 'success' | 'canceled' | 'failed',
-    paymentIntentId?: string
+    paymentIntentId?: string,
+    saveCard?: boolean
   ) => {
-    await handleWebPaymentResult(result, paymentIntentId);
+    await handleWebPaymentResult(result, paymentIntentId, saveCard);
     if (result !== 'failed') {
       setClientSecret(null);
     }
@@ -83,6 +93,15 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
     <AppBottomSheet isVisible={isVisible} onClose={onClose}>
       {isSuccess ? (
         <SuccessAnimation onClose={onClose} />
+      ) : hasSavedCard ? (
+        <SavedCardConfirm
+          brand={user?.savedCardBrand?.toUpperCase() ?? ''}
+          last4={user?.savedCardLast4 ?? ''}
+          confirmLabel={confirmLabel}
+          onConfirm={() => quickDonate(prayerId)}
+          isLoading={isProcessing}
+          error={error}
+        />
       ) : clientSecret ? (
         <WebPaymentForm clientSecret={clientSecret} onResult={handleWebResult} />
       ) : (
@@ -102,14 +121,34 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
               rtl={rtl}
             />
           )}
+          <Pressable
+            onPress={() => setSaveCard(!saveCard)}
+            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12, gap: 8 }}
+          >
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 4,
+                borderWidth: 2,
+                borderColor: saveCard ? COLORS.primary.DEFAULT : COLORS.ink.muted,
+                backgroundColor: saveCard ? COLORS.primary.DEFAULT : 'transparent',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {saveCard && (
+                <Text style={{ color: COLORS.surface.card, fontSize: 13, fontWeight: '700' }}>
+                  ✓
+                </Text>
+              )}
+            </View>
+            <Text style={{ color: COLORS.ink.DEFAULT, fontSize: 14 }}>
+              {t('donation.save_card')}
+            </Text>
+          </Pressable>
           {error && <Text style={{ color: 'red' }}>{error}</Text>}
-          <Button
-            label={t('donation.confirm_donation', {
-              amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
-            })}
-            onPress={handleConfirm}
-            isLoading={isProcessing}
-          />
+          <Button label={confirmLabel} onPress={handleConfirm} isLoading={isProcessing} />
         </View>
       )}
     </AppBottomSheet>
