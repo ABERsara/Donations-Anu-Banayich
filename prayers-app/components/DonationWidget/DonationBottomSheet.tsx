@@ -11,23 +11,21 @@ import { SuccessAnimation } from './SuccessAnimation';
 import { SavedCardConfirm } from './SavedCardConfirm';
 import WebPaymentForm from './WebPaymentForm';
 import { PRAYER_NAME_MIN_AMOUNT } from '@/constants';
-import type { Currency } from '@/types';
-
-const CURRENCY_SYMBOLS: Record<Currency, string> = {
-  ILS: '₪',
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-  ARS: '$',
-};
+import { formatAmount } from '@/utils/formatAmount';
 
 interface DonationBottomSheetProps {
   prayerId: string;
   isVisible: boolean;
   onClose: () => void;
+  quickButtonSlug?: string;
 }
 
-export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBottomSheetProps) {
+export function DonationBottomSheet({
+  prayerId,
+  isVisible,
+  onClose,
+  quickButtonSlug,
+}: DonationBottomSheetProps) {
   const { t } = useTranslation();
 
   const { donorName, prayerName, setDonorName, setPrayerName, isSuccess, currency } =
@@ -47,7 +45,7 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
 
   const showPrayerNameField = amount >= PRAYER_NAME_MIN_AMOUNT;
   const confirmLabel = t('donation.confirm_donation', {
-    amount: `${CURRENCY_SYMBOLS[currency]}${(amount / 100).toFixed(0)}`,
+    amount: formatAmount(amount, currency),
   });
   const [validationError, setValidationError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -60,12 +58,12 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
     setValidationError(null);
 
     if (Platform.OS === 'web') {
-      const secret = await initiateWebPayment(prayerId);
+      const secret = await initiateWebPayment(prayerId, quickButtonSlug);
       if (secret) {
         setClientSecret(secret);
       }
     } else {
-      initiateDonation(prayerId);
+      initiateDonation(prayerId, quickButtonSlug);
     }
   };
 
@@ -89,7 +87,7 @@ export function DonationBottomSheet({ prayerId, isVisible, onClose }: DonationBo
           brand={user?.savedCardBrand?.toUpperCase() ?? ''}
           last4={user?.savedCardLast4 ?? ''}
           confirmLabel={confirmLabel}
-          onConfirm={() => quickDonate(prayerId)}
+          onConfirm={() => quickDonate(prayerId, quickButtonSlug)}
           isLoading={isProcessing}
           error={error}
         />

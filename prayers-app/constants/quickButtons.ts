@@ -22,7 +22,7 @@ export const QUICK_BUTTONS: QuickButton[] = [
       es: 'Tengo un examen',
       ar: 'لدي امتحان',
     },
-    prayerSlug: 'exam',
+    prayerSlug: 'exam-prayer',
     defaultAmount: { ILS: 7200, USD: 1800, EUR: 1800, GBP: 1500, ARS: 200000 },
   },
   {
@@ -36,7 +36,7 @@ export const QUICK_BUTTONS: QuickButton[] = [
       es: 'Voy a volar',
       ar: 'أنا أسافر بالطائرة',
     },
-    prayerSlug: 'travel',
+    prayerSlug: 'travel-prayer',
     defaultAmount: { ILS: 7200, USD: 1800, EUR: 1800, GBP: 1500, ARS: 200000 },
   },
   {
@@ -50,7 +50,7 @@ export const QUICK_BUTTONS: QuickButton[] = [
       es: 'Antes de una cirugía',
       ar: 'قبل العملية',
     },
-    prayerSlug: 'health',
+    prayerSlug: 'health-prayer',
     defaultAmount: { ILS: 18000, USD: 5000, EUR: 5000, GBP: 4000, ARS: 500000 },
   },
   {
@@ -64,7 +64,7 @@ export const QUICK_BUTTONS: QuickButton[] = [
       es: 'Antes del parto',
       ar: 'قبل الولادة',
     },
-    prayerSlug: 'baby',
+    prayerSlug: 'baby-prayer',
     defaultAmount: { ILS: 7200, USD: 1800, EUR: 1800, GBP: 1500, ARS: 200000 },
   },
   {
@@ -78,7 +78,7 @@ export const QUICK_BUTTONS: QuickButton[] = [
       es: 'Entrevista de trabajo',
       ar: 'مقابلة عمل',
     },
-    prayerSlug: 'success',
+    prayerSlug: 'success-prayer',
     defaultAmount: { ILS: 7200, USD: 1800, EUR: 1800, GBP: 1500, ARS: 200000 },
   },
 ];
