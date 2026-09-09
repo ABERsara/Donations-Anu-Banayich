@@ -76,9 +76,14 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
 
 export function useSignOut(): () => Promise<void> {
   const router = useRouter();
+
   return async () => {
-    await signOutUser();
-    useAuthStore.getState().reset();
-    router.replace('/(tabs)');
+    try {
+      await signOutUser();
+      useAuthStore.getState().reset();
+      router.replace('/(tabs)');
+    } catch (err) {
+      console.error('Sign out failed:', err);
+    }
   };
 }
