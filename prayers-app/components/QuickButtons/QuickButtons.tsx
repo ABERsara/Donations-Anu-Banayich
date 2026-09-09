@@ -33,7 +33,7 @@ export function QuickButtons() {
     setLoadingSlug(button.slug);
     setLoadError(null);
     try {
-      const prayer = (await getPrayer(`${button.prayerSlug}-prayer`, lang)) as LocalizedPrayer;
+      const prayer = (await getPrayer(button.prayerSlug, lang)) as LocalizedPrayer;
       const tier = buildTier(button, currency);
       selectTier(tier);
       setSelectedPrayerId(prayer.id);
