@@ -2,7 +2,7 @@
  * EXAMPLE HOOK — דוגמא מלאה לשאר ה-hooks
  * ────────────────────────────────────────
  * משתמשת ב: languageStore + i18next
- * מחזירה: lang, rtl, setLang, t (translate fn)
+ * מחזירה: lang, rtl, setLanguage, t (translate fn)
  */
 import { useTranslation } from 'react-i18next';
 import { useLanguageStore } from '@/store/languageStore';
@@ -15,11 +15,11 @@ export function useLanguage() {
   const { t } = useTranslation();
   const { lang, rtl, setLang } = useLanguageStore();
 
-  const changeLanguage = async (newLang: SupportedLang) => {
+  const setLanguage = async (newLang: SupportedLang) => {
     setLang(newLang);
     await i18n.changeLanguage(newLang);
     await AsyncStorage.setItem(STORAGE_KEYS.PREFERRED_LANG, newLang);
   };
 
-  return { lang, rtl, t, changeLanguage };
+  return { lang, rtl, t, setLanguage };
 }

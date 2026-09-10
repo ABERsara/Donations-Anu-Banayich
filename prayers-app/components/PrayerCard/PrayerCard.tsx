@@ -11,6 +11,7 @@ import type { LocalizedPrayer } from '@/types/prayer.types';
 import { ROUTES } from '@/constants/routes';
 import { useLanguageStore } from '@/store/languageStore';
 import { THEME } from '@/constants/theme';
+import { getFlexDir, getTextAlign, isRTL } from '@/utils/rtl';
 
 interface PrayerCardProps {
   prayer: LocalizedPrayer;
@@ -25,22 +26,25 @@ export function PrayerCard({ prayer }: PrayerCardProps) {
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.85}>
+    <TouchableOpacity
+      style={[styles.card, { flexDirection: getFlexDir(lang) }]}
+      onPress={handlePress}
+      activeOpacity={0.85}
+    >
       <View style={styles.accent} />
       <View style={styles.body}>
-        <Text style={styles.title}>{prayer.title}</Text>
-        <Text style={styles.preview} numberOfLines={2}>
+        <Text style={[styles.title, { textAlign: getTextAlign(lang) }]}>{prayer.title}</Text>
+        <Text style={[styles.preview, { textAlign: getTextAlign(lang) }]} numberOfLines={2}>
           {prayer.body}
         </Text>
       </View>
-      <Text style={styles.arrow}>{'<'}</Text>
+      <Text style={styles.arrow}>{isRTL(lang) ? '<' : '>'}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row-reverse', // RTL
     backgroundColor: THEME.card,
     borderRadius: 14,
     marginHorizontal: 16,
@@ -64,13 +68,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: THEME.primary,
-    textAlign: 'right',
     marginBottom: 4,
   },
   preview: {
     fontSize: 13,
     color: THEME.inkMuted,
-    textAlign: 'right',
     lineHeight: 20,
   },
   arrow: {

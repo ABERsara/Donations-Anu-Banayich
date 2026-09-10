@@ -5,9 +5,11 @@
 import { Tabs } from 'expo-router';
 import { useLanguageStore } from '@/store/languageStore';
 import { THEME } from '@/constants/theme';
+import { useTranslation } from 'react-i18next';
 
 export default function TabsLayout() {
   const { rtl } = useLanguageStore();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -18,9 +20,9 @@ export default function TabsLayout() {
         tabBarStyle: { backgroundColor: THEME.primary },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'בית' }} />
-      <Tabs.Screen name="search" options={{ title: 'חיפוש' }} />
-      <Tabs.Screen name="profile" options={{ title: 'פרופיל' }} />
+      <Tabs.Screen name="index" options={{ title: t('common.tab_home') }} />
+      <Tabs.Screen name="search" options={{ title: t('common.tab_search') }} />
+      <Tabs.Screen name="profile" options={{ title: t('common.tab_profile') }} />
     </Tabs>
   );
 }

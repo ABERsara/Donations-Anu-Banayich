@@ -7,11 +7,13 @@
  */
 import React from 'react';
 import { View, Text } from 'react-native';
+import { LanguagePicker } from '@/components/LanguagePicker';
 
 export default function ProfileScreen() {
   return (
     <View>
       <Text>פרופיל — TODO</Text>
+      <LanguagePicker />
     </View>
   );
 }
