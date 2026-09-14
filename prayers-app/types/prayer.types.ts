@@ -57,12 +57,12 @@ export interface LocalizedPrayer {
 }
 
 export type PrayerSlug =
-  | 'health'
-  | 'success'
-  | 'exam'
-  | 'travel'
-  | 'baby'
-  | 'marriage'
-  | 'livelihood'
-  | 'soldiers'
+  | 'health-prayer'
+  | 'success-prayer'
+  | 'exam-prayer'
+  | 'travel-prayer'
+  | 'baby-prayer'
+  | 'marriage-prayer'
+  | 'livelihood-prayer'
+  | 'soldiers-prayer'
   | (string & {});
