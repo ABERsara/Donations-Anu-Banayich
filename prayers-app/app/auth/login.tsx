@@ -32,6 +32,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const isNonAnonymous = useAuthStore(selectIsNonAnonymous);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (isNonAnonymous) {
@@ -88,7 +89,7 @@ export default function LoginScreen() {
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
       <TouchableOpacity disabled={true}>
-        <Text>התחבר עם Apple</Text>
+        <Text>{t('auth.sign_in_apple')}</Text>
       </TouchableOpacity>
     </View>
   );

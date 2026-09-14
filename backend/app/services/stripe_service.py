@@ -94,12 +94,17 @@ async def get_default_payment_method(customer_id: str):
 
 async def charge_saved_card(customer_id: str, amount: int, currency: str):
     """חיוב מיידי על payment_method שמור (Quick donation) — off-session charge."""
-    # לא נבדק כאן — בהסתמך על default_payment_method מוגדר מראש ב-Stripe customer
+    default_pm = await get_default_payment_method(customer_id)
+    payment_method_id = default_pm["payment_method_id"]
+    if not payment_method_id:
+        raise HTTPException(status_code=400, detail="No default payment method set for customer")
+
     intent = await asyncio.to_thread(
         stripe.PaymentIntent.create,
         amount=amount,
         currency=currency.lower(),
         customer=customer_id,
+        payment_method=payment_method_id,
         off_session=True,
         confirm=True,
     )
