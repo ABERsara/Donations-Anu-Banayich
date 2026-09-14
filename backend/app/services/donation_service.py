@@ -12,7 +12,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
-from app.models.models import Donation, Prayer, RecurringDonation, User
+from app.models.models import Donation, Prayer, QuickButton, RecurringDonation, User
 from app.schemas.schemas import QuickDonationCreate, QuickDonationResponse
 from app.services import stripe_service
 
@@ -28,6 +28,14 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
+    quick_button_id = None
+    if data.quick_button_slug:
+        quick_button = (
+            db.query(QuickButton).filter(QuickButton.slug == data.quick_button_slug).first()
+        )
+        if quick_button is None:
+            raise HTTPException(status_code=404, detail="Quick button not found")
+        quick_button_id = quick_button.id
     try:
         stripe_result = await stripe_service.create_donation_payment_intent(
             amount=data.amount,
@@ -40,6 +48,7 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     donation = Donation(
         user_id=user_id,
         prayer_id=prayer_uuid,
+        quick_button_id=quick_button_id,
         amount=data.amount,
         currency=data.currency.value,
         donor_name=data.donor_name,
@@ -155,8 +164,14 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
 
 
 async def list_history(db: Session, current_user: User):
-    """TODO: SELECT * FROM donations WHERE user_id = ... ORDER BY created_at DESC."""
-    raise NotImplementedError
+    history = (
+        db.query(Donation)
+        .filter(Donation.user_id == current_user.id)
+        .order_by(Donation.created_at.desc())
+        .limit(50)
+        .all()
+    )
+    return history
 
 
 async def create_recurring(db: Session, data, current_user: User):

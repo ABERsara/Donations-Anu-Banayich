@@ -31,6 +31,7 @@ def update_me(
         firebase_uid=current_user.firebase_uid,
         lang=body.preferred_lang,
         currency=body.preferred_currency,
+        display_name=body.display_name,
     )
     return user
 
