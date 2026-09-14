@@ -139,6 +139,15 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
 
+    quick_button_id = None
+    if data.quick_button_slug:
+        quick_button = (
+            db.query(QuickButton).filter(QuickButton.slug == data.quick_button_slug).first()
+        )
+        if quick_button is None:
+            raise HTTPException(status_code=404, detail="Quick button not found")
+        quick_button_id = quick_button.id
+
     try:
         stripe_result = await stripe_service.charge_saved_card(
             customer_id=current_user.stripe_customer_id,
@@ -151,6 +160,7 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
     donation = Donation(
         user_id=current_user.id,
         prayer_id=prayer_uuid,
+        quick_button_id=quick_button_id,
         amount=data.amount,
         currency=data.currency.value,
         donor_name=data.donor_name,

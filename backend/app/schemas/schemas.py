@@ -46,6 +46,7 @@ class QuickDonationCreate(BaseModel):
     amount: int = Field(gt=0)
     currency: Currency
     donor_name: str = Field(min_length=2)
+    quick_button_slug: str | None = None
 
 
 class QuickDonationResponse(BaseModel):
