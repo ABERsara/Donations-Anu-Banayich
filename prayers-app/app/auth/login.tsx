@@ -112,11 +112,13 @@ import {
 } from '@/services/firebase';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
   const router = useRouter();
+  const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
@@ -190,7 +192,7 @@ export default function LoginScreen() {
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
       <TouchableOpacity disabled={true}>
-        <Text>התחבר עם Apple</Text>
+        <Text>{t('auth.sign_in_apple')}</Text>
       </TouchableOpacity>
     </View>
   );
