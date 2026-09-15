@@ -4,6 +4,9 @@ import {
   ConfirmDonationResponse,
   InitiateDonationPayload,
   InitiateDonationResponse,
+  QuickDonationPayload,
+  QuickDonationResponse,
+  AppUser,
 } from '@/types';
 
 interface RequestOptions extends RequestInit {
@@ -31,7 +34,7 @@ export async function apiFetch<T>(url: string, options: RequestOptions = {}): Pr
 }
 
 // ─── Prayers ────────────────────────────────────────────────
-export const getPrayers = () => apiFetch(API.PRAYERS);
+export const getPrayers = (lang: string) => apiFetch(`${API.PRAYERS}?lang=${lang}`);
 export const getPrayer = (slug: string, lang: string) =>
   apiFetch(`${API.PRAYER(slug)}?lang=${lang}`);
 export const searchPrayers = (q: string) =>
@@ -52,13 +55,17 @@ export const confirmDonation = (payload: ConfirmDonationPayload, token?: string)
     token,
   });
 
-export const quickDonate = (payload: unknown, token: string) =>
-  apiFetch(API.DONATE_QUICK, { method: 'POST', body: JSON.stringify(payload), token });
+export const quickDonate = (payload: QuickDonationPayload, token: string) =>
+  apiFetch<QuickDonationResponse>(API.DONATE_QUICK, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    token,
+  });
 
 export const getDonationHistory = (token: string) => apiFetch(API.DONATE_HISTORY, { token });
 
 // ─── User ────────────────────────────────────────────────────
-export const getMe = (token: string) => apiFetch(API.ME, { token });
+export const getMe = (token: string) => apiFetch<AppUser>(API.ME, { token });
 export const updateMe = (payload: unknown, token: string) =>
   apiFetch(API.ME, { method: 'PATCH', body: JSON.stringify(payload), token });
 export const deleteCard = (token: string) => apiFetch(API.DELETE_CARD, { method: 'DELETE', token });
