@@ -9,6 +9,11 @@ const config = getDefaultConfig(__dirname);
 const webStubs = {
   // Stripe React Native is native-only; stub the whole package on web.
   '@stripe/stripe-react-native': path.resolve(__dirname, 'web-shims/stripe-react-native.js'),
+  // Google Sign-In is native-only; no web OAuth flow in this app.
+  '@react-native-google-signin/google-signin': path.resolve(
+    __dirname,
+    'web-shims/google-signin.js'
+  ),
   // Kept as a safety net for any other lib that deep-imports this on web.
   'react-native/Libraries/Components/TextInput/TextInputState': path.resolve(
     __dirname,
