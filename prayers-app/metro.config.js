@@ -14,6 +14,10 @@ const webStubs = {
     __dirname,
     'web-shims/google-signin.js'
   ),
+  // Firebase auth initialises at module-load time and throws auth/invalid-api-key
+  // when env vars are absent during Vercel static export. The SSR render bundle
+  // does not apply .web.ts extensions, so we intercept the path alias directly.
+  '@/services/firebase': path.resolve(__dirname, 'web-shims/firebase.js'),
   // Kept as a safety net for any other lib that deep-imports this on web.
   'react-native/Libraries/Components/TextInput/TextInputState': path.resolve(
     __dirname,
