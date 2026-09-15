@@ -103,12 +103,15 @@
  */
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Platform } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   auth,
   GoogleAuthProvider,
   signInWithCredential,
   linkWithCredential,
+  signInWithPopup,
+  linkWithPopup,
 } from '@/services/firebase';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
@@ -121,62 +124,71 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (user && !user.isAnonymous) {
-      router.back();
+      router.replace('/(tabs)');
     }
   }, [user, router]);
 
   useEffect(() => {
-    console.log(
-      'Configuring GoogleSignin with webClientId:',
-      process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
-    );
-    GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    });
+    if (Platform.OS !== 'web') {
+      GoogleSignin.configure({
+        webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+      });
+    }
   }, []);
 
   const handleGoogleSignIn = async () => {
     setGoogleError(null);
     setIsGoogleLoading(true);
     try {
-      console.log('Step 1: checking Play Services');
-      await GoogleSignin.hasPlayServices();
-
-      console.log('Step 2: calling GoogleSignin.signIn()');
-      const { idToken } = await GoogleSignin.signIn();
-      console.log('Step 2 result - idToken received:', !!idToken);
-
-      if (!idToken) {
-        throw new Error('לא התקבל idToken מ-Google');
-      }
-      const googleCredential = GoogleAuthProvider.credential(idToken);
-
-      console.log('Step 3: checking current user, isAnonymous:', auth.currentUser?.isAnonymous);
-      const currentUser = auth.currentUser;
-      if (currentUser?.isAnonymous) {
-        try {
-          console.log('Step 4a: linkWithCredential');
-          await linkWithCredential(currentUser, googleCredential);
-        } catch (linkErr: any) {
-          console.log('Step 4a failed with code:', linkErr?.code);
-          if (linkErr?.code === 'auth/credential-already-in-use') {
-            console.log('Step 4b: fallback to signInWithCredential');
-            await signInWithCredential(auth, googleCredential);
-          } else {
-            throw linkErr;
+      if (Platform.OS === 'web') {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        const currentUser = auth.currentUser;
+        if (currentUser?.isAnonymous) {
+          try {
+            await linkWithPopup(currentUser, provider);
+          } catch (linkErr: any) {
+            if (linkErr?.code === 'auth/credential-already-in-use') {
+              const credential = GoogleAuthProvider.credentialFromError(linkErr);
+              if (credential) {
+                await signInWithCredential(auth, credential);
+              } else {
+                await signInWithPopup(auth, provider);
+              }
+            } else {
+              throw linkErr;
+            }
           }
+        } else {
+          await signInWithPopup(auth, provider);
         }
       } else {
-        console.log('Step 4: signInWithCredential (not anonymous)');
-        await signInWithCredential(auth, googleCredential);
+        await GoogleSignin.hasPlayServices();
+
+        const { idToken } = await GoogleSignin.signIn();
+
+        if (!idToken) {
+          throw new Error('לא התקבל idToken מ-Google');
+        }
+        const googleCredential = GoogleAuthProvider.credential(idToken);
+
+        const currentUser = auth.currentUser;
+        if (currentUser?.isAnonymous) {
+          try {
+            await linkWithCredential(currentUser, googleCredential);
+          } catch (linkErr: any) {
+            if (linkErr?.code === 'auth/credential-already-in-use') {
+              await signInWithCredential(auth, googleCredential);
+            } else {
+              throw linkErr;
+            }
+          }
+        } else {
+          await signInWithCredential(auth, googleCredential);
+        }
       }
-      console.log('Google sign-in flow completed successfully');
-      //useAuth.ts תופס את השינוי דרך onAuthStateChanged ומעדכן את authStore לבד
     } catch (err: any) {
       console.error('Google sign-in error:', err);
-      console.log('Error code:', err?.code);
-      console.log('Error message:', err?.message);
-      console.log('Full error object:', JSON.stringify(err, null, 2));
       setGoogleError('ההתחברות עם Google נכשלה. נסי שוב.');
     } finally {
       setIsGoogleLoading(false);

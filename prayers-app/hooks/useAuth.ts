@@ -6,7 +6,7 @@
  * - קריאה ל-GET /api/users/me לקבלת הפרופיל
  */
 import { useEffect, useState } from 'react';
-import { auth, getIdToken, onAuthStateChanged, signInAnon, type User } from '@/services/firebase';
+import { auth, getIdToken, onIdTokenChanged, signInAnon, type User } from '@/services/firebase';
 import type { AppUser } from '@/types/user.types';
 import { getMe } from '@/services/api';
 import { useAuthStore } from '@/store/authStore';
@@ -29,7 +29,7 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser: User | null) => {
       const store = useAuthStore.getState();
       if (firebaseUser) {
         try {
