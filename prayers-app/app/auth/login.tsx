@@ -109,6 +109,7 @@ import {
   GoogleAuthProvider,
   signInWithCredential,
   linkWithCredential,
+  onAuthStateChanged,
 } from '@/services/firebase';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
@@ -120,8 +121,20 @@ export default function LoginScreen() {
   const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
+    // Navigate away as soon as Firebase confirms a real (non-anonymous) user,
+    // without waiting for the backend /me call in useAuth.ts.
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser && !firebaseUser.isAnonymous) {
+        router.replace('/(tabs)');
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
+  // Fallback: if useAuth already loaded the full AppUser, navigate too.
+  useEffect(() => {
     if (user && !user.isAnonymous) {
-      router.back();
+      router.replace('/(tabs)');
     }
   }, [user, router]);
 
