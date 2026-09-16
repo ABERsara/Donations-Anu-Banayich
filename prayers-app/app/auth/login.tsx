@@ -198,6 +198,9 @@ export default function LoginScreen() {
   return (
     <View>
       <Text>התחברות</Text>
+      <Text>התחברות</Text>
+      <Text>התחברות</Text>
+
       <TouchableOpacity onPress={handleGoogleSignIn} disabled={isGoogleLoading}>
         {isGoogleLoading ? <ActivityIndicator /> : <Text>התחבר עם Google</Text>}
       </TouchableOpacity>

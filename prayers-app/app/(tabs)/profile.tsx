@@ -16,7 +16,7 @@
 //   );
 // }
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Alert } from 'react-native';
 import { router } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -24,7 +24,21 @@ export default function ProfileScreen() {
     <View>
       <Text>פרופיל — TODO</Text>
       {/* TEMP - לבדיקת ABD-62 בלבד, להסיר לפני PR */}
-      <Button title="בדיקה זמנית: מסך התחברות" onPress={() => router.push('/auth/login')} />
+      <Button
+        title="בדיקה זמנית: מסך התחברות"
+        onPress={() => {
+          Alert.alert('נלחץ!');
+          router.push('/auth/login');
+        }}
+      />
+
+      <Button
+        title="בדיקה זמנית: מסך התחברות"
+        onPress={() => {
+          Alert.alert('נלחץ!');
+          router.push('/auth/login');
+        }}
+      />
     </View>
   );
 }
