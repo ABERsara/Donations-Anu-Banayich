@@ -5,6 +5,16 @@
  * - LanguagePicker + currency picker
  * - כפתור התנתקות
  */
+// import React from 'react';
+// import { View, Text } from 'react-native';
+
+// export default function ProfileScreen() {
+//   return (
+//     <View>
+//       <Text>פרופיל — TODO</Text>
+//     </View>
+//   );
+// }
 import React from 'react';
 import { View, Text } from 'react-native';
 import { LanguagePicker } from '@/components/LanguagePicker';

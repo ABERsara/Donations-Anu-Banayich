@@ -3,9 +3,13 @@ import {
   getAuth,
   signInAnonymously,
   signInWithCredential,
+  linkWithCredential,
+  signInWithPopup,
+  linkWithPopup,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  onIdTokenChanged,
   type User,
 } from 'firebase/auth';
 
@@ -34,5 +38,13 @@ export const getIdToken = (forceRefresh = false): Promise<string> => {
 
 export const signOutUser = () => signOut(auth);
 
-export { onAuthStateChanged, GoogleAuthProvider, signInWithCredential };
+export {
+  onAuthStateChanged,
+  onIdTokenChanged,
+  GoogleAuthProvider,
+  signInWithCredential,
+  linkWithCredential,
+  signInWithPopup,
+  linkWithPopup,
+};
 export type { User };

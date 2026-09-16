@@ -28,4 +28,17 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(context, moduleName, platform);
 };
 
+const defaultEnhanceMiddleware = config.server.enhanceMiddleware;
+
+config.server.enhanceMiddleware = (metroMiddleware, metroServer) => {
+  const baseMiddleware = defaultEnhanceMiddleware
+    ? defaultEnhanceMiddleware(metroMiddleware, metroServer)
+    : metroMiddleware;
+
+  return (req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    return baseMiddleware(req, res, next);
+  };
+};
+
 module.exports = config;
