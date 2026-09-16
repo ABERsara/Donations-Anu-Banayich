@@ -18,6 +18,7 @@ class Settings:
     # ─── Stripe ──────────────────────────────────────────────
     STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
     STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    STRIPE_API_VERSION: str = os.getenv("STRIPE_API_VERSION", "")
 
     # ─── Firebase ────────────────────────────────────────────
     # נתיב ל-service-account.json או תוכן ה-JSON עצמו

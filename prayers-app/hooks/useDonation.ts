@@ -81,7 +81,7 @@ export function useDonation() {
         token ?? undefined
       );
 
-      const result = await openPaymentSheet(data.clientSecret);
+      const result = await openPaymentSheet(data.clientSecret, data.customerId, data.ephemeralKey);
       if (result === 'canceled') {
         setProcessing(false);
         return;
