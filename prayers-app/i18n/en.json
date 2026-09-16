@@ -47,12 +47,7 @@
     "anonymous_sign_in_failed": "Unable to sign in anonymously. Please try again later."
   },
   "quick_buttons": {
-    "title": "What's going on with you?",
-    "exam": "I have an exam",
-    "flight": "I'm flying abroad",
-    "surgery": "Before surgery",
-    "birth": "Before giving birth",
-    "job_interview": "Job interview"
+   "title": "TODO"
   },
   "error": {
     "loading": "Error loading, please try again"
