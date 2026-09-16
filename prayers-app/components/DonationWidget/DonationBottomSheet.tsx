@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Platform, Pressable } from 'react-native';
+import { View, Text, Platform, Pressable, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/constants/theme';
 
@@ -119,36 +119,50 @@ export function DonationBottomSheet({
               rtl={rtl}
             />
           )}
-          <Pressable
-            onPress={() => setSaveCard(!saveCard)}
-            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12, gap: 8 }}
-          >
-            <View
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 4,
-                borderWidth: 2,
-                borderColor: saveCard ? COLORS.primary.DEFAULT : COLORS.ink.muted,
-                backgroundColor: saveCard ? COLORS.primary.DEFAULT : 'transparent',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {saveCard && (
-                <Text style={{ color: COLORS.surface.card, fontSize: 13, fontWeight: '700' }}>
-                  ✓
-                </Text>
-              )}
+          <Pressable onPress={() => setSaveCard(!saveCard)} style={styles.checkboxRow}>
+            <View style={[styles.checkboxBox, saveCard && styles.checkboxBoxChecked]}>
+              {saveCard && <Text style={styles.checkboxMark}>✓</Text>}
             </View>
-            <Text style={{ color: COLORS.ink.DEFAULT, fontSize: 14 }}>
-              {t('donation.save_card')}
-            </Text>
+            <Text style={styles.checkboxLabel}>{t('donation.save_card')}</Text>
           </Pressable>
-          {error && <Text style={{ color: 'red' }}>{error}</Text>}
+          {error && <Text style={styles.errorText}>{error}</Text>}
           <Button label={confirmLabel} onPress={handleConfirm} isLoading={isProcessing} />
         </View>
       )}
     </AppBottomSheet>
   );
 }
+
+const styles = StyleSheet.create({
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    gap: 8,
+  },
+  checkboxBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.ink.muted,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxBoxChecked: {
+    backgroundColor: COLORS.primary.DEFAULT,
+    borderColor: COLORS.primary.DEFAULT,
+  },
+  checkboxMark: {
+    color: COLORS.surface.card,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  checkboxLabel: {
+    color: COLORS.ink.DEFAULT,
+    fontSize: 14,
+  },
+  errorText: {
+    color: 'red',
+  },
+});
