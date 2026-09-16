@@ -112,7 +112,7 @@ export default function LoginScreen() {
     <View>
       <Text>{t('auth.sign_in')}</Text>
       <TouchableOpacity onPress={handleGoogleSignIn} disabled={isGoogleLoading}>
-        {isGoogleLoading ? <ActivityIndicator /> : <Text> {t('auth.sign_in_google')} </Text>}
+        {isGoogleLoading ? <ActivityIndicator /> : <Text>{t('auth.sign_in_google')}</Text>}
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
     </View>
