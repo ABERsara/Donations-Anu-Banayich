@@ -64,7 +64,7 @@ export function useDonation() {
     }
   };
 
-  const initiateDonation = async (prayerId: string) => {
+  const initiateDonation = async (prayerId: string, quickButtonSlug?: string) => {
     setProcessing(true);
     setError(null);
     try {
@@ -75,6 +75,7 @@ export function useDonation() {
           currency,
           donor_name: donorName,
           prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+          quick_button_slug: quickButtonSlug,
         },
         token ?? undefined
       );
@@ -97,7 +98,10 @@ export function useDonation() {
     }
   };
 
-  const initiateWebPayment = async (prayerId: string): Promise<string | null> => {
+  const initiateWebPayment = async (
+    prayerId: string,
+    quickButtonSlug?: string
+  ): Promise<string | null> => {
     setProcessing(true);
     setError(null);
     try {
@@ -108,6 +112,7 @@ export function useDonation() {
           currency,
           donor_name: donorName,
           prayer_name: amount >= PRAYER_NAME_MIN_AMOUNT ? prayerName : undefined,
+          quick_button_slug: quickButtonSlug,
         },
         token ?? undefined
       );
@@ -138,7 +143,7 @@ export function useDonation() {
     await finalizeSuccess(paymentIntentId, saveCard);
   };
 
-  const quickDonate = async (prayerId: string) => {
+  const quickDonate = async (prayerId: string, quickButtonSlug?: string) => {
     if (!token) {
       handleFailure(new Error(t('common.error')));
       return;
@@ -155,6 +160,7 @@ export function useDonation() {
           amount,
           currency,
           donor_name: quickDonorName,
+          quick_button_slug: quickButtonSlug,
         },
         token
       );

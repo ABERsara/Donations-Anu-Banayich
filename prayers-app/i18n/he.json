@@ -8,7 +8,10 @@
     "confirm": "אישור",
     "loading": "טוען...",
     "error": "אירעה שגיאה, נסה שוב",
-    "download_app": "הורד את האפליקציה"
+    "download_app": "הורד את האפליקציה",
+    "tab_home": "בית",
+    "tab_search": "חיפוש",
+    "tab_profile": "פרופיל"
   },
   "prayer": {
     "not_found": "תפילה לא נמצאה",

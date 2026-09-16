@@ -12,3 +12,5 @@ export const APP_CONFIG = {
   APPLE_STORE_URL: 'https://apps.apple.com/app/id_REPLACE_ME',
   GOOGLE_PLAY_URL: 'https://play.google.com/store/apps/details?id=com.abd.prayersapp',
 } as const;
+
+export const AVAILABLE_LANGS: SupportedLang[] = ['he', 'en'];

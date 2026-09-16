@@ -18,6 +18,7 @@
 import React from 'react';
 import { View, Text, Button, Alert } from 'react-native';
 import { router } from 'expo-router';
+import { LanguagePicker } from '@/components/LanguagePicker';
 
 export default function ProfileScreen() {
   return (
@@ -31,7 +32,6 @@ export default function ProfileScreen() {
           router.push('/auth/login');
         }}
       />
-
       <Button
         title="בדיקה זמנית: מסך התחברות"
         onPress={() => {
@@ -39,6 +39,7 @@ export default function ProfileScreen() {
           router.push('/auth/login');
         }}
       />
+      <LanguagePicker />
     </View>
   );
 }
