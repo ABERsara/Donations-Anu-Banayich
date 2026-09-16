@@ -41,7 +41,8 @@
     "sign_in_apple": "Sign in with Apple",
     "sign_in_phone": "Sign in with phone number",
     "sign_out": "Sign Out",
-    "profile": "My Profile"
+    "profile": "My Profile",
+    "error":"Error connecting with Google"
   },
   "quick_buttons": {
     "title": "What's going on with you?",

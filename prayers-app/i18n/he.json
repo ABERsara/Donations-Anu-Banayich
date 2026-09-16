@@ -42,7 +42,8 @@
     "sign_in_apple": "התחבר עם Apple",
     "sign_in_phone": "התחבר עם מספר טלפון",
     "sign_out": "התנתק",
-    "profile": "הפרופיל שלי"
+    "profile": "הפרופיל שלי",
+    "error":"שגיאה בהיתחברות עם google"
   },
   "quick_buttons": {
     "title": "מה קורה אצלך?",
