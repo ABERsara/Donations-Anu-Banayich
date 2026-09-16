@@ -10,6 +10,8 @@ import { auth, getIdToken, onAuthStateChanged, signInAnon, type User } from '@/s
 import type { AppUser } from '@/types/user.types';
 import { getMe } from '@/services/api';
 import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'expo-router';
+import { signOutUser } from '@/services/firebase';
 
 function buildAppUser(
   serverUser: Omit<AppUser, 'isAnonymous' | 'createdAt'>,
@@ -64,6 +66,15 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
 }
 
 export function useSignOut(): () => Promise<void> {
-  // TODO: לממש — Firebase signOut + reset store
-  return async () => {};
+  const router = useRouter();
+
+  return async () => {
+    try {
+      await signOutUser();
+      useAuthStore.getState().reset();
+      router.replace('/');
+    } catch (err) {
+      console.error('Sign out failed:', err);
+    }
+  };
 }

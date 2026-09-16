@@ -12,15 +12,21 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.constants import DONATION_STATUS_FAILED, DONATION_STATUS_SUCCESS
-from app.models.models import Donation, Prayer, RecurringDonation, User
+from app.models.models import Donation, Prayer, QuickButton, RecurringDonation, User
 from app.schemas.schemas import QuickDonationCreate, QuickDonationResponse
 from app.services import stripe_service
 
 
 async def create_pending_donation(db: Session, data, current_user: User | None = None):
     user_id = None
+    customer_id = None
     if current_user:
         user_id = current_user.id
+        customer_result = await stripe_service.create_or_get_customer(
+            current_user.stripe_customer_id, current_user.email
+        )
+        customer_id = customer_result["customer_id"]
+        current_user.stripe_customer_id = customer_id
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
     except ValueError as e:
@@ -28,11 +34,19 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     prayer = db.query(Prayer).filter(Prayer.id == prayer_uuid).first()
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
+    quick_button_id = None
+    if data.quick_button_slug:
+        quick_button = (
+            db.query(QuickButton).filter(QuickButton.slug == data.quick_button_slug).first()
+        )
+        if quick_button is None:
+            raise HTTPException(status_code=404, detail="Quick button not found")
+        quick_button_id = quick_button.id
     try:
         stripe_result = await stripe_service.create_donation_payment_intent(
             amount=data.amount,
             currency=data.currency.value,
-            customer_id=None,
+            customer_id=customer_id,
         )
     except stripe_sdk.error.StripeError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
@@ -40,6 +54,7 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     donation = Donation(
         user_id=user_id,
         prayer_id=prayer_uuid,
+        quick_button_id=quick_button_id,
         amount=data.amount,
         currency=data.currency.value,
         donor_name=data.donor_name,
@@ -54,6 +69,8 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     return {
         "client_secret": stripe_result["client_secret"],
         "payment_intent_id": stripe_result["payment_intent_id"],
+        "customer_id": stripe_result.get("customer_id"),
+        "ephemeral_key": stripe_result.get("ephemeral_key"),
     }
 
 
@@ -130,6 +147,15 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
     if prayer is None:
         raise HTTPException(status_code=404, detail="Prayer not found")
 
+    quick_button_id = None
+    if data.quick_button_slug:
+        quick_button = (
+            db.query(QuickButton).filter(QuickButton.slug == data.quick_button_slug).first()
+        )
+        if quick_button is None:
+            raise HTTPException(status_code=404, detail="Quick button not found")
+        quick_button_id = quick_button.id
+
     try:
         stripe_result = await stripe_service.charge_saved_card(
             customer_id=current_user.stripe_customer_id,
@@ -142,6 +168,7 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
     donation = Donation(
         user_id=current_user.id,
         prayer_id=prayer_uuid,
+        quick_button_id=quick_button_id,
         amount=data.amount,
         currency=data.currency.value,
         donor_name=data.donor_name,
@@ -155,8 +182,14 @@ async def quick_donation(db: Session, data: QuickDonationCreate, current_user: U
 
 
 async def list_history(db: Session, current_user: User):
-    """TODO: SELECT * FROM donations WHERE user_id = ... ORDER BY created_at DESC."""
-    raise NotImplementedError
+    history = (
+        db.query(Donation)
+        .filter(Donation.user_id == current_user.id)
+        .order_by(Donation.created_at.desc())
+        .limit(50)
+        .all()
+    )
+    return history
 
 
 async def create_recurring(db: Session, data, current_user: User):
