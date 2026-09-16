@@ -35,10 +35,10 @@ class DonationCreate(BaseModel):
 
 
 class DonationResponse(BaseModel):
-    client_secret: str = Field(alias="clientSecret")
-    payment_intent_id: str = Field(alias="paymentIntentId")
+    client_secret: str
+    payment_intent_id: str
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class QuickDonationCreate(BaseModel):
