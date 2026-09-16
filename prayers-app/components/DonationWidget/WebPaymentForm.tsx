@@ -10,7 +10,7 @@ type PaymentResult = 'success' | 'canceled' | 'failed';
 
 interface WebPaymentFormProps {
   clientSecret: string;
-  onResult: (result: PaymentResult, paymentIntentId?: string) => void;
+  onResult: (result: PaymentResult, paymentIntentId?: string, saveCard?: boolean) => void;
 }
 
 export default function WebPaymentForm({ clientSecret, onResult }: WebPaymentFormProps) {
@@ -24,13 +24,14 @@ export default function WebPaymentForm({ clientSecret, onResult }: WebPaymentFor
 function CheckoutForm({
   onResult,
 }: {
-  onResult: (result: PaymentResult, paymentIntentId?: string) => void;
+  onResult: (result: PaymentResult, paymentIntentId?: string, saveCard?: boolean) => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
   const { t } = useTranslation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [saveCard, setSaveCard] = useState(false);
 
   const handleSubmit = async () => {
     if (!stripe || !elements) {
@@ -54,7 +55,7 @@ function CheckoutForm({
     }
 
     if (paymentIntent && paymentIntent.status === 'succeeded') {
-      onResult('success', paymentIntent.id);
+      onResult('success', paymentIntent.id, saveCard);
     } else {
       onResult('failed');
     }
@@ -67,6 +68,17 @@ function CheckoutForm({
   return (
     <View style={styles.container}>
       <PaymentElement />
+
+      <Pressable
+        style={styles.checkboxRow}
+        onPress={() => setSaveCard((prev) => !prev)}
+        disabled={isProcessing}
+      >
+        <View style={[styles.checkboxBox, saveCard && styles.checkboxBoxChecked]}>
+          {saveCard && <Text style={styles.checkboxMark}>✓</Text>}
+        </View>
+        <Text style={styles.checkboxLabel}>{t('donation.save_card')}</Text>
+      </Pressable>
 
       {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
@@ -91,8 +103,36 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    gap: 8,
+  },
+  checkboxBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.ink.muted,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxBoxChecked: {
+    backgroundColor: COLORS.primary.DEFAULT,
+    borderColor: COLORS.primary.DEFAULT,
+  },
+  checkboxMark: {
+    color: COLORS.surface.card,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  checkboxLabel: {
+    color: COLORS.ink.DEFAULT,
+    fontSize: 14,
+  },
   errorText: {
-    color: COLORS.flame.DEFAULT, // צבע בולט לשגיאות מתוך הפלטה
+    color: COLORS.flame.DEFAULT,
     marginTop: 8,
     fontSize: 14,
   },
