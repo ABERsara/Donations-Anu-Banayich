@@ -61,6 +61,8 @@ export interface InitiateDonationPayload {
 export interface InitiateDonationResponse {
   clientSecret: string;
   paymentIntentId: string;
+  customerId?: string;
+  ephemeralKey?: string;
 }
 /** Payload לאישור תשלום */
 export interface ConfirmDonationPayload {
