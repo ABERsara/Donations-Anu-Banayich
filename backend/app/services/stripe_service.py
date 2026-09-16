@@ -46,19 +46,15 @@ async def create_donation_payment_intent(
 
     intent = await asyncio.to_thread(stripe.PaymentIntent.create, **params)
 
-    ephemeral_key = None
+    ephemeral_key_secret = None
     if customer_id:
-        ephemeral_key = await asyncio.to_thread(
-            stripe.EphemeralKey.create,
-            customer=customer_id,
-            stripe_version=settings.STRIPE_API_VERSION,
-        )
+        ephemeral_key_secret = await create_ephemeral_key(customer_id)
 
     return {
         "client_secret": intent.client_secret,
         "payment_intent_id": intent.id,
         "customer_id": customer_id,
-        "ephemeral_key": ephemeral_key.secret if ephemeral_key else None,
+        "ephemeral_key": ephemeral_key_secret,
     }
 
 
@@ -69,6 +65,15 @@ async def create_or_get_customer(existing_customer_id: str | None, email: str | 
         customer = await asyncio.to_thread(stripe.Customer.create, email=email)
 
     return {"customer_id": customer.id}
+
+
+async def create_ephemeral_key(customer_id: str) -> str:
+    ephemeral_key = await asyncio.to_thread(
+        stripe.EphemeralKey.create,
+        customer=customer_id,
+        stripe_version=settings.STRIPE_API_VERSION,
+    )
+    return ephemeral_key.secret
 
 
 async def get_payment_method_from_intent(payment_intent_id: str):
