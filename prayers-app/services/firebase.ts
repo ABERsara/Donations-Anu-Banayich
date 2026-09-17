@@ -3,6 +3,7 @@ import {
   getAuth,
   signInAnonymously,
   signInWithCredential,
+  linkWithCredential,
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
@@ -20,7 +21,13 @@ const firebaseConfig = {
 
 // אתחול יחיד — מונע כפילות ב-hot-reload
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+
+// During Vercel static export env vars are absent; getAuth throws auth/invalid-api-key
+// at module-load time and crashes the build. The guard lets the module load safely —
+// auth calls only happen inside React hooks/effects which never run during SSR.
+export const auth = process.env.EXPO_PUBLIC_FIREBASE_API_KEY
+  ? getAuth(app)
+  : ({} as ReturnType<typeof getAuth>);
 
 /** כניסה אנונימית — קורה ברקע בפתיחת האפליקציה */
 export const signInAnon = () => signInAnonymously(auth);
@@ -34,5 +41,5 @@ export const getIdToken = (forceRefresh = false): Promise<string> => {
 
 export const signOutUser = () => signOut(auth);
 
-export { onAuthStateChanged, GoogleAuthProvider, signInWithCredential };
+export { onAuthStateChanged, GoogleAuthProvider, signInWithCredential, linkWithCredential };
 export type { User };

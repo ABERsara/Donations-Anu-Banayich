@@ -14,6 +14,10 @@ from app.services.stripe_service import detach_payment_method, get_default_payme
 def get_or_create_user(db: Session, firebase_uid: str, email: str | None = None):
     user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
     if user is not None:
+        if email is not None and user.email != email:
+            user.email = email
+            db.commit()
+            db.refresh(user)
         return user
 
     user = User(firebase_uid=firebase_uid, email=email)
