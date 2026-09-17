@@ -5,40 +5,15 @@
  * - LanguagePicker + currency picker
  * - כפתור התנתקות
  */
-// import React from 'react';
-// import { View, Text } from 'react-native';
 
-// export default function ProfileScreen() {
-//   return (
-//     <View>
-//       <Text>פרופיל — TODO</Text>
-//     </View>
-//   );
-// }
 import React from 'react';
-import { View, Text, Button, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { View, Text } from 'react-native';
 import { LanguagePicker } from '@/components/LanguagePicker';
 
 export default function ProfileScreen() {
   return (
     <View>
       <Text>פרופיל — TODO</Text>
-      {/* TEMP - לבדיקת ABD-62 בלבד, להסיר לפני PR */}
-      <Button
-        title="בדיקה זמנית: מסך התחברות"
-        onPress={() => {
-          Alert.alert('נלחץ!');
-          router.push('/auth/login');
-        }}
-      />
-      <Button
-        title="בדיקה זמנית: מסך התחברות"
-        onPress={() => {
-          Alert.alert('נלחץ!');
-          router.push('/auth/login');
-        }}
-      />
       <LanguagePicker />
     </View>
   );

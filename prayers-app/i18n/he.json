@@ -41,6 +41,7 @@
     "sign_in_google": "התחבר עם Google",
     "sign_in_apple": "התחבר עם Apple",
     "sign_in_phone": "התחבר עם מספר טלפון",
+    "google_sign_in_failed": "ההתחברות עם Google נכשלה. נסי שוב.",
     "sign_out": "התנתק",
     "profile": "הפרופיל שלי"
   },

@@ -32,6 +32,9 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
       const store = useAuthStore.getState();
       if (firebaseUser) {
+        // מסלול מהיר: לעדכן isNonAnonymous מיד, בלי לחכות ל-getMe() מהשרת,
+        // כדי שמסכים כמו login.tsx יוכלו לנווט מוקדם ככל האפשר.
+        store.setNonAnonymous(!firebaseUser.isAnonymous);
         try {
           const token: string = await getIdToken();
           const serverUser = (await getMe(token)) as Omit<AppUser, 'isAnonymous' | 'createdAt'>;
@@ -48,6 +51,7 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
           store.setLoading(false);
         }
       } else {
+        store.setNonAnonymous(false);
         try {
           await signInAnon();
         } catch (err) {
