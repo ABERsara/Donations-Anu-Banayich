@@ -5,6 +5,7 @@
  * - LanguagePicker + currency picker
  * - כפתור התנתקות
  */
+
 import React from 'react';
 import { View, Text } from 'react-native';
 import { LanguagePicker } from '@/components/LanguagePicker';

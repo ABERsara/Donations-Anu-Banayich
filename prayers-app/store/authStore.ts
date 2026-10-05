@@ -5,9 +5,11 @@ interface AuthStore {
   user: AppUser | null;
   firebaseToken: string | null;
   isLoading: boolean;
+  isNonAnonymous: boolean;
   setUser: (user: AppUser | null) => void;
   setToken: (token: string | null) => void;
   setLoading: (v: boolean) => void;
+  setNonAnonymous: (v: boolean) => void;
   reset: () => void;
 }
 
@@ -15,12 +17,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   firebaseToken: null,
   isLoading: true,
+  isNonAnonymous: false,
   setUser: (user) => set({ user }),
   setToken: (token) => set({ firebaseToken: token }),
   setLoading: (v) => set({ isLoading: v }),
-  reset: () => set({ user: null, firebaseToken: null }),
+  setNonAnonymous: (v) => set({ isNonAnonymous: v }),
+  reset: () => set({ user: null, firebaseToken: null, isNonAnonymous: false }),
 }));
 
 // selectors
 export const selectIsLoggedIn = (s: AuthStore) => !!s.user && !s.user.isAnonymous;
 export const selectHasSavedCard = (s: AuthStore) => s.user?.hasSavedCard ?? false;
+export const selectIsNonAnonymous = (s: AuthStore) => s.isNonAnonymous;
