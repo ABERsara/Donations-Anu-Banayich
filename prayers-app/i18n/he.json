@@ -43,7 +43,9 @@
     "sign_in_phone": "התחבר עם מספר טלפון",
     "google_sign_in_failed": "ההתחברות עם Google נכשלה. נסי שוב.",
     "sign_out": "התנתק",
-    "profile": "הפרופיל שלי"
+    "profile": "הפרופיל שלי",
+    "load_user_failed": "לא ניתן לטעון את פרטי המשתמש. אנא נסה שוב מאוחר יותר.",
+    "anonymous_sign_in_failed": "לא ניתן להיכנס באופן אנונימי. אנא נסה שוב מאוחר יותר."
   },
   "quick_buttons": {
     "title": "מה קורה אצלך?",

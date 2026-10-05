@@ -74,7 +74,6 @@ export default function LoginScreen() {
       }
       //useAuth.ts תופס את השינוי דרך onAuthStateChanged ומעדכן את authStore לבד
     } catch (err: any) {
-      console.error('Google sign-in error:', err);
       setGoogleError(t('auth.google_sign_in_failed'));
     } finally {
       setIsGoogleLoading(false);

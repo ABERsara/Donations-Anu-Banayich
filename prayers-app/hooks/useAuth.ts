@@ -1,15 +1,23 @@
 /**
- * TODO: לממש
+ *  * useAuth — ניהול מצב ההתחברות של האפליקציה
  * - האזנה ל-onAuthStateChanged מ-Firebase
  * - כניסה אנונימית אוטומטית בפתיחה
  * - שמירת token ב-authStore
  * - קריאה ל-GET /api/users/me לקבלת הפרופיל
  */
 import { useEffect, useState } from 'react';
-import { auth, getIdToken, onAuthStateChanged, signInAnon, type User } from '@/services/firebase';
+import {
+  auth,
+  getIdToken,
+  onAuthStateChanged,
+  signInAnon,
+  signOutUser,
+  type User,
+} from '@/services/firebase';
 import type { AppUser } from '@/types/user.types';
 import { getMe } from '@/services/api';
 import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'expo-router';
 
 function buildAppUser(
   serverUser: Omit<AppUser, 'isAnonymous' | 'createdAt'>,
@@ -45,18 +53,17 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
           store.setUser(appUser);
           store.setLoading(false);
         } catch (err) {
-          setError('לא ניתן לטעון את פרטי המשתמש. אנא נסה שוב מאוחר יותר.');
-          console.error('Error fetching user data:', err);
+          setError('auth.load_user_failed');
           setIsLoading(false);
           store.setLoading(false);
+          store.setNonAnonymous(false);
         }
       } else {
         store.setNonAnonymous(false);
         try {
           await signInAnon();
         } catch (err) {
-          setError('לא ניתן להיכנס באופן אנונימי. אנא נסה שוב מאוחר יותר.');
-          console.error('Error signing in anonymously:', err);
+          setError('auth.anonymous_sign_in_failed');
           setIsLoading(false);
           store.setLoading(false);
         }
@@ -68,6 +75,10 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
 }
 
 export function useSignOut(): () => Promise<void> {
-  // TODO: לממש — Firebase signOut + reset store
-  return async () => {};
+  const router = useRouter();
+  return async () => {
+    await signOutUser();
+    useAuthStore.getState().reset();
+    router.replace('/(tabs)');
+  };
 }
