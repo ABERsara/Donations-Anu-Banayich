@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import { LanguagePicker } from '@/components/LanguagePicker';
 import { View, Text, Button } from 'react-native';
 import { router } from 'expo-router';
 
@@ -15,7 +14,6 @@ export default function ProfileScreen() {
   return (
     <View>
       <Text>פרופיל — TODO</Text>
-      <LanguagePicker />
       {/* TEMP - לבדיקת ABD-62 בלבד, להסיר לפני PR */}
       <Button title="בדיקה זמנית: מסך התחברות" onPress={() => router.push('/auth/login')} />
     </View>
