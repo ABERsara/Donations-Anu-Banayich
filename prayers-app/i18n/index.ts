@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import * as Localization from 'expo-localization';
 
 import he from './he.json';
 import en from './en.json';
@@ -12,6 +11,7 @@ import ar from './ar.json';
 import type { SupportedLang } from '@/types/i18n.types';
 import { APP_CONFIG } from '@/constants/app';
 import { STORAGE_KEYS } from '@/constants/storage';
+import { detectPreferredLanguage } from '@/utils/detectLanguage';
 
 // TODO: החלף AsyncStorage ב-expo-secure-store אם נדרש
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,9 +31,7 @@ async function detectInitialLang(): Promise<SupportedLang> {
   if (saved && APP_CONFIG.SUPPORTED_LANGS.includes(saved as SupportedLang)) {
     return saved as SupportedLang;
   }
-  const device = Localization.locale.split('-')[0] as SupportedLang;
-  if (APP_CONFIG.SUPPORTED_LANGS.includes(device)) return device;
-  return APP_CONFIG.DEFAULT_LANG;
+  return detectPreferredLanguage();
 }
 
 export async function initI18n() {

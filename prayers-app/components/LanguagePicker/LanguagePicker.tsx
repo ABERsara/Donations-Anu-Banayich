@@ -1,20 +1,39 @@
 /**
- * TODO: בורר שפה
+ * בורר שפה
  *
  * מציג: רשימת LANG_LABELS + LANG_FLAGS (types/i18n.types.ts)
- * לחיצה → useLanguage().changeLanguage(lang)
- * חשוב: לאחר החלפה ל-RTL → I18nManager.forceRTL(true) + restart
+ * לחיצה → useLanguage().setLanguage(lang)
+ * RTL/LTR מתעדכן חי דרך languageStore — ללא I18nManager, ללא restart
  *
  * ב-Web: שינוי URL prefix ( /fr/prayer/... )
  */
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { useLanguage } from '@/hooks/useLanguage';
+import { AVAILABLE_LANGS } from '@/constants/app';
+import { LANG_LABELS, LANG_FLAGS } from '@/types/i18n.types';
+import type { SupportedLang } from '@/types/i18n.types';
+import { getTextAlign, getFlexDir } from '@/utils/rtl';
 
 export function LanguagePicker() {
-  // TODO: לממש
+  const { lang, setLanguage } = useLanguage();
+
   return (
     <View>
-      <Text>LanguagePicker — TODO</Text>
+      {AVAILABLE_LANGS.map((code: SupportedLang) => {
+        const isSelected = code === lang;
+        return (
+          <Pressable
+            key={code}
+            onPress={() => setLanguage(code)}
+            style={{ flexDirection: getFlexDir(lang) }}
+          >
+            <Text style={{ textAlign: getTextAlign(lang) }}>
+              {LANG_FLAGS[code]} {LANG_LABELS[code]} {isSelected ? '✓' : ''}
+            </Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
