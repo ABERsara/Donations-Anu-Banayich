@@ -9,7 +9,7 @@ const webStubs = {
     __dirname,
     'web-shims/google-signin.js'
   ),
-  '@/services/firebase': path.resolve(__dirname, 'web-shims/firebase.js'),
+  '@/services/firebase': path.resolve(__dirname, 'web-shims/firebase.ts'),
   'react-native/Libraries/Components/TextInput/TextInputState': path.resolve(
     __dirname,
     'web-shims/TextInputState.js'
