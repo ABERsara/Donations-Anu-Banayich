@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 
-import { getPrayer, getPrayers } from '@/services/api';
+import { getPrayer, getPrayers, searchPrayers } from '@/services/api';
 import type { LocalizedPrayer } from '@/types/prayer.types';
 import { useLanguage } from './useLanguage';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/app';
 
 export function usePrayer(slug: string): {
   prayer: LocalizedPrayer | null;
@@ -103,4 +104,57 @@ export function usePrayers(): {
   }, [lang]);
 
   return { prayers, isLoading, error };
+}
+
+export function useSearch(
+  query: string,
+  lang: string
+): {
+  results: LocalizedPrayer[];
+  isLoading: boolean;
+  error: string | null;
+  hasSearched: boolean;
+} {
+  const [results, setResults] = useState<LocalizedPrayer[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setResults([]);
+      setIsLoading(false);
+      setError(null);
+      setHasSearched(false);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+      setError(null);
+      searchPrayers(q, lang)
+        .then((data) => {
+          if (cancelled) return;
+          setResults(data as LocalizedPrayer[]);
+        })
+        .catch((err: Error) => {
+          if (!cancelled) setError(err.message);
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsLoading(false);
+            setHasSearched(true);
+          }
+        });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, lang]);
+
+  return { results, isLoading, error, hasSearched };
 }

@@ -41,9 +41,12 @@
     "sign_in_google": "התחבר עם Google",
     "sign_in_apple": "התחבר עם Apple",
     "sign_in_phone": "התחבר עם מספר טלפון",
+    "google_sign_in_failed": "ההתחברות עם Google נכשלה. נסי שוב.",
     "sign_out": "התנתק",
     "profile": "הפרופיל שלי",
     "error": "שגיאה בהיתחברות עם Google"
+    "load_user_failed": "לא ניתן לטעון את פרטי המשתמש. אנא נסה שוב מאוחר יותר.",
+    "anonymous_sign_in_failed": "לא ניתן להיכנס באופן אנונימי. אנא נסה שוב מאוחר יותר."
   },
   "quick_buttons": {
     "title": "מה קורה אצלך?",
@@ -52,6 +55,10 @@
     "surgery": "לפני ניתוח",
     "birth": "לפני לידה",
     "job_interview": "ראיון עבודה"
+  },
+  "search": {
+    "placeholder": "חיפוש תפילה...",
+    "empty": "לא נמצאו תפילות"
   },
   "error": {
     "loading": "שגיאה בטעינה, נסה שוב"

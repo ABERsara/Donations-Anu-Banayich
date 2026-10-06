@@ -16,8 +16,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Platform } from 'react-native';
-import { useTranslation } from 'react-i18next';
-
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   auth,
@@ -28,20 +26,21 @@ import {
   linkWithPopup,
 } from '@/services/firebase';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore, selectIsNonAnonymous } from '@/store/authStore';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
-  const user = useAuthStore((state) => state.user);
+  const isNonAnonymous = useAuthStore(selectIsNonAnonymous);
 
   useEffect(() => {
-    if (user && !user.isAnonymous) {
+    if (isNonAnonymous) {
       router.replace('/(tabs)');
     }
-  }, [user, router]);
+  }, [isNonAnonymous, router]);
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -103,7 +102,7 @@ export default function LoginScreen() {
         }
       }
     } catch (err: any) {
-      setGoogleError(t('auth.error'));
+      setGoogleError(t('auth.google_sign_in_failed'));
     } finally {
       setIsGoogleLoading(false);
     }

@@ -11,7 +11,7 @@ from app.models.models import User
 from app.services.stripe_service import detach_payment_method, get_default_payment_method
 
 
-def get_or_create_user(db: Session, firebase_uid: str, email: str | None = None):
+def get_create_or_update_user(db: Session, firebase_uid: str, email: str | None = None):
     user = db.query(User).filter(User.firebase_uid == firebase_uid).first()
     if user is not None:
         if email is not None and user.email != email:

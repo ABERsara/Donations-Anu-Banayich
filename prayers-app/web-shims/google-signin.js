@@ -1,35 +1,33 @@
 // Web stub for @react-native-google-signin/google-signin.
 //
-// This package is native-only: at import time it touches native modules
-// that don't exist on web, which fails Metro's web bundle resolution
-// (import { GoogleSignin } from '@react-native-google-signin/google-signin'
-// in app/auth/login.tsx). All actual calls to GoogleSignin in that file are
-// already guarded with Platform.OS !== 'web' (web uses the Firebase popup
-// flow instead - see services/firebase.ts), so these stubs only need to
-// satisfy Metro's module resolution at build time and are never invoked
-// at runtime on web.
+// This package is native-only: at import time it accesses native modules
+// that don't exist on web, crashing the static export / web bundle.
+// All methods return a "not supported on web" error so the app degrades
+// gracefully; sign-in on web is not a supported flow.
 
-const WEB_UNSUPPORTED = {
-  code: 'Failed',
-  message: '@react-native-google-signin is not supported on web.',
-};
-
-function configure() {
-  // no-op: never called on web (guarded by Platform.OS !== 'web')
-}
-
-async function hasPlayServices() {
-  throw WEB_UNSUPPORTED;
-}
-
-async function signIn() {
-  throw WEB_UNSUPPORTED;
-}
+const WEB_UNSUPPORTED_CODE = 'SIGN_IN_CANCELLED';
+const WEB_UNSUPPORTED_MSG = 'Google Sign-In is not supported on web.';
 
 const GoogleSignin = {
-  configure,
-  hasPlayServices,
-  signIn,
+  configure: () => {},
+  hasPlayServices: async () => true,
+  signIn: async () => {
+    throw { code: WEB_UNSUPPORTED_CODE, message: WEB_UNSUPPORTED_MSG };
+  },
+  signOut: async () => {},
+  isSignedIn: () => false,
+  getCurrentUser: () => null,
+  getTokens: async () => {
+    throw { code: WEB_UNSUPPORTED_CODE, message: WEB_UNSUPPORTED_MSG };
+  },
+  revokeAccess: async () => {},
 };
 
-module.exports = { GoogleSignin };
+const statusCodes = {
+  SIGN_IN_CANCELLED: WEB_UNSUPPORTED_CODE,
+  IN_PROGRESS: 'IN_PROGRESS',
+  PLAY_SERVICES_NOT_AVAILABLE: 'PLAY_SERVICES_NOT_AVAILABLE',
+  SIGN_IN_REQUIRED: 'SIGN_IN_REQUIRED',
+};
+
+module.exports = { GoogleSignin, statusCodes };

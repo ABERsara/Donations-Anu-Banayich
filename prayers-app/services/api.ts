@@ -37,8 +37,8 @@ export async function apiFetch<T>(url: string, options: RequestOptions = {}): Pr
 export const getPrayers = (lang: string) => apiFetch(`${API.PRAYERS}?lang=${lang}`);
 export const getPrayer = (slug: string, lang: string) =>
   apiFetch(`${API.PRAYER(slug)}?lang=${lang}`);
-export const searchPrayers = (q: string) =>
-  apiFetch(`${API.PRAYERS_SEARCH}?q=${encodeURIComponent(q)}`);
+export const searchPrayers = (q: string, lang: string) =>
+  apiFetch(`${API.PRAYERS_SEARCH}?q=${encodeURIComponent(q)}&lang=${lang}`);
 
 // ─── Donations ──────────────────────────────────────────────
 export const initiateDonation = (payload: InitiateDonationPayload, token?: string) =>

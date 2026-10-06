@@ -14,3 +14,5 @@ export const APP_CONFIG = {
 } as const;
 
 export const AVAILABLE_LANGS: SupportedLang[] = ['he', 'en'];
+/** זמן השהיה (במילישניות) אחרי ההקלדה האחרונה, לפני שליחת חיפוש לשרת */
+export const SEARCH_DEBOUNCE_MS = 300;
