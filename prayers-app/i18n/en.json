@@ -54,6 +54,10 @@
     "birth": "Before giving birth",
     "job_interview": "Job interview"
   },
+  "search": {
+    "placeholder": "Search prayers...",
+    "empty": "No prayers found"
+  },
   "error": {
     "loading": "Error loading, please try again"
   }
