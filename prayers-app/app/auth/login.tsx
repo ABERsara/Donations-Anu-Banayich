@@ -32,7 +32,6 @@ export default function LoginScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const isNonAnonymous = useAuthStore(selectIsNonAnonymous);
-  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (isNonAnonymous) {

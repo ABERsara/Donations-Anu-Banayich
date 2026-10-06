@@ -22,9 +22,12 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
     customer_id = None
     if current_user:
         user_id = current_user.id
-        customer_result = await stripe_service.create_or_get_customer(
-            current_user.stripe_customer_id, current_user.email
-        )
+        try:
+            customer_result = await stripe_service.create_or_get_customer(
+                current_user.stripe_customer_id, current_user.email
+            )
+        except stripe_sdk.error.StripeError as e:
+            raise HTTPException(status_code=502, detail=str(e)) from e
         customer_id = customer_result["customer_id"]
         current_user.stripe_customer_id = customer_id
     try:

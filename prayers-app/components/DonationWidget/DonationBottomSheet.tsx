@@ -119,7 +119,10 @@ export function DonationBottomSheet({
               rtl={rtl}
             />
           )}
-          <Pressable onPress={() => setSaveCard(!saveCard)} style={styles.checkboxRow}>
+          <Pressable
+            onPress={() => setSaveCard(!saveCard)}
+            style={[styles.checkboxRow, rtl && styles.checkboxRowRtl]}
+          >
             <View style={[styles.checkboxBox, saveCard && styles.checkboxBoxChecked]}>
               {saveCard && <Text style={styles.checkboxMark}>✓</Text>}
             </View>
@@ -164,5 +167,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+  },
+  checkboxRowRtl: {
+    flexDirection: 'row-reverse',
   },
 });
