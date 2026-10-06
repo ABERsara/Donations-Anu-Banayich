@@ -24,6 +24,7 @@ export function QuickButtons() {
   const { t } = useTranslation();
   const { lang, currency } = useLanguageStore();
   const selectTier = useDonationStore((s) => s.selectTier);
+  const setSuccess = useDonationStore((s) => s.setSuccess);
   const [selectedButton, setSelectedButton] = useState<QuickButton | null>(null);
   const [selectedPrayerId, setSelectedPrayerId] = useState<string | null>(null);
   const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
@@ -49,6 +50,7 @@ export function QuickButtons() {
   const handleClose = () => {
     setSelectedButton(null);
     setSelectedPrayerId(null);
+    setSuccess(false);
   };
 
   return (

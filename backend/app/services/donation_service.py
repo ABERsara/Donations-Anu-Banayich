@@ -33,9 +33,8 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
         quick_button = (
             db.query(QuickButton).filter(QuickButton.slug == data.quick_button_slug).first()
         )
-        if quick_button is None:
-            raise HTTPException(status_code=404, detail="Quick button not found")
-        quick_button_id = quick_button.id
+        if quick_button is not None:
+            quick_button_id = quick_button.id
     try:
         stripe_result = await stripe_service.create_donation_payment_intent(
             amount=data.amount,
