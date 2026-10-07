@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import {
   auth,
   getIdToken,
-  onAuthStateChanged,
+  onIdTokenChanged,
   signInAnon,
   signOutUser,
   type User,
@@ -37,7 +37,7 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser: User | null) => {
       const store = useAuthStore.getState();
       if (firebaseUser) {
         // מסלול מהיר: לעדכן isNonAnonymous מיד, בלי לחכות ל-getMe() מהשרת,
