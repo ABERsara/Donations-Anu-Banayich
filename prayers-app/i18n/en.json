@@ -44,7 +44,8 @@
     "sign_out": "Sign Out",
     "profile": "My Profile",
     "load_user_failed": "Unable to load user details. Please try again later.",
-    "anonymous_sign_in_failed": "Unable to sign in anonymously. Please try again later."
+    "anonymous_sign_in_failed": "Unable to sign in anonymously. Please try again later.",
+    "sign_out_failed": "Sign out failed. Please try again."
   },
   "quick_buttons": {
     "title": "What's going on with you?",

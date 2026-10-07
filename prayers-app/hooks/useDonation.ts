@@ -54,7 +54,7 @@ export function useDonation() {
           const refreshedUser = await getMe(token);
           setUser({ ...user!, ...refreshedUser });
         } catch (refreshErr) {
-          console.warn('Failed to refresh user profile after save_card:', refreshErr);
+          // מתעלם בכוונה — רענון הפרופיל הוא best-effort, לא קריטי להצלחת התרומה
         }
       }
 

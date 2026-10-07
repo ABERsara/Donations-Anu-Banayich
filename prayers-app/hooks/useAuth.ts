@@ -74,16 +74,22 @@ export function useAuth(): { user: AppUser | null; isLoading: boolean; error: st
   return { user: user, isLoading: isLoading, error: error };
 }
 
-export function useSignOut(): () => Promise<void> {
+export function useSignOut(): { signOut: () => Promise<void>; error: string | null } {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  return async () => {
+  const signOut = async () => {
     try {
       await signOutUser();
-      useAuthStore.getState().reset();
-      router.replace('/(tabs)');
+      setError(null);
     } catch (err) {
       console.error('Sign out failed:', err);
+      setError('auth.sign_out_failed');
+    } finally {
+      useAuthStore.getState().reset();
+      router.replace('/(tabs)');
     }
   };
+
+  return { signOut, error };
 }

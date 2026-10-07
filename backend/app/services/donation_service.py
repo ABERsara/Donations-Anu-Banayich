@@ -30,6 +30,8 @@ async def create_pending_donation(db: Session, data, current_user: User | None =
             raise HTTPException(status_code=502, detail=str(e)) from e
         customer_id = customer_result["customer_id"]
         current_user.stripe_customer_id = customer_id
+        db.commit()
+        db.refresh(current_user)
     try:
         prayer_uuid = uuid.UUID(data.prayer_id)
     except ValueError as e:

@@ -23,13 +23,11 @@ export function useCurrency(): CurrencyConfig {
   useEffect(() => {
     let isMounted = true;
 
-    detectCurrency()
-      .then((detected) => {
-        if (isMounted) {
-          setCurrency(detected);
-        }
-      })
-      .catch((err) => console.warn('Currency detection failed:', err));
+    detectCurrency().then((detected) => {
+      if (isMounted) {
+        setCurrency(detected);
+      }
+    });
 
     return () => {
       isMounted = false;
