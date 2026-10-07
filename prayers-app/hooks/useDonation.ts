@@ -20,6 +20,7 @@ export function useDonation() {
     prayerName,
     currency,
     donorName,
+    saveCard,
     isProcessing,
     isSuccess,
     error,
@@ -53,7 +54,7 @@ export function useDonation() {
           const refreshedUser = await getMe(token);
           setUser({ ...user!, ...refreshedUser });
         } catch (refreshErr) {
-          console.warn('Failed to refresh user profile after save_card:', refreshErr);
+          // מתעלם בכוונה — רענון הפרופיל הוא best-effort, לא קריטי להצלחת התרומה
         }
       }
 
@@ -80,7 +81,7 @@ export function useDonation() {
         token ?? undefined
       );
 
-      const result = await openPaymentSheet(data.client_secret);
+      const result = await openPaymentSheet(data.clientSecret, data.customerId, data.ephemeralKey);
       if (result === 'canceled') {
         setProcessing(false);
         return;
@@ -90,9 +91,8 @@ export function useDonation() {
         handleFailure();
         return;
       }
-      const NATIVE_SAVE_CARD = false;
 
-      await finalizeSuccess(data.payment_intent_id, NATIVE_SAVE_CARD);
+      await finalizeSuccess(data.paymentIntentId, saveCard);
     } catch (err) {
       handleFailure(err);
     }
@@ -118,7 +118,7 @@ export function useDonation() {
       );
 
       setProcessing(false);
-      return data.client_secret;
+      return data.clientSecret;
     } catch (err) {
       handleFailure(err);
       return null;

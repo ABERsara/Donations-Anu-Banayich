@@ -19,11 +19,15 @@ export async function initializeStripe() {
  */
 export type PaymentSheetResult = 'success' | 'canceled' | 'failed';
 
-export async function openPaymentSheet(clientSecret: string): Promise<PaymentSheetResult> {
-  // TODO: להגדיר setupIntent / customFlow לפי הצורך
+export async function openPaymentSheet(
+  clientSecret: string,
+  customerId?: string,
+  ephemeralKey?: string
+): Promise<PaymentSheetResult> {
   const { error: initError } = await initPaymentSheet({
     paymentIntentClientSecret: clientSecret,
     merchantDisplayName: 'Prayers App',
+    ...(customerId && ephemeralKey ? { customerId, customerEphemeralKeySecret: ephemeralKey } : {}),
   });
   if (initError) {
     console.warn('Stripe init error:', initError.message);

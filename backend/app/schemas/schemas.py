@@ -37,6 +37,8 @@ class DonationCreate(BaseModel):
 class DonationResponse(BaseModel):
     client_secret: str = Field(alias="clientSecret")
     payment_intent_id: str = Field(alias="paymentIntentId")
+    customer_id: str | None = Field(None, alias="customerId")
+    ephemeral_key: str | None = Field(None, alias="ephemeralKey")
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -46,6 +48,7 @@ class QuickDonationCreate(BaseModel):
     amount: int = Field(gt=0)
     currency: Currency
     donor_name: str = Field(min_length=2)
+    quick_button_slug: str | None = None
 
 
 class QuickDonationResponse(BaseModel):

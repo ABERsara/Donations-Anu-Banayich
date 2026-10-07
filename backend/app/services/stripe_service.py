@@ -46,9 +46,15 @@ async def create_donation_payment_intent(
 
     intent = await asyncio.to_thread(stripe.PaymentIntent.create, **params)
 
+    ephemeral_key_secret = None
+    if customer_id:
+        ephemeral_key_secret = await create_ephemeral_key(customer_id)
+
     return {
         "client_secret": intent.client_secret,
         "payment_intent_id": intent.id,
+        "customer_id": customer_id,
+        "ephemeral_key": ephemeral_key_secret,
     }
 
 
@@ -59,6 +65,15 @@ async def create_or_get_customer(existing_customer_id: str | None, email: str | 
         customer = await asyncio.to_thread(stripe.Customer.create, email=email)
 
     return {"customer_id": customer.id}
+
+
+async def create_ephemeral_key(customer_id: str) -> str:
+    ephemeral_key = await asyncio.to_thread(
+        stripe.EphemeralKey.create,
+        customer=customer_id,
+        stripe_version=settings.STRIPE_API_VERSION,
+    )
+    return ephemeral_key.secret
 
 
 async def get_payment_method_from_intent(payment_intent_id: str):
@@ -94,12 +109,17 @@ async def get_default_payment_method(customer_id: str):
 
 async def charge_saved_card(customer_id: str, amount: int, currency: str):
     """חיוב מיידי על payment_method שמור (Quick donation) — off-session charge."""
-    # לא נבדק כאן — בהסתמך על default_payment_method מוגדר מראש ב-Stripe customer
+    default_pm = await get_default_payment_method(customer_id)
+    payment_method_id = default_pm["payment_method_id"]
+    if not payment_method_id:
+        raise HTTPException(status_code=400, detail="No default payment method set for customer")
+
     intent = await asyncio.to_thread(
         stripe.PaymentIntent.create,
         amount=amount,
         currency=currency.lower(),
         customer=customer_id,
+        payment_method=payment_method_id,
         off_session=True,
         confirm=True,
     )

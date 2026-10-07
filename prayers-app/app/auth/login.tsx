@@ -14,8 +14,7 @@
  * ראה services/firebase.ts
  */
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
   auth,
@@ -114,6 +113,11 @@ export default function LoginScreen() {
         {isGoogleLoading ? <ActivityIndicator /> : <Text>{t('auth.sign_in_google')}</Text>}
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
+      {Platform.OS === 'ios' && (
+        <TouchableOpacity disabled={true}>
+          <Text>{t('auth.sign_in_apple')}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
