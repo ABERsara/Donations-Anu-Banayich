@@ -43,6 +43,7 @@
     "google_sign_in_failed": "Google sign-in failed. Please try again.",
     "sign_out": "Sign Out",
     "profile": "My Profile",
+    "error": "Error connecting with Google",
     "load_user_failed": "Unable to load user details. Please try again later.",
     "anonymous_sign_in_failed": "Unable to sign in anonymously. Please try again later."
   },
