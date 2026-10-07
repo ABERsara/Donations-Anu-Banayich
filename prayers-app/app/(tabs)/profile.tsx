@@ -3,7 +3,7 @@
  * - אם לא מחובר: כפתורי Google/Apple/Phone login
  * - אם מחובר: שם, כרטיס שמור, היסטוריית תרומות
  * - LanguagePicker + currency picker
- * - כפתור התנתקות
+ *  - כפתור התנתקות (useSignOut מחזיר { signOut, error } — יש לחבר את error לממשק)
  */
 
 import React from 'react';
