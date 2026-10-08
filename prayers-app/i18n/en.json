@@ -41,6 +41,8 @@
     "sign_in_apple": "Sign in with Apple",
     "sign_in_phone": "Sign in with phone number",
     "google_sign_in_failed": "Google sign-in failed. Please try again.",
+    "google_sign_in_cancelled": "Google sign-in was cancelled.",
+    "google_no_id_token": "Google did not return a sign-in token. Please try again.",
     "sign_out": "Sign Out",
     "profile": "My Profile",
     "error": "Error connecting with Google",

@@ -15,7 +15,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import {
   auth,
   GoogleAuthProvider,
@@ -37,7 +37,11 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (isNonAnonymous) {
-      router.replace('/(tabs)');
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   }, [isNonAnonymous, router]);
 
@@ -101,7 +105,15 @@ export default function LoginScreen() {
         }
       }
     } catch (err: any) {
-      setGoogleError(t('auth.google_sign_in_failed'));
+      if (
+        err?.code === statusCodes.SIGN_IN_CANCELLED ||
+        err?.code === 'auth/popup-closed-by-user' ||
+        err?.code === 'auth/cancelled-popup-request'
+      ) {
+        setGoogleError(t('auth.google_sign_in_cancelled'));
+      } else {
+        setGoogleError(t('auth.google_sign_in_failed'));
+      }
     } finally {
       setIsGoogleLoading(false);
     }
