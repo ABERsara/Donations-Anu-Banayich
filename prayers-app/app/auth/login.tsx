@@ -9,7 +9,7 @@
  * לאחר התחברות:
  *  - linkWithCredential אם המשתמש כבר Anonymous
  *  - עדכון authStore
- *  - router.back()
+ *  - router.replace('/(tabs)').()
  *
  * ראה services/firebase.ts
  */
@@ -85,7 +85,7 @@ export default function LoginScreen() {
         const { idToken } = await GoogleSignin.signIn();
 
         if (!idToken) {
-          throw new Error(t('auth.google_sign_in_failed'));
+          throw new Error(t('auth.error'));
         }
         const googleCredential = GoogleAuthProvider.credential(idToken);
 
