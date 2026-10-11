@@ -9,7 +9,7 @@
  * לאחר התחברות:
  *  - linkWithCredential אם המשתמש כבר Anonymous
  *  - עדכון authStore
- *  - router.replace('/(tabs)').()
+ *  - router.replace('/(tabs)')
  *
  * ראה services/firebase.ts
  */
@@ -85,7 +85,7 @@ export default function LoginScreen() {
         const { idToken } = await GoogleSignin.signIn();
 
         if (!idToken) {
-          throw new Error(t('auth.error'));
+          throw new Error(t('auth.google_no_id_token'));
         }
         const googleCredential = GoogleAuthProvider.credential(idToken);
 
@@ -125,11 +125,6 @@ export default function LoginScreen() {
         {isGoogleLoading ? <ActivityIndicator /> : <Text>{t('auth.sign_in_google')}</Text>}
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
-      {Platform.OS === 'ios' && (
-        <TouchableOpacity disabled={true}>
-          <Text>{t('auth.sign_in_apple')}</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
