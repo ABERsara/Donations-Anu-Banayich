@@ -42,6 +42,8 @@
     "sign_in_apple": "התחבר עם Apple",
     "sign_in_phone": "התחבר עם מספר טלפון",
     "google_sign_in_failed": "ההתחברות עם Google נכשלה. נסי שוב.",
+    "google_sign_in_cancelled": "ההתחברות עם Google בוטלה.",
+    "google_no_id_token": "Google לא החזיר אישור התחברות. נסי שוב.",
     "sign_out": "התנתק",
     "profile": "הפרופיל שלי",
     "error": "שגיאה בהיתחברות עם Google",

@@ -9,13 +9,13 @@
  * לאחר התחברות:
  *  - linkWithCredential אם המשתמש כבר Anonymous
  *  - עדכון authStore
- *  - router.replace('/(tabs)').()
+ *  - router.replace('/(tabs)')
  *
  * ראה services/firebase.ts
  */
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import {
   auth,
   GoogleAuthProvider,
@@ -37,7 +37,11 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (isNonAnonymous) {
-      router.replace('/(tabs)');
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   }, [isNonAnonymous, router]);
 
@@ -81,7 +85,7 @@ export default function LoginScreen() {
         const { idToken } = await GoogleSignin.signIn();
 
         if (!idToken) {
-          throw new Error(t('auth.error'));
+          throw new Error(t('auth.google_no_id_token'));
         }
         const googleCredential = GoogleAuthProvider.credential(idToken);
 
@@ -101,7 +105,15 @@ export default function LoginScreen() {
         }
       }
     } catch (err: any) {
-      setGoogleError(t('auth.google_sign_in_failed'));
+      if (
+        err?.code === statusCodes.SIGN_IN_CANCELLED ||
+        err?.code === 'auth/popup-closed-by-user' ||
+        err?.code === 'auth/cancelled-popup-request'
+      ) {
+        setGoogleError(t('auth.google_sign_in_cancelled'));
+      } else {
+        setGoogleError(t('auth.google_sign_in_failed'));
+      }
     } finally {
       setIsGoogleLoading(false);
     }
@@ -113,11 +125,6 @@ export default function LoginScreen() {
         {isGoogleLoading ? <ActivityIndicator /> : <Text>{t('auth.sign_in_google')}</Text>}
       </TouchableOpacity>
       {googleError && <Text>{googleError}</Text>}
-      {Platform.OS === 'ios' && (
-        <TouchableOpacity disabled={true}>
-          <Text>{t('auth.sign_in_apple')}</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
