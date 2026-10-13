@@ -35,6 +35,7 @@ class DonationCreate(BaseModel):
 
 
 class DonationResponse(BaseModel):
+
     client_secret: str = Field(alias="clientSecret")
     payment_intent_id: str = Field(alias="paymentIntentId")
     customer_id: str | None = Field(None, alias="customerId")
