@@ -13,7 +13,6 @@ import { StripeProvider } from '@stripe/stripe-react-native';
 import i18n, { initI18n } from '@/i18n';
 import { initializeStripe } from '@/services/stripe';
 import { LoadingSpinner } from '@/components/common';
-import { signInAnon } from '@/services/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguageStore } from '@/store/languageStore';
 import type { SupportedLang } from '@/types/i18n.types';
@@ -22,7 +21,7 @@ export default function RootLayout() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    Promise.all([initI18n(), initializeStripe(), signInAnon()])
+    Promise.all([initI18n(), initializeStripe()])
       .then(() => {
         useLanguageStore.getState().setLang(i18n.language as SupportedLang);
         setReady(true);

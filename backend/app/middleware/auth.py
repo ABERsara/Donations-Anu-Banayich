@@ -28,7 +28,7 @@ async def get_current_user(
     db: Session = Depends(get_db),
 ):
     uid, email = credentials
-    user = user_service.get_or_create_user(db, uid, email)
+    user = user_service.get_create_or_update_user(db, uid, email)
     return user
 
 
@@ -38,6 +38,6 @@ async def get_optional_user(authorization: str = Header(default=""), db: Session
 
     try:
         uid, email = await verify_firebase_token(authorization=authorization)
-        return user_service.get_or_create_user(db, uid, email)
+        return user_service.get_create_or_update_user(db, uid, email)
     except HTTPException:
         return None

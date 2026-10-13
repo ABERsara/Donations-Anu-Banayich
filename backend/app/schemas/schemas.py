@@ -35,8 +35,11 @@ class DonationCreate(BaseModel):
 
 
 class DonationResponse(BaseModel):
-    client_secret: str
-    payment_intent_id: str
+
+    client_secret: str = Field(alias="clientSecret")
+    payment_intent_id: str = Field(alias="paymentIntentId")
+    customer_id: str | None = Field(None, alias="customerId")
+    ephemeral_key: str | None = Field(None, alias="ephemeralKey")
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -46,6 +49,7 @@ class QuickDonationCreate(BaseModel):
     amount: int = Field(gt=0)
     currency: Currency
     donor_name: str = Field(min_length=2)
+    quick_button_slug: str | None = None
 
 
 class QuickDonationResponse(BaseModel):
@@ -75,7 +79,7 @@ class RecurringDonationResponse(BaseModel):
     is_active: bool = Field(alias="isActive")
     next_charge_at: str | None = Field(None, alias="nextChargeAt")
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class DonationHistoryItem(BaseModel):
@@ -88,7 +92,7 @@ class DonationHistoryItem(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     donor_note: str | None = Field(None, alias="donorNote")
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 # ─── Prayer ──────────────────────────────────────────────────
@@ -105,7 +109,7 @@ class PrayerResponse(BaseModel):
     category_id: str | None = Field(None, alias="categoryId")
     view_count: int
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 # ─── User ────────────────────────────────────────────────────
@@ -121,7 +125,7 @@ class UserResponse(BaseModel):
     saved_card_last4: str | None = Field(None, alias="savedCardLast4")
     saved_card_brand: str | None = Field(None, alias="savedCardBrand")
 
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True, by_alias=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class UserUpdate(BaseModel):
